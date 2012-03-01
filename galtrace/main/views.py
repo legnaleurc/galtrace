@@ -4,7 +4,8 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse
 
-from main.models import Order, OrderForm, PHASES
+from main.models import Order, PHASES
+from main.forms import RestoreForm, OrderForm
 from main import sites
 
 def index( request ):
@@ -13,8 +14,14 @@ def index( request ):
 		return render_to_response( 'index.html', context )
 
 	form = OrderForm()
+	restoreForm = RestoreForm()
 	items = Order.objects.all().filter( user__exact = request.user ).order_by( 'date', 'title' ).values()
-	return render_to_response( 'index.html', { 'phases': PHASES, 'form': form, 'items': items }, context_instance = context )
+	return render_to_response( 'index.html', {
+		'phases': PHASES,
+		'form': form,
+		'restoreForm': restoreForm,
+		'items': items,
+	}, context_instance = context )
 
 def auth( request ):
 	from django.contrib.auth import authenticate, login, logout
@@ -81,8 +88,7 @@ def delete( request ):
 	result[0].delete()
 	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 
-def dump( request ):
-	import json
+def backup( request ):
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 	response['Content-Disposition'] = 'attachment; filename=galtrace.json'
 	rows = Order.objects.all()
@@ -102,6 +108,13 @@ def dump( request ):
 		} )
 	json.dump( data, response, ensure_ascii = False )
 	return response
+
+def restore( request ):
+	if request.method == 'POST':
+		form = RestoreForm( data = request.POST, files = request.FILES )
+		if form.is_valid():
+			result = form.save( request.user )
+	return redirect( index )
 
 def fetch( request ):
 	args = getArgs( request )

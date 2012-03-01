@@ -3,7 +3,7 @@
 		<div class="container">
 			<ul class="nav">
 				<li>
-					<li><a href="#insert-modal" data-toggle="modal">Insert</a></li>
+					<a href="#insert-modal" data-toggle="modal">Insert</a>
 				</li>
 				<li class="dropdown" id="move-menu">
 					<a href="#move-menu" class="dropdown-toggle" data-toggle="dropdown">Move<b class="caret"></b></a>
@@ -22,7 +22,10 @@
 							<a href="#" id="button-delete">Delete</a>
 						</li>
 						<li>
-							<a href="dump.cgi">Dump</a>
+							<a href="/backup.cgi">Dump</a>
+						</li>
+						<li>
+							<a href="#restore-modal" data-toggle="modal">Restore</a>
 						</li>
 					</ul>
 				</li>
@@ -116,6 +119,34 @@
 				<input type="hidden" id="id_volume" name="volume" value="-1" />
 				<div class="form-actions">
 					<button type="button" id="fetch" class="btn">Fetch</button>
+					<button type="reset" class="btn">Reset</button>
+					<button type="submit" class="btn primary">Submit</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+	</div>
+</div>
+<div id="restore-modal" class="modal hide fade">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Restore</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="/restore.cgi">
+			<fieldset>
+				<div class="control-group">
+					{{ restoreForm.data.label_tag }}
+					<div class="controls">
+						{{ restoreForm.data }}
+						<p class="help-block">
+							{{ restoreForm.data.help_text }}
+						</p>
+					</div>
+				</div>
+				{% csrf_token %}
+				<div class="form-actions">
 					<button type="reset" class="btn">Reset</button>
 					<button type="submit" class="btn primary">Submit</button>
 				</div>
