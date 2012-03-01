@@ -1,0 +1,25 @@
+{% load i18n %}
+<form class="form-horizontal" id="login" method="post" action="auth.cgi">
+	<fieldset>
+		<legend>{% trans 'Please sign in or sign up' %}</legend>
+		<div class="control-group">
+			<label class="control-label" for="id_user">User Name</label>
+			<div class="controls">
+				<input id="id_user" type="text" name="user" />
+				<p class="help-block"></p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="id_pswd">Password</label>
+			<div class="controls">
+				<input id="id_pswd" type="password" name="pswd" />
+				<p class="help-block"></p>
+			</div>
+		</div>
+		{% csrf_token %}
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">Sign In</button>
+			<button type="reset" class="btn">Reset</button>
+		</div>
+	</fieldset>
+</form>

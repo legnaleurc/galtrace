@@ -1,0 +1,33 @@
+body {
+	padding-top: 60px;
+}
+
+.dropdown-menu input {
+	width: 128px;
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+td.vendor input, td.date input {
+	display: none;
+}
+
+#stderr {
+	color: red;
+}
+
+footer p {
+	text-align: center;
+}
+
+/* Override for Google CSE */
+.gsc-control-cse, .gsc-control-cse .gsc-table-result {
+	width: auto;
+}
+.gsc-resultsbox-visible {
+	overflow: auto;
+	height: 480px;
+}
+form.gsc-search-box, .gsc-adBlock {
+	display: none;
+}

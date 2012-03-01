@@ -1,0 +1,4 @@
+/venv
+*.pyc
+/private/data.json
+/static
