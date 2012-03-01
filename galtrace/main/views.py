@@ -82,12 +82,25 @@ def delete( request ):
 	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 
 def dump( request ):
-	from django.core import serializers
+	import json
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
-	response['Content-Disposition'] = 'attachment; filename=cart.json'
-	s = serializers.get_serializer( 'json' )()
-	result = Order.objects.all()
-	s.serialize( result, stream = response )
+	response['Content-Disposition'] = 'attachment; filename=galtrace.json'
+	rows = Order.objects.all()
+	data = {
+		'version': 0,
+		'orders': [],
+	}
+	for row in rows:
+		data['orders'].append( {
+			'pk': row.pk,
+			'title': row.title,
+			'vendor': row.vendor,
+			'date': row.date,
+			'uri': row.uri,
+			'phase': row.phase,
+			'volume': row.volume,
+		} )
+	json.dump( data, response, ensure_ascii = False )
 	return response
 
 def fetch( request ):

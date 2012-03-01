@@ -1,4 +1,4 @@
 /venv
 *.pyc
-/private/data.json
+/galtrace/private/data.json
 /static
