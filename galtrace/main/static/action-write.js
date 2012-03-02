@@ -23,6 +23,7 @@ $( function() {
 		event.preventDefault();
 
 		var phase = $( this ).data( 'phase' );
+		var visible = $( '.phase-filter[data-value="' + phase + '"]' ).hasClass( 'active' );
 		for( var i = 0; i < Cart.view.size(); ++i ) {
 			var row = Cart.view.at( i );
 			// if not selected or phase no need to change, skip this part
@@ -32,7 +33,7 @@ $( function() {
 				// update phase and clear selection
 				row.setPhase( phase ).setChecked( false );
 				// update hidden state
-				if( $( '#phase-filter' ).val().indexOf( phase ) >= 0 ) {
+				if( visible ) {
 					row.getElement().show();
 				} else {
 					row.getElement().hide();
