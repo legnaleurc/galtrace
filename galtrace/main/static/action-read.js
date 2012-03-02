@@ -1,7 +1,5 @@
 $( function() {
 
-//	$( '#page-head' ).dropdown();
-
 	$( '.dropdown-menu form' ).click( function( event ) {
 		event.stopPropagation();
 	} );
