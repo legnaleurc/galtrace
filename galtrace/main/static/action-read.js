@@ -37,7 +37,9 @@ $( function() {
 
 	// NOTE: jQuery UI dialog module has a bug which causes Chrome gives an ignorable error. (#7293)
 
-//	var cseDialog = $( '#search-dialog' ).modal();
+	var cseDialog = $( '#search-modal' ).modal( {
+		show: false
+	} );
 	// Google CSE
 	var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
 	customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
