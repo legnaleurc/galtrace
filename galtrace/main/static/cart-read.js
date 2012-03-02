@@ -12,11 +12,13 @@ var Cart = {
 	},
 
 	getFilter: function() {
-		var input = $( '#phase-filter' ).val();
+		var input = jQuery.map( $( '.phase-filter.active' ), function( v ) {
+			return $( v ).data( 'value' );
+		} );
 		var phases_ = ( input.length === 0 ) ? null : {};
 		if( phases_ ) {
 			for( var i = 0; i < 5; ++i ) {
-				phases_[i] = ( input.indexOf( i.toString() ) >= 0 );
+				phases_[i] = ( input.indexOf( i ) >= 0 );
 			}
 		}
 		return {

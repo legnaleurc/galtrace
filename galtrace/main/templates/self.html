@@ -22,22 +22,13 @@
 			</ul>
 		</li>
 		<li class="divider-vertical"></li>
-		<li class="dropdown" id="filter-menu">
-			<a href="#filter-menu" class="dropdown-toggle" data-toggle="dropdown">Filter<b class="caret"></b></a>
-			<div class="dropdown-menu">
-				<form action=".">
-					<select id="phase-filter" multiple="multiple">
-						{% for phase in phases %}
-							<option value="{{ phase.0 }}" id="phase-filter-{{ phase.0 }}">{{ phase.1 }}</option>
-						{% endfor %}
-					</select>
-				</form>
-			</div>
-		</li>
+		{% for phase in phases %}
+			<li data-value="{{ phase.0 }}" class="phase-filter"><a href="#">{{ phase.1 }}</a></li>
+		{% endfor %}
+		<form action="" class="navbar-search">
+			<input type="text" class="search-query" id="search" placeholder="Search" />
+		</form>
 	</ul>
-	<form action="" class="navbar-search">
-		<input type="text" class="search-query" id="search" placeholder="Search" />
-	</form>
 	<ul class="nav pull-right">
 		<li><a href="/auth.cgi">Sign Out</a></li>
 	</ul>

@@ -19,7 +19,11 @@ $( function() {
 	function update() {
 		Cart.view.updateFilter();
 	}
-	$( '#phase-filter' ).change( update );
+	$( '.phase-filter' ).click( function( event ) {
+		event.preventDefault();
+		$( this ).toggleClass( 'active' );
+		update();
+	} );
 	var previous = $( '#search' ).text();
 	$( '#search' ).keyup( function( event ) {
 		var current = $( this ).val();
@@ -29,7 +33,7 @@ $( function() {
 		}
 	} );
 	// set initial filter
-	$( '#phase-filter' ).val( [ 0 ] ).change();
+	$( '.phase-filter[data-value="0"]' ).click();
 
 	// NOTE: jQuery UI dialog module has a bug which causes Chrome gives an ignorable error. (#7293)
 
