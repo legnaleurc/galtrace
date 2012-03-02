@@ -11,12 +11,12 @@ from main import sites
 def index( request ):
 	context = RequestContext( request )
 	if not request.user.is_authenticated():
-		return render_to_response( 'index.html', context )
+		return render_to_response( 'login.html', context )
 
 	form = OrderForm()
 	restoreForm = RestoreForm()
 	items = Order.objects.all().filter( user__exact = request.user ).order_by( 'date', 'title' ).values()
-	return render_to_response( 'index.html', {
+	return render_to_response( 'self.html', {
 		'phases': PHASES,
 		'form': form,
 		'restoreForm': restoreForm,
