@@ -1,1 +1,1 @@
-web: python galtrace/manage.py collectstatic -l --noinput; python galtrace/manage.py runserver 0.0.0.0:$PORT --noreload
+web: python galtrace/manage.py collectstatic -l --noinput; python galtrace/manage.py run_gunicorn -b "0.0.0.0:$PORT"
