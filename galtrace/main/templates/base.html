@@ -16,7 +16,11 @@
 		<div id="page-head" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-					<a href="#" class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse"></a>
+					<a href="#" class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
 					<a href="{% url main.views.index %}" class="brand">GalTrace</a>
 					<div class="nav-collapse">
 						{% block navbar %}
