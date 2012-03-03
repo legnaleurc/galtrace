@@ -2,12 +2,6 @@ body {
 	padding-top: 60px;
 }
 
-.dropdown-menu input {
-	width: 128px;
-	margin-left: 6px;
-	margin-right: 6px;
-}
-
 td.vendor input, td.date input {
 	display: none;
 }
