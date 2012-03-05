@@ -27,3 +27,8 @@ def create( uri ):
 	log.append( title )
 	title = title.strip()
 	return { 'title': title, 'vendor': pq( '#brandsite' ).text(), 'date': pq( '#tooltip-day' ).text(), 'log': log }
+
+if __name__ == '__main__':
+	import sys
+	uri = urlparse.urlsplit( sys.argv[1] )
+	print create( uri )
