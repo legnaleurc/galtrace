@@ -1,4 +1,5 @@
 Django
 pyquery
+pycurl
 psycopg2
 gunicorn
