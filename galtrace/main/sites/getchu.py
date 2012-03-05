@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import re, urlparse, urllib, urllib2, pyquery
+import re, urlparse, urllib, urllib2, pyquery, pycurl, StringIO
 
 def verify( uri ):
 	if uri.netloc == 'www.getchu.com':
@@ -17,9 +17,14 @@ def create( uri ):
 		query['gc'] = 'gc'
 	uri_ = urlparse.urlunsplit( ( uri.scheme, uri.netloc, uri.path, urllib.urlencode( query ), '' ) )
 
-	link = urllib2.urlopen( uri_ )
-	content = link.read().decode( 'EUC-JP', 'replace' )
+	link = pycurl.Curl()
+	link.setopt( pycurl.URL, uri_.encode( 'utf-8' ) )
+	sin = StringIO.StringIO()
+	link.setopt( pycurl.WRITEFUNCTION, lambda x: sin.write( x ) )
+	link.perform()
 	link.close()
+	content = sin.getvalue().decode( 'EUC-JP', 'replace' )
+	sin.close()
 	pq = pyquery.PyQuery( content )
 
 	log = []
