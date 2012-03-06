@@ -1,4 +1,4 @@
-$( function() {
+( function() {
 
 	$( '.dropdown-menu form' ).click( function( event ) {
 		event.stopPropagation();
@@ -35,23 +35,21 @@ $( function() {
 	// set initial filter
 	$( '.phase-filter[data-value="0"]' ).click();
 
-	// NOTE: jQuery UI dialog module has a bug which causes Chrome gives an ignorable error. (#7293)
-
 	var cseDialog = $( '#search-modal' ).modal( {
 		show: false
 	} );
 	// Google CSE
-	var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
-	customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
-	customSearchControl.draw( 'cse' );
-	Cart.googleSearch = function( keyword ) {
-		cseDialog.modal( 'show' );
-		customSearchControl.execute( keyword );
-	};
+	google.load( 'search', '1', {
+		language: 'en',
+		callback: function() {
+			var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
+			customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
+			customSearchControl.draw( 'cse' );
+			Cart.googleSearch = function( keyword ) {
+				cseDialog.modal( 'show' );
+				customSearchControl.execute( keyword );
+			};
+		},
+	} );
 
-} );
-
-// Google CSE
-google.load( 'search', '1', {
-	language : 'en'
-} );
+} )();

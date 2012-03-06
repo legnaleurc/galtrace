@@ -212,8 +212,8 @@ Cart.Row.prototype.__post_new__ = function() {
 
 Cart.StaticRow.prototype = new Cart.Row();
 
-$( function() {
+( function() {
 
 	Cart.view = new Cart.Table( '#cart' );
 
-} );
+} )();

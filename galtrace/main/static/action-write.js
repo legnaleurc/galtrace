@@ -1,11 +1,9 @@
-$( function() {
+( function() {
 
-	// select all setting
-	( function() {
-		$( '#select-all' ).change( function( event ) {
-			$( '.check' ).attr( 'checked', $( this ).is( ':checked' ) );
-		} );
-	} )();
+	// select all event
+	$( '#select-all' ).change( function( event ) {
+		$( '.check' ).attr( 'checked', $( this ).is( ':checked' ) );
+	} );
 
 	// delete button
 	$( '#button-delete' ).click( function( event ) {
@@ -94,4 +92,4 @@ $( function() {
 		} );
 	} );
 
-} );
+} )();
