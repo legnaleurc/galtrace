@@ -81,53 +81,19 @@
 			<h3>Insert</h3>
 		</div>
 		<div class="modal-body">
-			<form class="form-horizontal" id="stdin" action=".">
+			<form class="well form-horizontal" id="stdin" action=".">
 				<fieldset>
-					<div class="control-group">
-						{{ form.uri.label_tag }}
-						<div class="controls">
-							{{ form.uri }}
-							<p class="help-block">
-								{{ form.uri.help_text }}
-							</p>
+					{% for field in form %}
+						<div class="control-group">
+							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<div class="controls">
+								{{ field }}
+								<p class="help-block">
+									{{ field.help_text }}
+								</p>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						{{ form.title.label_tag }}
-						<div class="controls">
-							{{ form.title }}
-							<p class="help-block">
-								{{ form.title.help_text }}
-							</p>
-						</div>
-					</div>
-					<div class="control-group">
-						{{ form.vendor.label_tag }}
-						<div class="controls">
-							{{ form.vendor }}
-							<p class="help-block">
-								{{ form.vendor.help_text }}
-							</p>
-						</div>
-					</div>
-					<div class="control-group">
-						{{ form.date.label_tag }}
-						<div class="controls">
-							{{ form.date }}
-							<p class="help-block">
-								{{ form.date.help_text }}
-							</p>
-						</div>
-					</div>
-					<div class="control-group">
-						{{ form.phase.label_tag }}
-						<div class="controls">
-							{{ form.phase }}
-							<p class="help-block">
-								{{ form.phase.help_text }}
-							</p>
-						</div>
-					</div>
+					{% endfor %}
 					<input type="hidden" id="id_volume" name="volume" value="-1" />
 					<div class="form-actions">
 						<button type="button" id="fetch" class="btn">Fetch</button>
