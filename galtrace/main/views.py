@@ -66,7 +66,7 @@ def save( request ):
 	result = Order.objects.filter( title__exact = args[u'title'] )
 	if( len( result ) == 0 ):
 		# new item, insert
-		result = Order( **args )
+		result = Order( user = request.user, **args )
 		result.save()
 	else:
 		# item exists, update

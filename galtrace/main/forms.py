@@ -13,8 +13,7 @@ class RestoreForm( forms.Form ):
 		rows = data_['orders']
 		Order.objects.all().delete()
 		for row in rows:
-			row['user'] = user
-			o = Order( **row )
+			o = Order( user = user, **row )
 			o.save()
 		return True
 
