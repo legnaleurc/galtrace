@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" type="image/x-icon" />
 		<title>GalTrace</title>
-		<!-- BEGIN Google CSE -->
-		<script src="https://www.google.com/jsapi" type="text/javascript"></script>
-		<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
-		<!-- END Google CSE -->
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-responsive.min.css" />
+		{% block head %}
+			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap.min.css" />
+			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css" />
+			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-responsive.min.css" />
+		{% endblock %}
 	</head>
 	<body>
 		<div id="page-head" class="navbar navbar-fixed-top">

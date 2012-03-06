@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block head %}
+	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
+	{{ block.super }}
+{% endblock %}
+
 {% block navbar %}
 	<ul class="nav">
 		<li class="divider-vertical"></li>
@@ -136,6 +141,7 @@
 		<div class="modal-footer">
 		</div>
 	</div>
+	<script src="https://www.google.com/jsapi" type="text/javascript"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}jquery.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}bootstrap.min.js"></script>
 	<script type="text/javascript" src="/csrf.js"></script>
