@@ -96,9 +96,9 @@
 					{% endfor %}
 					<input type="hidden" id="id_volume" name="volume" value="-1" />
 					<div class="form-actions">
-						<button type="button" id="fetch" class="btn">Fetch</button>
-						<button type="reset" class="btn">Reset</button>
-						<button type="submit" class="btn primary">Submit</button>
+						<button type="button" id="fetch" class="btn btn-info">Fetch</button>
+						<button type="reset" class="btn btn-warning">Reset</button>
+						<button type="submit" class="btn btn-primary">Submit</button>
 					</div>
 				</fieldset>
 			</form>
@@ -127,8 +127,8 @@
 					{% endfor %}
 					{% csrf_token %}
 					<div class="form-actions">
-						<button type="reset" class="btn">Reset</button>
-						<button type="submit" class="btn primary">Submit</button>
+						<button type="reset" class="btn btn-warning">Reset</button>
+						<button type="submit" class="btn btn-primary">Submit</button>
 					</div>
 				</fieldset>
 			</form>
