@@ -1,4 +1,4 @@
-Cart.Table.prototype.newRow = function( args ) {
+Cart.Table.prototype.newRow = function( args, callback ) {
 	var row = new Cart.DynamicRow( args );
 	var result = this.find( row );
 	if( result.found ) {
@@ -16,11 +16,7 @@ Cart.Table.prototype.newRow = function( args ) {
 		row.getElement().hide();
 	}
 
-	// FIXME this well depends on external layout, please abstract later
-	row.save().success( function() {
-		// clear input fields
-		$( '#stdin input[type=text]' ).val( '' );
-	} );
+	row.save().success( callback );
 
 	return this;
 };

@@ -88,7 +88,10 @@ $( function() {
 			return false;
 		}
 
-		Cart.view.newRow( args );
+		Cart.view.newRow( args, function() {
+			// clear input fields
+			$( '#stdin input[type=text]' ).val( '' );
+		} );
 	} );
 
 } );
