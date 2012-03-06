@@ -7,8 +7,10 @@ var Cart = {
 		};
 	},
 
-	cerr: function( msg ) {
-		$( '#stderr' ).show().text( msg ).fadeOut( 5000 );
+	cerr: function( selector, msg ) {
+		var tmp = $( '<div class="alert alert-error"><a class="close" href="#" data-dismiss="alert">&times;</a></div>' );
+		tmp.appendTo( selector );
+		tmp.append( $( '<span/>' ).text( msg ) );
 	},
 
 	getFilter: function() {

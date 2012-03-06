@@ -44,7 +44,7 @@ Cart.Row.prototype.remove = function() {
 		title: this.title
 	}, function( data, textStatus ) {
 		if( textStatus != 'success' ) {
-			Cart.cerr( data );
+			Cart.cerr( 'footer', data );
 		}
 	}, 'json' );
 };
@@ -59,7 +59,7 @@ Cart.Row.prototype.save = function() {
 		volume: this.volume
 	}, function( data, textStatus ) {
 		if( textStatus != 'success' ) {
-			Cart.cerr( data );
+			Cart.cerr( 'footer', data );
 			return;
 		}
 	}, 'json' );
@@ -87,7 +87,7 @@ Cart.__utilities__ = {
 		args[field] = input.val();
 		jQuery.post( 'save.cgi', args, function( data, textStatus ) {
 			if( textStatus != 'success' ) {
-				Cart.cerr( data );
+				Cart.cerr( 'footer', data );
 			}
 		} );
 	},

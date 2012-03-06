@@ -56,11 +56,11 @@ $( function() {
 			uri: uri
 		}, function( data, textStatus, message ) {
 			if( textStatus !== 'success' ) {
-				Cart.cerr( message );
+				Cart.cerr( '#insert-modal .modal-footer', message );
 				return;
 			}
 			if( data === null ) {
-				Cart.cerr( 'Fetched nothing.' );
+				Cart.cerr( '#insert-modal .modal-footer', 'Fetched nothing.' );
 				return;
 			}
 			$( '#id_title' ).val( data.title );
@@ -79,12 +79,12 @@ $( function() {
 			vendor: $( '#id_vendor' ).val(),
 			volume: parseInt( $( '#id_volume' ).val(), 10 )
 		};
-		if( args.title == '' || args.uri == '' ) {
-			Cart.cerr( 'No empty field(s)' );
+		if( args.title === '' || args.uri === '' ) {
+			Cart.cerr( '#insert-modal .modal-footer', 'No empty field(s)' );
 			return false;
 		}
 		if( !/^\d\d\d\d\/\d\d\/\d\d$/.test( args.date ) ) {
-			Cart.cerr( 'Wrong date: ' + args.date );
+			Cart.cerr( '#insert-modal .modal-footer', 'Wrong date: ' + args.date );
 			return false;
 		}
 
