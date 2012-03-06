@@ -15,6 +15,15 @@ class RestoreForm( forms.Form ):
 		for row in rows:
 			o = Order( user = user, **row )
 			o.save()
+
+		# NOTE for PostgreSQL, it must update next pk by hand
+		import os
+		if 'DATABASE_URL' in os.environ:
+			from django.db import connection, transaction
+			query = connection.cursor()
+			query.execute( 'SELECT setval(pg_get_serial_sequence(\'"main_order"\',\'id\'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "main_order";' )
+			transaction.commit_unless_managed()
+
 		return True
 
 class OrderForm( forms.ModelForm ):
