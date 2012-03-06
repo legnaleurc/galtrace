@@ -112,17 +112,19 @@
 			<h3>Restore</h3>
 		</div>
 		<div class="modal-body">
-			<form class="form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="/restore.cgi">
+			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="/restore.cgi">
 				<fieldset>
-					<div class="control-group">
-						{{ restoreForm.data.label_tag }}
-						<div class="controls">
-							{{ restoreForm.data }}
-							<p class="help-block">
-								{{ restoreForm.data.help_text }}
-							</p>
+					{% for field in restoreForm %}
+						<div class="control-group">
+							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<div class="controls">
+								{{ field }}
+								<p class="help-block">
+									{{ field.help_text }}
+								</p>
+							</div>
 						</div>
-					</div>
+					{% endfor %}
 					{% csrf_token %}
 					<div class="form-actions">
 						<button type="reset" class="btn">Reset</button>
