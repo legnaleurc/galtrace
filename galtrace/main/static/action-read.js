@@ -3,10 +3,6 @@
 	// create table
 	Cart.view = new Cart.Table( '#cart' );
 
-	$( '.dropdown-menu form' ).click( function( event ) {
-		event.stopPropagation();
-	} );
-
 	// select all on click
 	$( '#stdin input[type=text]' ).focus( function() {
 		this.select();
