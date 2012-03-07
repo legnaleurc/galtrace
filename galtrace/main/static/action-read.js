@@ -1,5 +1,8 @@
 ( function() {
 
+	// create table
+	Cart.view = new Cart.Table( '#cart' );
+
 	$( '.dropdown-menu form' ).click( function( event ) {
 		event.stopPropagation();
 	} );
