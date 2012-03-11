@@ -94,8 +94,9 @@ def delete( request ):
 
 @login_required
 def backup( request ):
+	from datetime import datetime
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
-	response['Content-Disposition'] = 'attachment; filename=galtrace.json'
+	response['Content-Disposition'] = 'attachment; filename=galtrace_{0}.json'.format( datetime.now().strftime( '%Y%m%d%H%M%S' ) )
 	rows = Order.objects.all()
 	data = {
 		'version': 0,
