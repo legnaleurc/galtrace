@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from main.models import Order, PHASES
 from main.forms import RestoreForm, OrderForm
@@ -52,11 +53,13 @@ def getArgs( request ):
 			args[item[0]] = item[1]
 	return args
 
+@login_required
 def load( request ):
 	result = Order.objects.all().order_by( 'date', 'title' ).values()
 	result = [ x for x in result ]
 	return HttpResponse( json.dumps( result ), content_type = 'text/plain; charset="utf-8"' )
 
+@login_required
 def save( request ):
 	args = getArgs( request )
 	# title should not be null
@@ -76,6 +79,7 @@ def save( request ):
 
 	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 
+@login_required
 def delete( request ):
 	args = getArgs( request )
 	if u'title' not in args or len( args[u'title'] ) == 0:
@@ -88,6 +92,7 @@ def delete( request ):
 	result[0].delete()
 	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 
+@login_required
 def backup( request ):
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 	response['Content-Disposition'] = 'attachment; filename=galtrace.json'
@@ -109,6 +114,7 @@ def backup( request ):
 	json.dump( data, response, ensure_ascii = False )
 	return response
 
+@login_required
 def restore( request ):
 	if request.method == 'POST':
 		form = RestoreForm( data = request.POST, files = request.FILES )
@@ -116,6 +122,7 @@ def restore( request ):
 			result = form.save( request.user )
 	return redirect( index )
 
+@login_required
 def fetch( request ):
 	args = getArgs( request )
 	result = sites.fetch( args[u'uri'] )
