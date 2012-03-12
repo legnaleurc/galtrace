@@ -7,7 +7,13 @@ td.vendor input, td.date input {
 }
 
 #stderr {
-	color: red;
+	position: fixed;
+	z-index: 1045;	/* between dialog and background */
+	top: 60px;
+	left: 50%;
+	width: 560px;	/* dialog width */
+	margin-left: -280px;	/* centralize */
+	display: none;
 }
 
 footer p {

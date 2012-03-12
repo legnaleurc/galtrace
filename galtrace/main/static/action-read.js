@@ -3,6 +3,13 @@
 	// create table
 	Cart.view = new Cart.Table( '#cart' );
 
+	// alert widget
+	$( '#stderr .close' ).click( function( event ) {
+		event.preventDefault();
+
+		$( '#stderr' ).fadeOut( 'slow' );
+	} );
+
 	// select all on click
 	$( '#stdin input[type=text]' ).focus( function() {
 		this.select();
