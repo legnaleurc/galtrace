@@ -1,5 +1,18 @@
+/**
+ * @namespace All functionality of GalTrace.
+ */
 var Cart = {
 
+	/**
+	 * Bind function but leave this untouched.
+	 *
+	 * Unlike Function.bind in JavaScript 1.8, this version only binds
+	 * arguments, the instance will not change.
+	 *
+	 * @param {Function} fn The binding function.
+	 * @param [args ...] The binding arguments.
+	 * @returns The binded function.
+	 */
 	bind: function( fn ) {
 		var args = Array.prototype.slice.call( arguments, 1 );
 		return function() {
@@ -7,12 +20,23 @@ var Cart = {
 		};
 	},
 
+	/**
+	 * Show error message.
+	 *
+	 * @param {String} selector Where error message will show.
+	 * @param {String} msg The error message.
+	 */
 	cerr: function( selector, msg ) {
 		var tmp = $( '<div class="alert alert-error"><a class="close" href="#" data-dismiss="alert">&times;</a></div>' );
 		tmp.appendTo( selector );
 		tmp.append( $( '<span/>' ).text( msg ) );
 	},
 
+	/**
+	 * Get phase filter from UI.
+	 *
+	 * @returns {Object} o.pattern contains name filter. o.phases is a array.
+	 */
 	getFilter: function() {
 		var input = jQuery.map( $( '.phase-filter.active' ), function( v ) {
 			return $( v ).data( 'value' );
@@ -29,10 +53,22 @@ var Cart = {
 		};
 	},
 
+	/**
+	 * Do nothing.
+	 *
+	 * @class Base class of table row.
+	 */
 	Row: function() {
 		// NOTE base class
 	},
 
+	/**
+	 * Create rows from static page.
+	 *
+	 * @class Pre-exists row.
+	 * @augments Cart.Row
+	 * @param element The selector of row.
+	 */
 	StaticRow: function( element ) {
 		// call super
 		Cart.Row.apply( this, arguments );
@@ -70,6 +106,12 @@ var Cart = {
 		this.__post_new__();
 	},
 
+	/**
+	 * Creates table.
+	 *
+	 * @class The table.
+	 * @param selector The selector on DOM.
+	 */
 	Table: function( selector ) {
 		this.items = [];
 		this.view = $( selector );
@@ -81,20 +123,46 @@ var Cart = {
 
 };
 
+/**
+ * Append a row to the table.
+ *
+ * @param {Cart.Row} row The appending row.
+ * @returns {Cart.Table} self.
+ */
 Cart.Table.prototype.append = function( row ) {
 	this.items.push( row );
 	this.view.append( row.getElement() );
 	return this;
 };
 
+/**
+ * Get index-th row.
+ *
+ * @param {int} index The row index.
+ * @returns {Row} row.
+ */
 Cart.Table.prototype.at = function( index ) {
 	return this.items[index];
 };
 
+/**
+ * Get row's count.
+ *
+ * @returns {int} Total rows.
+ */
 Cart.Table.prototype.size = function() {
 	return this.items.length;
 };
 
+/**
+ * Find row in table.
+ *
+ * @param {Row} row The row to be found.
+ * @param {Function} [compare] Comparator.
+ * @returns {Object}
+ * o.found indicates whether the row exists.
+ * o.index indicates the position of row, or desired insert position.
+ */
 Cart.Table.prototype.find = function( row, compare ) {
 	if( compare === undefined ) {
 		compare = function( l, r ) {
@@ -142,6 +210,13 @@ Cart.Table.prototype.find = function( row, compare ) {
 	} : binarySearch( row, this.items, 0, this.items.length );
 };
 
+/**
+ * Insert row to index.
+ *
+ * @param index After insertion, row will appear here.
+ * @param row The row to be insert.
+ * @return {Table} self.
+ */
 Cart.Table.prototype.insert = function( index, row ) {
 	if( this.items.length == 0 ) {
 		this.append( row );
@@ -158,6 +233,11 @@ Cart.Table.prototype.insert = function( index, row ) {
 	return this;
 };
 
+/**
+ * Update displaying rows according to UI selection.
+ *
+ * @returns {Cart.Table} self.
+ */
 Cart.Table.prototype.updateFilter = function() {
 	var filter = Cart.getFilter();
 	for( var i = 0; i < this.items.length; ++i ) {
@@ -171,14 +251,31 @@ Cart.Table.prototype.updateFilter = function() {
 	return this;
 };
 
+/**
+ * Get DOM jQuery object.
+ *
+ * @returns {jQuery} DOM object.
+ */
 Cart.Row.prototype.getElement = function() {
 	return this.element;
 };
 
+/**
+ * Selection state.
+ *
+ * @return {boolean} true if selected.
+ */
 Cart.Row.prototype.isChecked = function() {
 	return this.checkbox.is( ":checked" );
 };
 
+/**
+ * Matches given condition.
+ *
+ * @param {String} pattern Matches title or vendor.
+ * @param {Array} phases Selected phases.
+ * @return {boolean} true if matched.
+ */
 Cart.Row.prototype.isMatch = function( pattern, phases ) {
 	var patternPass = false;
 	var lPattern = pattern.toLowerCase();
@@ -194,18 +291,40 @@ Cart.Row.prototype.isMatch = function( pattern, phases ) {
 	return patternPass && phasePass;
 }
 
+/**
+ * Get title.
+ *
+ * @returns {String} Title.
+ */
 Cart.Row.prototype.getTitle = function() {
 	return this.title;
 };
 
+/**
+ * Get release date.
+ *
+ * @returns {String} Release date.
+ */
 Cart.Row.prototype.getDate = function() {
 	return this.date;
 };
 
+/**
+ * Get complete phase.
+ *
+ * @returns {int} Complete phase.
+ */
 Cart.Row.prototype.getPhase = function() {
 	return this.phase;
 };
 
+/**
+ * Post-initialization.
+ *
+ * Please override this function.
+ *
+ * @private
+ */
 Cart.Row.prototype.__post_new__ = function() {
 	// NOTE this function provides a post-initialization
 };
