@@ -1,3 +1,10 @@
+/**
+ * Create a new row.
+ *
+ * @param {Object} args JSON-parsed data.
+ * @param {Function} callback callback function on success.
+ * @returns {Cart.Table} self.
+ */
 Cart.Table.prototype.newRow = function( args, callback ) {
 	var row = new Cart.DynamicRow( args );
 	var result = this.find( row );
@@ -21,22 +28,47 @@ Cart.Table.prototype.newRow = function( args, callback ) {
 	return this;
 };
 
+/**
+ * Take row from table.
+ *
+ * The DOM object is temporary removed, but still exist.
+ *
+ * @param {int} index The index to be remove.
+ * @returns {Cart.Row} The taken row.
+ */
 Cart.Table.prototype.take = function( index ) {
 	var taken = this.items.splice( index, 1 )[0];
 	taken.getElement().detach();
 	return taken;
 };
 
+/**
+ * Set selection state.
+ *
+ * @param {boolean} checked selection state.
+ * @returns {Cart.Row} self.
+ */
 Cart.Row.prototype.setChecked = function( checked ) {
 	this.checkbox.attr( 'checked', checked );
 	return this;
 };
 
+/**
+ * Set complete phase.
+ *
+ * @param {int} phase Complete phase.
+ * @returns {Cart.Row} self.
+ */
 Cart.Row.prototype.setPhase = function( phase ) {
 	this.phase = phase;
 	return this;
 };
 
+/**
+ * Totally remove row from DOM and database.
+ *
+ * @returns {jqXHR} A AJAX object.
+ */
 Cart.Row.prototype.remove = function() {
 	this.element.remove();
 
@@ -49,6 +81,11 @@ Cart.Row.prototype.remove = function() {
 	}, 'json' );
 };
 
+/**
+ * Save row's change.
+ *
+ * @returns {jqXHR} A AJAX object.
+ */
 Cart.Row.prototype.save = function() {
 	return jQuery.post( 'save.cgi', {
 		title: this.title,
@@ -65,17 +102,42 @@ Cart.Row.prototype.save = function() {
 	}, 'json' );
 };
 
+/**
+ * @namespace Internal namespace.
+ * @private
+ */
 Cart.__utilities__ = {
 
+	/**
+	 * Show the inline edit widget.
+	 *
+	 * @param {jQuery} parent Parent HTML element.
+	 * @param {jQuery} label The displaying label.
+	 * @param {jQuery} input The editing widget.
+	 */
 	openEdit: function( parent, label, input ) {
 		input.width( parent.width() ).val( label.hide().text() ).show().select();
 	},
 
+	/**
+	 * Hide the inline edit widget.
+	 *
+	 * @param {jQuery} label The displaying label.
+	 * @param {jQuery} input The editing widget.
+	 */
 	closeEdit: function( label, input ) {
 		label.show();
 		input.hide();
 	},
 
+	/**
+	 * Commit content.
+	 *
+	 * @param {jQuery} label The displaying label.
+	 * @param {jQuery} input The editing widget.
+	 * @param {String} key Editing row's title.
+	 * @param {String} field The field to be commit as change.
+	 */
 	saveEdit: function( label, input, key, field ) {
 		if( label.text() == input.val() ) {
 			return;
@@ -94,6 +156,11 @@ Cart.__utilities__ = {
 
 };
 
+/**
+ * Post-initialization.
+ *
+ * @protected
+ */
 Cart.StaticRow.prototype.__post_new__ = function() {
 		// checkbox cell
 		this.checkbox = this.element.find( 'input.check' );
@@ -121,6 +188,12 @@ Cart.StaticRow.prototype.__post_new__ = function() {
 		this.dateCell.dblclick( Cart.bind( Cart.__utilities__.openEdit, this.dateCell, this.dateText, this.dateEdit ) );
 };
 
+/**
+ * Create dynamic row from JSON data.
+ *
+ * @class Row from JSON to DOM.
+ * @param data The JSON data.
+ */
 Cart.DynamicRow =  function( data ) {
 	// call super
 	Cart.Row.apply( this, arguments );
@@ -172,6 +245,11 @@ Cart.DynamicRow =  function( data ) {
 
 Cart.DynamicRow.prototype = new Cart.Row();
 
+/**
+ * Post-initialization.
+ *
+ * @protected
+ */
 Cart.DynamicRow.prototype.__post_new__ = function() {
 		// checkbox cell
 		this.selector = $( '<td></td>' );

@@ -139,7 +139,7 @@ Cart.Table.prototype.append = function( row ) {
  * Get index-th row.
  *
  * @param {int} index The row index.
- * @returns {Row} row.
+ * @returns {Cart.Row} row.
  */
 Cart.Table.prototype.at = function( index ) {
 	return this.items[index];
@@ -157,7 +157,7 @@ Cart.Table.prototype.size = function() {
 /**
  * Find row in table.
  *
- * @param {Row} row The row to be found.
+ * @param {Cart.Row} row The row to be found.
  * @param {Function} [compare] Comparator.
  * @returns {Object}
  * o.found indicates whether the row exists.
@@ -215,7 +215,7 @@ Cart.Table.prototype.find = function( row, compare ) {
  *
  * @param index After insertion, row will appear here.
  * @param row The row to be insert.
- * @return {Table} self.
+ * @return {Cart.Table} self.
  */
 Cart.Table.prototype.insert = function( index, row ) {
 	if( this.items.length == 0 ) {
@@ -323,7 +323,7 @@ Cart.Row.prototype.getPhase = function() {
  *
  * Please override this function.
  *
- * @private
+ * @protected
  */
 Cart.Row.prototype.__post_new__ = function() {
 	// NOTE this function provides a post-initialization
