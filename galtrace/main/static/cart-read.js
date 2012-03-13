@@ -23,13 +23,13 @@ var Cart = {
 	/**
 	 * Show error message.
 	 *
-	 * @param {String} selector Where error message will show.
+	 * @param {String} title Error message title.
 	 * @param {String} msg The error message.
 	 */
-	cerr: function( selector, msg ) {
-		var tmp = $( '<div class="alert alert-error"><a class="close" href="#" data-dismiss="alert">&times;</a></div>' );
-		tmp.appendTo( selector );
-		tmp.append( $( '<span/>' ).text( msg ) );
+	cerr: function( title, msg ) {
+		$( '#error-title' ).text( title );
+		$( '#error-message' ).text( msg );
+		$( '#stderr' ).fadeIn( 'slow' );
 	},
 
 	/**

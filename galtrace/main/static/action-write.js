@@ -11,7 +11,9 @@
 
 		for( var i = Cart.view.size() - 1; i >= 0; --i ) {
 			if( Cart.view.at( i ).isChecked() ) {
-				Cart.view.take( i ).remove();
+				Cart.view.take( i ).remove().error( function( data, textStatus, jqXHR ) {
+					Cart.cerr( 'footer', data );
+				} );
 			}
 		}
 	} );
@@ -37,7 +39,9 @@
 					row.getElement().hide();
 				}
 				// sync to database
-				row.save();
+				row.save().error( function( data, textStatus, jqXHR ) {
+					Cart.cerr( 'footer', data );
+				} );
 			}
 		}
 	} );

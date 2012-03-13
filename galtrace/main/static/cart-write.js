@@ -74,10 +74,6 @@ Cart.Row.prototype.remove = function() {
 
 	return jQuery.post( 'delete.cgi', {
 		title: this.title
-	}, function( data, textStatus ) {
-		if( textStatus != 'success' ) {
-			Cart.cerr( 'footer', data );
-		}
 	}, 'json' );
 };
 
@@ -94,11 +90,6 @@ Cart.Row.prototype.save = function() {
 		uri: this.uri,
 		phase: this.phase,
 		volume: this.volume
-	}, function( data, textStatus ) {
-		if( textStatus != 'success' ) {
-			Cart.cerr( 'footer', data );
-			return;
-		}
 	}, 'json' );
 };
 
@@ -137,6 +128,7 @@ Cart.__utilities__ = {
 	 * @param {jQuery} input The editing widget.
 	 * @param {String} key Editing row's title.
 	 * @param {String} field The field to be commit as change.
+	 * @returns {jqXHR} The AJAX object.
 	 */
 	saveEdit: function( label, input, key, field ) {
 		if( label.text() == input.val() ) {
@@ -147,11 +139,7 @@ Cart.__utilities__ = {
 			title: key
 		};
 		args[field] = input.val();
-		jQuery.post( 'save.cgi', args, function( data, textStatus ) {
-			if( textStatus != 'success' ) {
-				Cart.cerr( 'footer', data );
-			}
-		} );
+		return jQuery.post( 'save.cgi', args, 'json' );
 	},
 
 };
