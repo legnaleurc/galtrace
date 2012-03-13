@@ -53,6 +53,9 @@ def getArgs( request ):
 			args[item[0]] = item[1]
 	return args
 
+def toJSONResponse( x ):
+	return HttpResponse( json.dumps( x ), content_type = 'text/plain; charset="utf-8"' )
+
 @login_required
 def load( request ):
 	result = Order.objects.all().order_by( 'date', 'title' ).values()
@@ -126,5 +129,15 @@ def restore( request ):
 @login_required
 def fetch( request ):
 	args = getArgs( request )
-	result = sites.fetch( args[u'uri'] )
-	return HttpResponse( json.dumps( result ), content_type = 'text/plain; charset="utf-8"' )
+	try:
+		result = sites.fetch( args[u'uri'] )
+	except Exception as e:
+		return toJSONResponse( {
+			'success': False,
+			'type': e.__class__.__name__,
+			'message': e.message,
+		} )
+	return toJSONResponse( {
+		'success': True,
+		'data': result,
+	} )

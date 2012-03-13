@@ -56,19 +56,20 @@
 		}
 		jQuery.post( 'fetch.cgi', {
 			uri: uri
-		}, function( data, textStatus, message ) {
-			if( textStatus !== 'success' ) {
-				Cart.cerr( '#insert-modal .modal-footer', message );
+		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+			console.log( arguments );
+			if( !data.success ) {
+				Cart.cerr( data.type, data.message );
 				return;
 			}
-			if( data === null ) {
-				Cart.cerr( '#insert-modal .modal-footer', 'Fetched nothing.' );
-				return;
-			}
+			data = data.data;
 			$( '#id_title' ).val( data.title );
 			$( '#id_vendor' ).val( data.vendor );
 			$( '#id_date' ).val( data.date );
-		}, 'json' );
+		} ).error( function( jqXHR, textStatus, message ) {
+				console.log( arguments );
+				Cart.cerr( 'Unknown Error', message );
+		} );
 	} );
 	$( '#stdin button[type=submit]' ).click( function( event ) {
 		event.preventDefault();
