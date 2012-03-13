@@ -11,8 +11,12 @@
 
 		for( var i = Cart.view.size() - 1; i >= 0; --i ) {
 			if( Cart.view.at( i ).isChecked() ) {
-				Cart.view.take( i ).remove().error( function( data, textStatus, jqXHR ) {
-					Cart.cerr( 'footer', data );
+				Cart.view.take( i ).remove().success( function( data, textStatus, jqXHR ) {
+					if( !data.success ) {
+						Cart.cerr( data.type, data.message );
+					}
+				} ).error( function( jqXHR, textStatus, message ) {
+					Cart.cerr( 'Unknown Error', message );
 				} );
 			}
 		}

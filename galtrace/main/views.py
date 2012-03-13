@@ -86,14 +86,24 @@ def save( request ):
 def delete( request ):
 	args = getArgs( request )
 	if u'title' not in args or len( args[u'title'] ) == 0:
-		return HttpResponse( json.dumps( '`title` is empty' ), content_type = 'text/plain; charset="utf-8"' )
+		return toJSONResponse( {
+			'success': False,
+			'type': 'Parameter Error',
+			'message': 'title is empty',
+		} )
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
 	if( len( result ) == 0 ):
-		return HttpResponse( json.dumps( '{0} not found'.format( args[u'title'] ) ), content_type = 'text/plain; charset="utf-8"' )
+		return toJSONResponse( {
+			'success': False,
+			'type': 'Database Error',
+			'message': '{0} not found'.format( args[u'title'] ),
+		} )
 
 	result[0].delete()
-	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
+	return toJSONResponse( {
+		'success': True,
+	} )
 
 @login_required
 def backup( request ):
