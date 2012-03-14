@@ -6,7 +6,7 @@ PRIVATE_SETTINGS = private.settings.load( PROJECT_DIR )
 
 # Django settings for cart project.
 
-DEBUG = True
+DEBUG = PRIVATE_SETTINGS['DEBUG']
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

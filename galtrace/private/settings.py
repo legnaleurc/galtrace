@@ -4,6 +4,7 @@ def load( *args, **kwargs ):
 		return {
 			'DATABASES': {
 			},
+			'DEBUG': False,
 			'SECRET_KEY': os.environ['SECRET_KEY'],
 		}
 
@@ -19,5 +20,6 @@ def load( *args, **kwargs ):
 				'PORT': '',
 			}
 		},
+		'DEBUG': True,
 		'SECRET_KEY': data['SECRET_KEY'],
 	}
