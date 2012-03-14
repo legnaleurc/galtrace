@@ -33,20 +33,25 @@
 			// if not selected or phase no need to change, skip this part
 			if( !row.isChecked() || phase === row.getPhase() ) {
 				continue;
-			} else {
-				// update phase and clear selection
-				row.setPhase( phase ).setChecked( false );
-				// update hidden state
-				if( visible ) {
-					row.getElement().show();
-				} else {
-					row.getElement().hide();
-				}
-				// sync to database
-				row.save().error( function( data, textStatus, jqXHR ) {
-					Cart.cerr( 'footer', data );
-				} );
 			}
+
+			// update phase and clear selection
+			row.setPhase( phase ).setChecked( false );
+			// update hidden state
+			if( visible ) {
+				row.getElement().show();
+			} else {
+				row.getElement().hide();
+			}
+			// sync to database
+			row.save().success( function( data, textStatus, jqXHR ) {
+				if( !data.success ) {
+					Cart.cerr( data.type, data.message );
+					return;
+				}
+			} ).error( function( jqXHR, textStatus, message ) {
+				Cart.cerr( 'Unknown Error', message );
+			} );
 		}
 	} );
 
@@ -61,7 +66,6 @@
 		jQuery.post( 'fetch.cgi', {
 			uri: uri
 		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
-			console.log( arguments );
 			if( !data.success ) {
 				Cart.cerr( data.type, data.message );
 				return;
@@ -71,7 +75,6 @@
 			$( '#id_vendor' ).val( data.vendor );
 			$( '#id_date' ).val( data.date );
 		} ).error( function( jqXHR, textStatus, message ) {
-				console.log( arguments );
 				Cart.cerr( 'Unknown Error', message );
 		} );
 	} );
@@ -86,18 +89,24 @@
 			vendor: $( '#id_vendor' ).val(),
 			volume: parseInt( $( '#id_volume' ).val(), 10 )
 		};
-		if( args.title === '' || args.uri === '' ) {
-			Cart.cerr( '#insert-modal .modal-footer', 'No empty field(s)' );
+		if( args.title.length <= 0 || args.uri.length <= 0 ) {
+			Cart.cerr( 'Field Error', 'No empty field(s)' );
 			return false;
 		}
 		if( !/^\d\d\d\d\/\d\d\/\d\d$/.test( args.date ) ) {
-			Cart.cerr( '#insert-modal .modal-footer', 'Wrong date: ' + args.date );
+			Cart.cerr( 'Date Format Error', 'e.g. 2011/11/02' );
 			return false;
 		}
 
-		Cart.view.newRow( args, function() {
+		Cart.view.newRow( args ).success( function( data, textStatus, jqXHR ) {
+			if( !data.success ) {
+				Cart.cerr( data.type, data.message );
+				return;
+			}
 			// clear input fields
 			$( '#stdin input[type=text]' ).val( '' );
+		} ).error( function( jqXHR, textStatus, message ) {
+			Cart.cerr( 'Unknown Error', message );
 		} );
 	} );
 

@@ -3,9 +3,9 @@
  *
  * @param {Object} args JSON-parsed data.
  * @param {Function} callback callback function on success.
- * @returns {Cart.Table} self.
+ * @returns {jqXHR} AJAX object.
  */
-Cart.Table.prototype.newRow = function( args, callback ) {
+Cart.Table.prototype.newRow = function( args ) {
 	var row = new Cart.DynamicRow( args );
 	var result = this.find( row );
 	if( result.found ) {
@@ -23,9 +23,7 @@ Cart.Table.prototype.newRow = function( args, callback ) {
 		row.getElement().hide();
 	}
 
-	row.save().success( callback );
-
-	return this;
+	return row.save();
 };
 
 /**
@@ -90,7 +88,7 @@ Cart.Row.prototype.save = function() {
 		uri: this.uri,
 		phase: this.phase,
 		volume: this.volume
-	}, 'json' );
+	}, null, 'json' );
 };
 
 /**

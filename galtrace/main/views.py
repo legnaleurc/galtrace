@@ -67,20 +67,40 @@ def save( request ):
 	args = getArgs( request )
 	# title should not be null
 	if u'title' not in args or len( args[u'title'] ) == 0:
-		return HttpResponse( json.dumps( '`title` is empty' ), content_type = 'text/plain; charset="utf-8"' )
+		return toJSONResponse( {
+			'success': False,
+			'type': 'Paramenter Error',
+			'message': '`title` is empty',
+		} )
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
 	if( len( result ) == 0 ):
 		# new item, insert
 		result = Order( user = request.user, **args )
-		result.save()
+		try:
+			result.save()
+		except Exception as e:
+			return toJSONResponse( {
+				'success': False,
+				'type': e.__class__.__name__,
+				'message': e.message,
+			} )
 	else:
 		# item exists, update
 		result.update( **args )
 		for x in result:
-			x.save()
+			try:
+				x.save()
+			except Exception as e:
+				return toJSONResponse( {
+					'success': False,
+					'type': e.__class__.__name__,
+					'message': e.message,
+				} )
 
-	return HttpResponse( content_type = 'text/plain; charset="utf-8"' )
+	return toJSONResponse( {
+		'success': True,
+	} )
 
 @login_required
 def delete( request ):
