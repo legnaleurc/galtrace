@@ -60,7 +60,7 @@ def toJSONResponse( x ):
 def load( request ):
 	result = Order.objects.all().order_by( 'date', 'title' ).values()
 	result = [ x for x in result ]
-	return HttpResponse( json.dumps( result ), content_type = 'text/plain; charset="utf-8"' )
+	return toJSONResponse( result )
 
 @login_required
 def save( request ):
