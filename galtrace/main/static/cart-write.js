@@ -72,7 +72,7 @@ Cart.Row.prototype.remove = function() {
 
 	return jQuery.post( 'delete.cgi', {
 		title: this.title
-	}, 'json' );
+	}, null, 'json' );
 };
 
 /**
@@ -137,7 +137,7 @@ Cart.__utilities__ = {
 			title: key
 		};
 		args[field] = input.val();
-		return jQuery.post( 'save.cgi', args, 'json' );
+		return jQuery.post( 'save.cgi', args, null, 'json' );
 	},
 
 };
