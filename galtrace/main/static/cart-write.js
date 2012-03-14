@@ -137,6 +137,7 @@ Cart.__utilities__ = {
 			title: key
 		};
 		args[field] = input.val();
+		// TODO add hook
 		return jQuery.post( 'save.cgi', args, null, 'json' );
 	},
 
