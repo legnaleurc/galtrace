@@ -27,6 +27,7 @@ def load( *args, **kwargs ):
 		data = json.load( open( os.path.join( PRIVATE_DIR, 'data.json' ), 'r' ) )
 
 	private.update( {
+		'ADMIN_MEDIA_PREFIX': '/static/admin/',
 		'EMAIL_HOST': data['EMAIL_HOST'],
 		'EMAIL_HOST_PASSWORD': data['EMAIL_HOST_PASSWORD'],
 		'EMAIL_HOST_USER': data['EMAIL_HOST_USER'],
@@ -34,6 +35,8 @@ def load( *args, **kwargs ):
 		'EMAIL_USE_TLS': data['EMAIL_USE_TLS'],
 		'SECRET_KEY': data['SECRET_KEY'],
 		'SERVER_EMAIL': data['SERVER_EMAIL'],
+		'STATIC_ROOT': os.path.abspath( os.path.join( args[0], '../static/' ) ),
+		'STATIC_URL': '/static/',
 	} )
 
 	private['ADMINS'] = tuple( ( t[0], t[1] ) for t in data['ADMINS'] )
