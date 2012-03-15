@@ -3,8 +3,8 @@ import os, json
 PRIVATE_DIR = os.path.dirname( os.path.abspath( __file__ ) )
 
 def load( *args, **kwargs ):
-	if 'DATABASE_URL' in os.environ:
-		data = json.loads( os.environ['PRIVATE_DATA'] )
+	if 'GALTRACE_DATA' in os.environ:
+		data = json.loads( os.environ['GALTRACE_DATA'] )
 		private = {
 			'ADMIN_MEDIA_PREFIX': data['ADMIN_MEDIA_PREFIX'],
 			'DATABASES': {
@@ -23,7 +23,7 @@ def load( *args, **kwargs ):
 					'PASSWORD': '',
 					'HOST': '',
 					'PORT': '',
-				}
+				},
 			},
 			'DEBUG': True,
 			'STATIC_URL': '/static/',
@@ -47,5 +47,5 @@ def load( *args, **kwargs ):
 if __name__ == '__main__':
 	import subprocess, sys
 	data = json.load( open( os.path.join( PRIVATE_DIR, 'data.json' ), 'r' ) )
-	ret = subprocess.call( [ 'heroku', 'config:add', 'PRIVATE_DATA={0}'.format( json.dumps( data, separators = ( ',', ':' ) ) ) ] )
+	ret = subprocess.call( [ 'heroku', 'config:add', 'GALTRACE_DATA={0}'.format( json.dumps( data, separators = ( ',', ':' ) ) ) ] )
 	sys.exit( ret )
