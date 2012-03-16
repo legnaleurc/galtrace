@@ -100,7 +100,7 @@ def save( request ):
 	if u'title' not in args or len( args[u'title'] ) == 0:
 		return toJSONResponse( {
 			'success': False,
-			'type': 'Paramenter Error',
+			'type': 'Parameter Error',
 			'message': '`title` is empty',
 		} )
 
