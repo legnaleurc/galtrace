@@ -1,5 +1,4 @@
-$( function() {
-
+( function() {
 	$( document ).ajaxSend( function( event, xhr, settings ) {
 		function safeMethod( method ) {
 			return /^(GET|HEAD|OPTIONS|TRACE)$/.test( method );
@@ -9,5 +8,4 @@ $( function() {
 			xhr.setRequestHeader( 'X-CSRFToken', '{{ csrf_token }}' );
 		}
 	} );
-
-} );
+} )();

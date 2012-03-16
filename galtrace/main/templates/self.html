@@ -51,21 +51,6 @@
 			</tr>
 		</thead>
 		<tbody id="cart">
-			{% for item in items %}
-				<tr data-phase="{{ item.phase }}">
-					<td><input type="checkbox" class="check" /></td>
-					<td class="title">{{ item.title }}</td>
-					<td><a rel="external" href="{{ item.uri }}">Link</a></td>
-					<td class="vendor">
-						<span>{{ item.vendor }}</span>
-						<input type="text" />
-					</td>
-					<td class="date">
-						<span>{{ item.date }}</span>
-						<input type="text" />
-					</td>
-				</tr>
-			{% endfor %}
 		</tbody>
 	</table>
 {% endblock %}

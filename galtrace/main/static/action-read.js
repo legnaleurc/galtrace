@@ -3,6 +3,32 @@
 	// create table
 	Cart.view = new Cart.Table( '#cart' );
 
+	// load orders, tail recursion
+	function load() {
+		jQuery.post( '/load.cgi', {
+			offset: Cart.view.size(),
+			limit: 100,
+		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+			if( !data.success ) {
+				Cart.cerr( data.type, data.message );
+				return;
+			}
+			if( data.data === null ) {
+				// stop
+				return;
+			}
+
+			load();
+
+			$( data.data ).each( function() {
+				Cart.view.append( new Cart.DynamicRow( this ) );
+			} );
+		} ).error( function( jqXHR, textStatus, message ) {
+			Cart.cerr( 'Unknown Error', message );
+		} );
+	}
+	load();
+
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
 		event.preventDefault();

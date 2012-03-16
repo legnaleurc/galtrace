@@ -16,12 +16,10 @@ def index( request ):
 
 	form = OrderForm()
 	restoreForm = RestoreForm()
-	items = Order.objects.all().filter( user__exact = request.user ).order_by( 'date', 'title' ).values()
 	return render_to_response( 'self.html', {
 		'phases': PHASES,
 		'form': form,
 		'restoreForm': restoreForm,
-		'items': items,
 	}, context_instance = context )
 
 def auth( request ):
@@ -58,9 +56,42 @@ def toJSONResponse( x ):
 
 @login_required
 def load( request ):
-	result = Order.objects.all().order_by( 'date', 'title' ).values()
-	result = [ x for x in result ]
-	return toJSONResponse( result )
+	try:
+		offset = int( request.POST['offset'] )
+		limit = offset + int( request.POST['limit'] )
+	except Exception as e:
+		return toJSONResponse( {
+			'success': False,
+			'type': e.__class__.__name__,
+			'message': e.message,
+		} )
+
+	if offset < 0 or limit <= 0:
+		return toJSONResponse( {
+			'success': False,
+			'type': 'Parameter Error',
+			'message': 'invalid interval',
+		} )
+
+	try:
+		result = Order.objects.filter( user__exact = request.user ).order_by( 'date', 'title' )[offset:limit].values()
+	except Exception as e:
+		return toJSONResponse( {
+			'success': False,
+			'type': e.__class__.__name__,
+			'message': e.message,
+		} )
+	if len( result ) <= 0:
+		return toJSONResponse( {
+			'success': True,
+			'data': None,
+		} )
+	else:
+		result = [ x for x in result ]
+		return toJSONResponse( {
+			'success': True,
+			'data': result,
+		} )
 
 @login_required
 def save( request ):
