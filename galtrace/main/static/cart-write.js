@@ -70,7 +70,7 @@ Cart.Row.prototype.setPhase = function( phase ) {
 Cart.Row.prototype.remove = function() {
 	this.element.remove();
 
-	return jQuery.post( 'delete.cgi', {
+	return jQuery.post( '/delete.cgi', {
 		title: this.title
 	}, null, 'json' );
 };
@@ -81,7 +81,7 @@ Cart.Row.prototype.remove = function() {
  * @returns {jqXHR} A AJAX object.
  */
 Cart.Row.prototype.save = function() {
-	return jQuery.post( 'save.cgi', {
+	return jQuery.post( '/save.cgi', {
 		title: this.title,
 		vendor: this.vendor,
 		date: this.date,
@@ -138,7 +138,7 @@ Cart.__utilities__ = {
 		};
 		args[field] = input.val();
 		// TODO add hook
-		return jQuery.post( 'save.cgi', args, null, 'json' );
+		return jQuery.post( '/save.cgi', args, null, 'json' );
 	},
 
 };
