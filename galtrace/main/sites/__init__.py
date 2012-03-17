@@ -3,7 +3,9 @@
 
 import urlparse, os
 
-__factory__ = [ ( lambda x: 1, lambda x: None ) ]
+def __helper__( x ):
+	raise RuntimeError( 'unsupported link' )
+__factory__ = [ ( lambda x: 1, __helper__ ) ]
 
 def __init__():
 	plugins = map( lambda x: os.path.splitext( x )[0], filter( lambda x: x.endswith( '.py' ) and x != '__init__.py', os.listdir( os.path.dirname( __file__ ) ) ) )
