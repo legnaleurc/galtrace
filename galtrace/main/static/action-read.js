@@ -4,9 +4,9 @@
 	Cart.view = new Cart.Table( '#cart' );
 
 	// load orders, tail recursion
-	function load() {
+	function load( offset ) {
 		jQuery.post( '/load.cgi', {
-			offset: Cart.view.size(),
+			offset: offset,
 			limit: 100,
 		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
@@ -18,7 +18,7 @@
 				return;
 			}
 
-			load();
+			load( offset + data.data.length );
 
 			$( data.data ).each( function() {
 				Cart.view.append( new Cart.DynamicRow( this ) );
@@ -27,7 +27,7 @@
 			Cart.cerr( 'Unknown Error', message );
 		} );
 	}
-	load();
+	load( 0 );
 
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
