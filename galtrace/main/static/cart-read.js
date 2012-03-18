@@ -76,6 +76,14 @@ var Cart = {
 		// container element
 		this.element = $( element );
 
+		// update hidden state
+		var filter = Cart.getFilter();
+		if( this.isMatch( filter.pattern, filter.phases ) ) {
+			this.getElement().show();
+		} else {
+			this.getElement().hide();
+		}
+
 		// title cell
 		this.titleCell = this.element.find( 'td.title' ).click( function( event ) {
 			if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {

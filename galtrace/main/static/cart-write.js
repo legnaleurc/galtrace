@@ -15,14 +15,6 @@ Cart.Table.prototype.newRow = function( args ) {
 	}
 	this.insert( result.index, row );
 
-	// update hidden state
-	var filter = Cart.getFilter();
-	if( row.isMatch( filter.pattern, filter.phases ) ) {
-		row.getElement().show();
-	} else {
-		row.getElement().hide();
-	}
-
 	return row.save();
 };
 
@@ -195,6 +187,14 @@ Cart.DynamicRow =  function( data ) {
 
 	// container element
 	this.element = $( '<tr />' );
+
+	// update hidden state
+	var filter = Cart.getFilter();
+	if( this.isMatch( filter.pattern, filter.phases ) ) {
+		this.getElement().show();
+	} else {
+		this.getElement().hide();
+	}
 
 	// title cell
 	this.titleCell = $( '<td class="title"></td>' ).text( this.title ).click( function( event ) {
