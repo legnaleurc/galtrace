@@ -3,5 +3,5 @@
 *~
 /galtrace/private/data.json
 /galtrace/private/default.sqlite
-/static
+/galtrace/static
 .DS_Store
