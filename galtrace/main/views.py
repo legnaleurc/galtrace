@@ -128,21 +128,7 @@ def backup( request ):
 	from datetime import datetime
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 	response['Content-Disposition'] = 'attachment; filename=galtrace_{0}.json'.format( datetime.now().strftime( '%Y%m%d%H%M%S' ) )
-	rows = Order.objects.all()
-	data = {
-		'version': 0,
-		'orders': [],
-	}
-	for row in rows:
-		data['orders'].append( {
-			'pk': row.pk,
-			'title': row.title,
-			'vendor': row.vendor,
-			'date': row.date,
-			'uri': row.uri,
-			'phase': row.phase,
-			'volume': row.volume,
-		} )
+	data = Order.objects.dump( request.user )
 	json.dump( data, response, ensure_ascii = False )
 	return response
 
