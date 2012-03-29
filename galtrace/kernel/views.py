@@ -6,9 +6,9 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-from main.models import Order, PHASES
-from main.forms import RestoreForm, OrderForm
-from main import sites
+from kernel.models import Order, PHASES
+from kernel.forms import RestoreForm, OrderForm
+from kernel import sites
 
 def ajaxView( f ):
 	def toJSONResponse( x ):
@@ -49,13 +49,13 @@ def auth( request ):
 		if user.is_active:
 			login( request, user )
 			# redirect
-			return redirect( 'main.views.index' )
+			return redirect( 'kernel.views.index' )
 		else:
 			# redirect
-			return redirect( 'main.views.index' )
+			return redirect( 'kernel.views.index' )
 	else:
 		logout( request )
-		return redirect( 'main.views.index' )
+		return redirect( 'kernel.views.index' )
 
 def csrf( request ):
 	return render_to_response( 'csrf.js', {}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )

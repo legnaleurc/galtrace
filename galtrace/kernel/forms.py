@@ -1,6 +1,6 @@
 from django import forms
 
-from main.models import Order, PHASES
+from kernel.models import Order, PHASES
 
 import json
 
