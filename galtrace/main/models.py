@@ -26,7 +26,6 @@ class OrderManager( models.Manager ):
 		if data['version'] != 1:
 			return False
 		rows = data['orders']
-		# TODO implement transcation semetic
 		super( OrderManager, self ).filter( user__exact = user ).delete()
 		for row in rows:
 			# FIXME dangerous, please check data
