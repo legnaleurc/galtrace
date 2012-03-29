@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block body %}
-	<form class="well form-horizontal" id="login" method="post" action="/auth.cgi">
+	<form class="well form-horizontal" id="login" method="post" action="{% url main.views.auth %}">
 		<fieldset>
 			<legend>{% trans 'Please sign in or sign up' %}</legend>
 			<div class="control-group">

@@ -63,7 +63,7 @@
 		if( uri === '' ) {
 			return;
 		}
-		jQuery.post( 'fetch.cgi', {
+		jQuery.post( Cart.urls.FETCH, {
 			uri: uri
 		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {

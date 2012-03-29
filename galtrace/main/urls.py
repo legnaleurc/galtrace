@@ -10,4 +10,5 @@ urlpatterns = patterns( '',
 	url( r'^backup\.cgi$', 'main.views.backup' ),
 	url( r'^restore\.cgi$', 'main.views.restore' ),
 	url( r'^fetch\.cgi$', 'main.views.fetch' ),
+	url( r'^urls\.js$', 'main.views.urls' ),
 )

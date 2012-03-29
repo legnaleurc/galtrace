@@ -5,7 +5,7 @@
 
 	// load orders, tail recursion
 	function load( offset ) {
-		jQuery.post( '/load.cgi', {
+		jQuery.post( Cart.urls.LOAD, {
 			offset: offset,
 			limit: 100,
 		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {

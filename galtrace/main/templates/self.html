@@ -22,7 +22,7 @@
 			<a href="#data-menu" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<li><a href="#" id="button-delete">Delete</a></li>
-				<li><a href="/backup.cgi">Dump</a></li>
+				<li><a href="{% url main.views.backup %}">Backup</a></li>
 				<li><a href="#restore-modal" data-toggle="modal">Restore</a></li>
 			</ul>
 		</li>
@@ -35,7 +35,7 @@
 		</form>
 	</ul>
 	<ul class="nav pull-right">
-		<li><a href="/auth.cgi">Sign Out</a></li>
+		<li><a href="{% url main.views.auth %}">Sign Out</a></li>
 	</ul>
 {% endblock %}
 
@@ -102,7 +102,7 @@
 			<h3>Restore</h3>
 		</div>
 		<div class="modal-body">
-			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="/restore.cgi">
+			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url main.views.restore %}">
 				<fieldset>
 					{% for field in restoreForm %}
 						<div class="control-group">
@@ -138,8 +138,9 @@
 	<script src="https://www.google.com/jsapi" type="text/javascript"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}jquery.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}bootstrap.min.js"></script>
-	<script type="text/javascript" src="/csrf.js"></script>
+	<script type="text/javascript" src="{% url main.views.csrf %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}cart-read.js"></script>
+	<script type="text/javascript" src="{% url main.views.urls %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}cart-write.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}action-read.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}action-write.js"></script>

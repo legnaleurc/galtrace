@@ -60,6 +60,10 @@ def auth( request ):
 def csrf( request ):
 	return render_to_response( 'csrf.js', {}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
 
+def urls( request ):
+	return render_to_response( 'urls.js', {
+	}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
+
 def getArgs( request ):
 	args = {}
 	for item in request.POST.items():
