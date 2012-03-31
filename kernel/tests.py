@@ -30,7 +30,7 @@ class LoadTest( TestCase ):
 		response = c.post( self.loadUrl )
 		self.assertEqual( response.status_code, 302 )
 
-	def testWithUserEmptyArgs( self ):
+	def testEmptyArgs( self ):
 		"""
 		Login but empty args
 		Should return JSON, success is False
@@ -43,7 +43,7 @@ class LoadTest( TestCase ):
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
 
-	def testWithUserWrongArgs( self ):
+	def testWrongArgs( self ):
 		"""
 		Login but wrong args
 		Should return JSON, success is False
@@ -59,7 +59,7 @@ class LoadTest( TestCase ):
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
 
-	def testWithUserRightArgs( self ):
+	def testRightArgs( self ):
 		"""
 		Login and right args
 		Should return JSON with data
