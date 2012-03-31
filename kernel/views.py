@@ -11,6 +11,14 @@ from kernel.forms import RestoreForm, OrderForm
 from kernel import sites
 
 def ajaxView( f ):
+	'''
+	This decorator serialize returning object to JSON.
+	All exceptions will be catched and serialized.
+	For the contrast to Django, this decorator must be the most inner one.
+
+	Keyword arguments:
+	f -- the view which returns as an object
+	'''
 	def toJSONResponse( x ):
 		return HttpResponse( json.dumps( x ), content_type = 'text/plain; charset="utf-8"' )
 	def g( request ):
@@ -73,9 +81,9 @@ def getArgs( request ):
 			args[item[0]] = item[1]
 	return args
 
-@ajaxView
 @require_POST
 @login_required
+@ajaxView
 def load( request ):
 	offset = int( request.POST['offset'] )
 	limit = offset + int( request.POST['limit'] )
@@ -90,9 +98,9 @@ def load( request ):
 		result = [ x for x in result ]
 		return result
 
-@ajaxView
 @require_POST
 @login_required
+@ajaxView
 def save( request ):
 	args = getArgs( request )
 	# title should not be null
@@ -112,9 +120,9 @@ def save( request ):
 
 	return None
 
-@ajaxView
 @require_POST
 @login_required
+@ajaxView
 def delete( request ):
 	args = getArgs( request )
 	if u'title' not in args or len( args[u'title'] ) == 0:
@@ -144,9 +152,9 @@ def restore( request ):
 			result = form.save( request.user )
 	return redirect( index )
 
-@ajaxView
 @require_POST
 @login_required
+@ajaxView
 def fetch( request ):
 	args = getArgs( request )
 	result = sites.fetch( args[u'uri'] )
