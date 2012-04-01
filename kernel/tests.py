@@ -89,7 +89,7 @@ class SaveTest( TestCase ):
 		User.objects.create_user( username = 'alpha', password = 'alpha' )
 
 	@classmethod
-	def tearDown( cls ):
+	def tearDownClass( cls ):
 		User.objects.get( username__exact = 'alpha' ).delete()
 		Order.objects.all().delete()
 
