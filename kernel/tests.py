@@ -210,3 +210,95 @@ class SaveTest( TestCase ):
 		result = Order.objects.get( user__exact = self.userAlpha, title__exact = '1' )
 		self.assertEqual( result.phase, -1 )
 		self.assertEqual( result.volume, -1 )
+
+class DeleteTest( TestCase ):
+
+	@classmethod
+	def setUpClass( cls ):
+		user = User.objects.create_user( username = 'alpha', password = 'alpha' )
+		o = Order( title = 'to-be-deleted', phase = -1, volume = -1, user = user )
+		o.save()
+
+	@classmethod
+	def tearDownClass( cls ):
+		User.objects.all().delete()
+		Order.objects.all().delete()
+
+	def setUp( self ):
+		self.deleteUrl = '/delete.cgi'
+
+	def testGet( self ):
+		"""
+		Call with GET
+		Should return failed request
+		"""
+		c = Client()
+		response = c.get( self.deleteUrl )
+		self.assertEqual( response.status_code, 405 )
+
+	def testWithoutUser( self ):
+		"""
+		Call without login
+		Should redirect to /
+		"""
+		c = Client()
+		response = c.post( self.deleteUrl )
+		self.assertEqual( response.status_code, 302 )
+
+	def testEmptyArgs( self ):
+		"""
+		Call with empty args
+		Should return a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.deleteUrl )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+
+	def testEmptyTitle( self ):
+		"""
+		Call with empty title
+		Should return a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.deleteUrl, {
+			'title': '',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+
+	def testDeleteNonExists( self ):
+		"""
+		Trying to delete non-exists record
+		Should return a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.deleteUrl, {
+			'title': 'non-exists',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+
+	def testRightArgs( self ):
+		"""
+		Trying to delete non-exists record
+		Should return a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.deleteUrl, {
+			'title': 'to-be-deleted',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertTrue( result['success'] )
