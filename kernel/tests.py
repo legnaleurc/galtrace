@@ -8,9 +8,16 @@ import json
 
 class LoadTest( TestCase ):
 
+	@classmethod
+	def setUpClass( cls ):
+		User.objects.create_user( username = 'alpha', password = 'alpha' )
+
+	@classmethod
+	def tearDownClass( cls ):
+		User.objects.get( username__exact = 'alpha' ).delete()
+
 	def setUp( self ):
 		self.loadUrl = '/load.cgi'
-		User.objects.create_user( username = 'alpha', password = 'alpha' )
 
 	def testGet( self ):
 		"""
@@ -77,9 +84,17 @@ class LoadTest( TestCase ):
 
 class SaveTest( TestCase ):
 
+	@classmethod
+	def setUpClass( cls ):
+		User.objects.create_user( username = 'alpha', password = 'alpha' )
+
+	@classmethod
+	def tearDown( cls ):
+		User.objects.get( username__exact = 'alpha' ).delete()
+
 	def setUp( self ):
 		self.saveUrl = '/save.cgi'
-		self.userAlpha = User.objects.create_user( username = 'alpha', password = 'alpha' )
+		self.userAlpha = User.objects.get( username__exact = 'alpha' )
 
 	def testGet( self ):
 		"""
