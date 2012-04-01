@@ -91,6 +91,7 @@ class SaveTest( TestCase ):
 	@classmethod
 	def tearDown( cls ):
 		User.objects.get( username__exact = 'alpha' ).delete()
+		Order.objects.all().delete()
 
 	def setUp( self ):
 		self.saveUrl = '/save.cgi'
