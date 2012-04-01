@@ -14,7 +14,7 @@ class LoadTest( TestCase ):
 
 	@classmethod
 	def tearDownClass( cls ):
-		User.objects.get( username__exact = 'alpha' ).delete()
+		User.objects.all().delete()
 
 	def setUp( self ):
 		self.loadUrl = '/load.cgi'
@@ -90,7 +90,7 @@ class SaveTest( TestCase ):
 
 	@classmethod
 	def tearDownClass( cls ):
-		User.objects.get( username__exact = 'alpha' ).delete()
+		User.objects.all().delete()
 		Order.objects.all().delete()
 
 	def setUp( self ):
