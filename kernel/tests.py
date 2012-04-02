@@ -35,7 +35,7 @@ class LoadTest( TestCase ):
 		"""
 		c = Client()
 		response = c.post( self.loadUrl )
-		self.assertEqual( response.status_code, 302 )
+		self.assertRedirects( response, '/?next={0}'.format( self.loadUrl ) )
 
 	def testEmptyArgs( self ):
 		"""
@@ -113,7 +113,7 @@ class SaveTest( TestCase ):
 		"""
 		c = Client()
 		response = c.post( self.saveUrl )
-		self.assertEqual( response.status_code, 302 )
+		self.assertRedirects( response, '/?next={0}'.format( self.saveUrl ) )
 
 	def testEmptyArgs( self ):
 		"""
@@ -243,7 +243,7 @@ class DeleteTest( TestCase ):
 		"""
 		c = Client()
 		response = c.post( self.deleteUrl )
-		self.assertEqual( response.status_code, 302 )
+		self.assertRedirects( response, '/?next={0}'.format( self.deleteUrl ) )
 
 	def testEmptyArgs( self ):
 		"""
