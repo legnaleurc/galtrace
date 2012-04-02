@@ -8,7 +8,7 @@ def __helper__( x ):
 __factory__ = [ ( lambda x: 1, __helper__ ) ]
 
 def __init__():
-	plugins = map( lambda x: os.path.splitext( x )[0], filter( lambda x: x.endswith( '.py' ) and x != '__init__.py', os.listdir( os.path.dirname( __file__ ) ) ) )
+	plugins = map( lambda x: os.path.splitext( x )[0], filter( lambda x: x.endswith( '.py' ) and x != '__init__.py' and x != 'tests.py', os.listdir( os.path.dirname( __file__ ) ) ) )
 	for plugin in plugins:
 		module = None
 		if __name__ == '__main__':
