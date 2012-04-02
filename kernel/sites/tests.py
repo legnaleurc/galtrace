@@ -24,14 +24,13 @@ class SiteTest( unittest.TestCase ):
 		self.assertEqual( result['title'], u'嘘と真琴にお仕置きを' )
 		self.assertEqual( result['vendor'], '10mile' )
 
-	def testDLGetchu1( self ):
+	def testDLGetchuDoujin( self ):
 		result = sites.fetch( 'http://dl.getchu.com/index.php?action=gd&gcd=D0006562&cirid=72&cp=&c=' )
 		self.assertEqual( result['date'], '2009/07/24' )
 		self.assertEqual( result['title'], 'Tentacle and Witches' )
 		self.assertEqual( result['vendor'], 'Lilith / Pixy' )
 
-	@unittest.expectedFailure
-	def testDLGetchu2( self ):
+	def testDLGetchuShougyou( self ):
 		result = sites.fetch( 'http://dl.getchu.com/index.php?action=gdSoft&gcd=74749&cp=&c=' )
 		self.assertEqual( result['date'], '2012/02/24' )
 		self.assertEqual( result['title'], u'めちゃ婚！' )

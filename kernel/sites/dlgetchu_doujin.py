@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import re, urllib, urllib2, cookielib
+import re, urllib, urllib2, cookielib, urlparse
 
 def verify( uri ):
 	if uri.netloc == 'dl.getchu.com':
-		return 100
-	else:
-		return 0
+		result = urlparse.parse_qs( uri.query )
+		if result['action'][0] == 'gd':
+			return 100
+	return 0
 
 def create( uri ):
 	query = {}
