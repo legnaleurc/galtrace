@@ -17,7 +17,7 @@ class LoadTest( TestCase ):
 		User.objects.all().delete()
 
 	def setUp( self ):
-		self.loadUrl = '/load.cgi'
+		self.url = '/load.cgi'
 
 	def testGet( self ):
 		"""
@@ -25,7 +25,7 @@ class LoadTest( TestCase ):
 		Should get failure response
 		"""
 		c = Client()
-		response = c.get( self.loadUrl )
+		response = c.get( self.url )
 		self.assertEqual( response.status_code, 405 )
 
 	def testWithoutUser( self ):
@@ -34,8 +34,8 @@ class LoadTest( TestCase ):
 		Should redirect to /
 		"""
 		c = Client()
-		response = c.post( self.loadUrl )
-		self.assertRedirects( response, '/?next={0}'.format( self.loadUrl ) )
+		response = c.post( self.url )
+		self.assertRedirects( response, '/?next={0}'.format( self.url ) )
 
 	def testEmptyArgs( self ):
 		"""
@@ -45,7 +45,7 @@ class LoadTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.loadUrl )
+		response = c.post( self.url )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
@@ -58,7 +58,7 @@ class LoadTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.loadUrl, {
+		response = c.post( self.url, {
 			'offset': -1,
 			'limit': 0,
 		} )
@@ -74,7 +74,7 @@ class LoadTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.loadUrl, {
+		response = c.post( self.url, {
 			'offset': 0,
 			'limit': 100,
 		} )
@@ -94,7 +94,7 @@ class SaveTest( TestCase ):
 		Order.objects.all().delete()
 
 	def setUp( self ):
-		self.saveUrl = '/save.cgi'
+		self.url = '/save.cgi'
 		self.userAlpha = User.objects.get( username__exact = 'alpha' )
 
 	def testGet( self ):
@@ -103,7 +103,7 @@ class SaveTest( TestCase ):
 		Should return failed request
 		"""
 		c = Client()
-		response = c.get( self.saveUrl )
+		response = c.get( self.url )
 		self.assertEqual( response.status_code, 405 )
 
 	def testWithoutUser( self ):
@@ -112,8 +112,8 @@ class SaveTest( TestCase ):
 		Should redirect to /
 		"""
 		c = Client()
-		response = c.post( self.saveUrl )
-		self.assertRedirects( response, '/?next={0}'.format( self.saveUrl ) )
+		response = c.post( self.url )
+		self.assertRedirects( response, '/?next={0}'.format( self.url ) )
 
 	def testEmptyArgs( self ):
 		"""
@@ -123,7 +123,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl )
+		response = c.post( self.url )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
@@ -136,7 +136,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl, {
+		response = c.post( self.url, {
 			'title': '',
 		} )
 		self.assertEqual( response.status_code, 200 )
@@ -151,7 +151,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl, {
+		response = c.post( self.url, {
 			'title': '1',
 		} )
 		self.assertEqual( response.status_code, 200 )
@@ -166,7 +166,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl, {
+		response = c.post( self.url, {
 			'title': '1',
 			'phase': 'a',
 		} )
@@ -182,7 +182,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl, {
+		response = c.post( self.url, {
 			'title': '1',
 			'phase': -1,
 			'volume': 'a',
@@ -199,7 +199,7 @@ class SaveTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.saveUrl, {
+		response = c.post( self.url, {
 			'title': '1',
 			'phase': -1,
 			'volume': -1,
@@ -225,7 +225,7 @@ class DeleteTest( TestCase ):
 		Order.objects.all().delete()
 
 	def setUp( self ):
-		self.deleteUrl = '/delete.cgi'
+		self.url = '/delete.cgi'
 
 	def testGet( self ):
 		"""
@@ -233,7 +233,7 @@ class DeleteTest( TestCase ):
 		Should return failed request
 		"""
 		c = Client()
-		response = c.get( self.deleteUrl )
+		response = c.get( self.url )
 		self.assertEqual( response.status_code, 405 )
 
 	def testWithoutUser( self ):
@@ -242,8 +242,8 @@ class DeleteTest( TestCase ):
 		Should redirect to /
 		"""
 		c = Client()
-		response = c.post( self.deleteUrl )
-		self.assertRedirects( response, '/?next={0}'.format( self.deleteUrl ) )
+		response = c.post( self.url )
+		self.assertRedirects( response, '/?next={0}'.format( self.url ) )
 
 	def testEmptyArgs( self ):
 		"""
@@ -253,7 +253,7 @@ class DeleteTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.deleteUrl )
+		response = c.post( self.url )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
@@ -266,7 +266,7 @@ class DeleteTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.deleteUrl, {
+		response = c.post( self.url, {
 			'title': '',
 		} )
 		self.assertEqual( response.status_code, 200 )
@@ -281,7 +281,7 @@ class DeleteTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.deleteUrl, {
+		response = c.post( self.url, {
 			'title': 'non-exists',
 		} )
 		self.assertEqual( response.status_code, 200 )
@@ -296,7 +296,7 @@ class DeleteTest( TestCase ):
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
-		response = c.post( self.deleteUrl, {
+		response = c.post( self.url, {
 			'title': 'to-be-deleted',
 		} )
 		self.assertEqual( response.status_code, 200 )
