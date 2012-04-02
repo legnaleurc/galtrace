@@ -302,3 +302,18 @@ class DeleteTest( TestCase ):
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
 		self.assertTrue( result['success'] )
+
+class FetchTest( TestCase ):
+
+	def setUp( self ):
+		self.url = '/fetch.cgi'
+
+	def testGet( self ):
+		c = Client()
+		response = c.get( self.url )
+		self.assertEqual( response.status_code, 405 )
+
+	def testWithoutUser( self ):
+		c = Client()
+		response = c.post( self.url )
+		self.assertRedirects( response, '/?next={0}'.format( self.url ) )
