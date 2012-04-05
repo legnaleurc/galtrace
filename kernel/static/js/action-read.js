@@ -3,31 +3,8 @@
 	// create table
 	Cart.view = new Cart.Table( '#cart' );
 
-	// load orders, tail recursion
-	function load( offset ) {
-		jQuery.post( Cart.urls.LOAD, {
-			offset: offset,
-			limit: 100,
-		}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
-			if( !data.success ) {
-				Cart.cerr( data.type, data.message );
-				return;
-			}
-			if( data.data === null ) {
-				// stop
-				return;
-			}
-
-			load( offset + data.data.length );
-
-			$( data.data ).each( function() {
-				Cart.view.append( new Cart.DynamicRow( this ) );
-			} );
-		} ).error( function( jqXHR, textStatus, message ) {
-			Cart.cerr( 'Unknown Error', message );
-		} );
-	}
-	load( 0 );
+	// load orders
+	Cart.load();
 
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
