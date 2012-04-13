@@ -159,3 +159,9 @@ def fetch( request ):
 	args = getArgs( request )
 	result = sites.fetch( args[u'uri'] )
 	return result
+
+def robots( request ):
+	response = HttpResponse( mimetype = 'text/plain' )
+	response.write( 'User-agent: *\n' )
+	response.write( 'Disallow: /\n' )
+	return response

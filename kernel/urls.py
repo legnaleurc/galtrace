@@ -11,4 +11,5 @@ urlpatterns = patterns( '',
 	url( r'^restore\.cgi$', 'kernel.views.restore' ),
 	url( r'^fetch\.cgi$', 'kernel.views.fetch' ),
 	url( r'^urls\.js$', 'kernel.views.urls' ),
+	url( r'^robots\.txt$', 'kernel.views.robots' ),
 )
