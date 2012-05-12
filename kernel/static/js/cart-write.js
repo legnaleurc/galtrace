@@ -130,7 +130,7 @@ Cart.__utilities__ = {
 		};
 		args[field] = input.val();
 		// TODO add hook
-		return jQuery.post( Cart.views.SAVE, args, null, 'json' );
+		return jQuery.post( Cart.urls.SAVE, args, null, 'json' );
 	},
 
 };
