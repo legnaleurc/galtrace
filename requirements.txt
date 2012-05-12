@@ -1,5 +1,5 @@
 Django >= 1.4
-pyquery
+pyquery >= 1.2.1
 pycurl
-psycopg2
-gunicorn
+psycopg2 >= 2.4.5
+gunicorn >= 0.14.2
