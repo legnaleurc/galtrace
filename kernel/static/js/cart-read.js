@@ -109,14 +109,6 @@ var Cart = {
 		// container element
 		this.element = $( element );
 
-		// update hidden state
-		var filter = Cart.getFilter();
-		if( this.isMatch( filter.pattern, filter.phases ) ) {
-			this.getElement().show();
-		} else {
-			this.getElement().hide();
-		}
-
 		// title cell
 		this.titleCell = this.element.find( 'td.title' ).click( function( event ) {
 			if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {
@@ -173,6 +165,20 @@ var Cart = {
 Cart.Table.prototype.append = function( row ) {
 	this.items.push( row );
 	this.view.append( row.getElement() );
+
+	var totalOrders = $( '#total-orders' );
+	var currentOrders = $( '#current-orders' );
+
+	// update hidden state
+	var filter = Cart.getFilter();
+	if( row.isMatch( filter.pattern, filter.phases ) ) {
+		currentOrders.text( parseInt( currentOrders.text(), 10 ) + 1 );
+		row.getElement().show();
+	} else {
+		row.getElement().hide();
+	}
+	totalOrders.text( parseInt( totalOrders.text(), 10 ) + 1 );
+
 	return this;
 };
 
@@ -281,13 +287,17 @@ Cart.Table.prototype.insert = function( index, row ) {
  */
 Cart.Table.prototype.updateFilter = function() {
 	var filter = Cart.getFilter();
+	var orders = 0;
 	for( var i = 0; i < this.items.length; ++i ) {
 		if( this.items[i].isMatch( filter.pattern, filter.phases ) ) {
+			++orders;
 			this.items[i].getElement().show();
 		} else {
 			this.items[i].getElement().hide();
 		}
 	}
+	var currentOrders = $( '#current-orders' );
+	currentOrders.text( orders );
 
 	return this;
 };

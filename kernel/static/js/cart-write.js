@@ -188,14 +188,6 @@ Cart.DynamicRow =  function( data ) {
 	// container element
 	this.element = $( '<tr />' );
 
-	// update hidden state
-	var filter = Cart.getFilter();
-	if( this.isMatch( filter.pattern, filter.phases ) ) {
-		this.getElement().show();
-	} else {
-		this.getElement().hide();
-	}
-
 	// title cell
 	this.titleCell = $( '<td class="title"></td>' ).text( this.title ).click( function( event ) {
 		if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {

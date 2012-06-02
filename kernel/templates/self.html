@@ -35,6 +35,12 @@
 		</form>
 	</ul>
 	<ul class="nav pull-right">
+		<li class="navbar-text">
+			<span id="current-orders">0</span>
+			<span>&nbsp;/&nbsp;</span>
+			<span id="total-orders">0</span>
+		</li>
+		<li class="divider-vertical"></li>
 		<li><a href="{% url kernel.views.auth %}">Sign Out</a></li>
 	</ul>
 {% endblock %}
