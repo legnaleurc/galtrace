@@ -3,3 +3,4 @@ pyquery >= 1.2.1
 pycurl
 psycopg2 >= 2.4.5
 gunicorn >= 0.14.2
+dj-database-url >= 0.2.0

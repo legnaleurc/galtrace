@@ -8,9 +8,11 @@ PRIVATE_DATABASE_PATH = os.path.join( PRIVATE_DIR, 'default.sqlite' )
 def load( *args, **kwargs ):
 	if PRIVATE_KEY in os.environ:
 		data = json.loads( os.environ[PRIVATE_KEY] )
+		import dj_database_url
 		private = {
 			'ADMIN_MEDIA_PREFIX': data['ADMIN_MEDIA_PREFIX'],
 			'DATABASES': {
+				'default': dj_database_url.config(),
 			},
 			'DEBUG': False,
 			'STATIC_URL': data['STATIC_URL'],
