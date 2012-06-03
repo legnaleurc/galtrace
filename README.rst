@@ -16,6 +16,25 @@ Dependencies
 * `Gunicorn`_
 * `Psycopg`_ (only needed on production)
 
+How To Deploy Static Files
+--------------------------
+
+::
+
+    # ensure you are on working branch
+    python manage.py collectstatic
+    git checkout gh-pages
+    python sync.py
+    # commit and push changes
+
+How To Upload Private Settings
+------------------------------
+
+::
+
+    # ensure your **galtrace/private/data.json** exists
+    python galtrace/private/settings.py
+
 Note
 ----
 
