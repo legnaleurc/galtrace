@@ -2,5 +2,5 @@ Django >= 1.4
 pyquery >= 1.2.1
 pycurl
 psycopg2 >= 2.4.5
-gunicorn >= 0.14.2
+gunicorn >= 0.14.3
 dj-database-url >= 0.2.0
