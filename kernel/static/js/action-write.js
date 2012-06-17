@@ -35,14 +35,19 @@
 				continue;
 			}
 
+			var currentOrders = $( '#current-orders' );
+			var diff = parseInt( currentOrders.text(), 10 );
 			// update phase and clear selection
 			row.setPhase( phase ).setChecked( false );
 			// update hidden state
 			if( visible ) {
+				++diff;
 				row.getElement().show();
 			} else {
+				--diff;
 				row.getElement().hide();
 			}
+			currentOrders.text( diff );
 			// sync to database
 			row.save().success( function( data, textStatus, jqXHR ) {
 				if( !data.success ) {
