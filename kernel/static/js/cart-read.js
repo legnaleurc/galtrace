@@ -36,27 +36,6 @@ var Cart = {
 		return Cart.view.view.trigger( eventType, extraParameters );
 	},
 
-	/**
-	 * Get phase filter from UI.
-	 *
-	 * @returns {Object} o.pattern contains name filter. o.phases is a array.
-	 */
-	getFilter: function() {
-		var input = jQuery.map( $( '.phase-filter.active' ), function( v ) {
-			return $( v ).data( 'value' );
-		} );
-		var phases_ = ( input.length === 0 ) ? null : {};
-		if( phases_ ) {
-			for( var i = 0; i < 5; ++i ) {
-				phases_[i] = ( input.indexOf( i ) >= 0 );
-			}
-		}
-		return {
-			pattern: $( '#search' ).val(),
-			phases: phases_,
-		};
-	},
-
 	initialize: function( selector ) {
 		function load( offset ) {
 			jQuery.post( Cart.urls.LOAD, {
@@ -89,6 +68,37 @@ var Cart = {
 		Cart.phaseSet = null;
 		Cart.searchSet = null;
 		load( 0 );
+	},
+
+	/**
+	 * Matches given condition.
+	 *
+	 * @param {String} pattern Matches title or vendor.
+	 * @param {Array} phases Selected phases.
+	 * @return {boolean} true if matched.
+	 */
+	applyFilter: function( row ) {
+		// NOTE should only call by row's constructor
+		// FIXME ugly global operation
+		var phases = jQuery.map( $( '.phase-filter.active' ), function( v ) {
+			return $( v ).data( 'value' );
+		} );
+		var pattern = $( '#search' ).val().toLowerCase();
+
+		var patternPass = false;
+		if( row.title.toLowerCase().indexOf( pattern ) >= 0 || row.vendor.toLowerCase().indexOf( pattern ) >= 0 ) {
+			patternPass = true;
+		}
+		if( patternPass ) {
+			jQuery.merge( Cart.searchSet, [ row.getElement() ] );
+		}
+
+		var phasePass = phases.indexOf( row.phase ) >= 0;
+		if( phasePass ) {
+			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
+		}
+
+		return patternPass && phasePass;
 	},
 
 	/**
@@ -175,11 +185,11 @@ var Cart = {
 	},
 
 	/**
-	* Create dynamic row from JSON data.
-	*
-	* @class Row from JSON to DOM.
-	* @param data The JSON data.
-	*/
+	 * Create dynamic row from JSON data.
+	 *
+	 * @class Row from JSON to DOM.
+	 * @param data The JSON data.
+	 */
 	DynamicRow: function( data ) {
 		// call super
 		Cart.Row.apply( this, arguments );
@@ -229,6 +239,15 @@ var Cart = {
 		this.element.data( 'vendor', this.vendor );
 		this.element.data( 'phase', this.phase );
 
+		// update hidden state
+		var matched = Cart.applyFilter( this );
+		if( matched ) {
+			// FIXME assuming creation is insertion
+			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
+		} else {
+			this.element.hide();
+		}
+
 		this.__post_new__();
 	},
 
@@ -245,15 +264,6 @@ Cart.Table.prototype.append = function( row ) {
 	this.view.append( row.getElement() );
 
 	var totalOrders = $( '#total-orders' );
-
-	// update hidden state
-	var filter = Cart.getFilter();
-	if( row.isMatch( filter.pattern, filter.phases ) ) {
-		this.view.trigger( 'GalTrace.currentOrdersChanged', 1 );
-		row.getElement().show();
-	} else {
-		row.getElement().hide();
-	}
 	totalOrders.text( parseInt( totalOrders.text(), 10 ) + 1 );
 
 	return this;
@@ -374,28 +384,6 @@ Cart.Row.prototype.getElement = function() {
 Cart.Row.prototype.isChecked = function() {
 	return this.checkbox.is( ":checked" );
 };
-
-/**
- * Matches given condition.
- *
- * @param {String} pattern Matches title or vendor.
- * @param {Array} phases Selected phases.
- * @return {boolean} true if matched.
- */
-Cart.Row.prototype.isMatch = function( pattern, phases ) {
-	var patternPass = false;
-	var lPattern = pattern.toLowerCase();
-	if( pattern.length == 0 || this.title.toLowerCase().indexOf( lPattern ) != -1 || this.vendor.toLowerCase().indexOf( lPattern ) != -1 ) {
-		patternPass = true;
-	}
-
-	var phasePass = ( phases == null );
-	if( !phasePass ) {
-		phasePass = phases[this.phase];
-	}
-
-	return patternPass && phasePass;
-}
 
 /**
  * Get title.
