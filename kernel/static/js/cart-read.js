@@ -200,16 +200,13 @@ var Cart = {
 			if( brandNew ) {
 				Cart.searchSet = $( this ).children().filter( eq );
 				var diff = 0;
-				Cart.phaseSet.each( function() {
-					if( eq.bind( this )() ) {
-						$( this ).show();
-						diff += 1;
-					} else {
-						$( this ).hide();
-						diff -= 1;
-					}
+				var a = Cart.phaseSet.filter( ':hidden' ).filter( eq );
+				var b = Cart.phaseSet.filter( ':visible' ).filter( function() {
+					return !eq.bind( this )();
 				} );
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', diff );
+				a.show();
+				b.hide();
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', a.length - b.length );
 			} else if( increase ) {
 				Cart.searchSet = Cart.searchSet.filter( eq );
 				var tmp = Cart.phaseSet.filter( ':visible' ).filter( function() {
