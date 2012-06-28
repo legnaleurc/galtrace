@@ -1,10 +1,7 @@
 ( function() {
 
-	// create table
-	Cart.view = new Cart.Table( '#cart' );
-
-	// load orders
-	Cart.load();
+	// create table and load orders
+	Cart.initialize( '#cart' );
 
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
