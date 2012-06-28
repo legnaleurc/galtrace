@@ -157,6 +157,10 @@ var Cart = {
 			var row = new Cart.StaticRow( this );
 			table.items.push( row );
 		}, this ) );
+		this.view.on( 'GalTrace.currentOrdersChanged', function( event, diff ) {
+			var tmp = $( '#current-orders' );
+			tmp.text( parseInt( tmp.text(), 10 ) + diff );
+		} );
 		this.view.on( 'GalTrace.phaseChanged', function( event, phase, selected ) {
 			if( Cart.phaseSet === null || Cart.searchSet === null ) {
 				return;
@@ -176,8 +180,10 @@ var Cart = {
 			var tmp = Cart.searchSet.filter( eq );
 			if( selected ) {
 				tmp.show();
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
 			} else {
 				tmp.hide();
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', -tmp.length );
 			}
 		} );
 		this.view.on( 'GalTrace.searchChanged', function( event, searchText, brandNew, increase ) {
@@ -193,21 +199,29 @@ var Cart = {
 			// else add new matched result to visible set
 			if( brandNew ) {
 				Cart.searchSet = $( this ).children().filter( eq );
+				var diff = 0;
 				Cart.phaseSet.each( function() {
 					if( eq.bind( this )() ) {
 						$( this ).show();
+						diff += 1;
 					} else {
 						$( this ).hide();
+						diff -= 1;
 					}
 				} );
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', diff );
 			} else if( increase ) {
 				Cart.searchSet = Cart.searchSet.filter( eq );
-				Cart.phaseSet.filter( ':visible' ).filter( function() {
+				var tmp = Cart.phaseSet.filter( ':visible' ).filter( function() {
 					return !eq.bind( this )();
-				} ).hide();
+				} );
+				tmp.hide();
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', -tmp.length );
 			} else {
 				Cart.searchSet = $( this ).children().filter( eq );
-				Cart.phaseSet.filter( ':hidden' ).filter( eq ).show();
+				var tmp = Cart.phaseSet.filter( ':hidden' ).filter( eq );
+				tmp.show();
+				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
 			}
 		} );
 	},
