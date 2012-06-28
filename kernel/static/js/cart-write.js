@@ -136,66 +136,6 @@ Cart.__utilities__ = {
 };
 
 /**
- * Create dynamic row from JSON data.
- *
- * @class Row from JSON to DOM.
- * @param data The JSON data.
- */
-Cart.DynamicRow =  function( data ) {
-	// call super
-	Cart.Row.apply( this, arguments );
-
-	// data
-	this.title = data.title;
-	this.vendor = data.vendor;
-	this.date = data.date;
-	this.uri = data.uri;
-	this.phase = data.phase;
-	this.volume = data.volume;
-
-	// container element
-	this.element = $( '<tr />' );
-
-	// title cell
-	this.titleCell = $( '<td class="title"></td>' ).text( this.title ).click( function( event ) {
-		if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {
-			return;
-		}
-		Cart.googleSearch( $( this ).text() );
-	} );
-
-	// link cell
-	this.linkCell = $( '<td></td>' );
-	this.link = $( '<a rel="external">Link</a>' ).click( function( event ) {
-		event.preventDefault();
-		window.open( $( this ).attr( 'href' ), '_blank' );
-	} ).attr( 'href', this.uri );
-	this.linkCell.append( this.link );
-
-	// vendor cell
-	this.vendorCell = $( '<td class="vendor" />' );
-	this.vendorText = $( '<span />' ).text( this.vendor );
-	this.vendorCell.append( this.vendorText );
-
-	// date cell
-	this.dateCell = $( '<td class="date" />' );
-	this.dateText = $( '<span />' ).text( this.date );
-	this.dateCell.append( this.dateText );
-
-	// phase cell
-	this.phaseCell = $( '<td class="phase"></d>' ).hide().text( this.phase );
-
-	this.element.append( this.titleCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
-	this.element.data( 'title', this.title );
-	this.element.data( 'vendor', this.vendor );
-	this.element.data( 'phase', this.phase );
-
-	this.__post_new__();
-};
-
-Cart.DynamicRow.prototype = new Cart.Row();
-
-/**
  * Post-initialization.
  *
  * @protected
