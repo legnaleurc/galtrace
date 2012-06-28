@@ -157,6 +157,59 @@ var Cart = {
 			var row = new Cart.StaticRow( this );
 			table.items.push( row );
 		}, this ) );
+		this.view.on( 'GalTrace.phaseChanged', function( event, phase, selected ) {
+			if( Cart.phaseSet === null || Cart.searchSet === null ) {
+				return;
+			}
+			function eq() {
+				return $( this ).data( 'phase' ) === phase;
+			}
+			if( selected ) {
+				// some orders should be inserted, p += dp
+				jQuery.merge( Cart.phaseSet, $( this ).children().filter( eq ) );
+			} else {
+				Cart.phaseSet = Cart.phaseSet.filter( function() {
+					return !eq.bind( this )();
+				} );
+			}
+			// ( s && dp ).setVisible( selected )
+			var tmp = Cart.searchSet.filter( eq );
+			if( selected ) {
+				tmp.show();
+			} else {
+				tmp.hide();
+			}
+		} );
+		this.view.on( 'GalTrace.searchChanged', function( event, searchText, brandNew, increase ) {
+			function eq() {
+				var self = $( this );
+				if( self.data( 'title' ).toLowerCase().indexOf( searchText.toLowerCase() ) >= 0 || self.data( 'vendor' ).toLowerCase().indexOf( searchText.toLowerCase() ) >= 0 ) {
+					return true;
+				}
+				return false;
+			}
+			// if brand new search string, re-search whole orders
+			// else if text length is increasing, strip from current visible set
+			// else add new matched result to visible set
+			if( brandNew ) {
+				Cart.searchSet = $( this ).children().filter( eq );
+				Cart.phaseSet.each( function() {
+					if( eq.bind( this )() ) {
+						$( this ).show();
+					} else {
+						$( this ).hide();
+					}
+				} );
+			} else if( increase ) {
+				Cart.searchSet = Cart.searchSet.filter( eq );
+				Cart.phaseSet.filter( ':visible' ).filter( function() {
+					return !eq.bind( this )();
+				} ).hide();
+			} else {
+				Cart.searchSet = $( this ).children().filter( eq );
+				Cart.phaseSet.filter( ':hidden' ).filter( eq ).show();
+			}
+		} );
 	},
 
 };
@@ -282,28 +335,6 @@ Cart.Table.prototype.insert = function( index, row ) {
 		this.items[0].getElement().before( row.getElement() );
 		this.items.splice( 0, 0, row );
 	}
-	return this;
-};
-
-/**
- * Update displaying rows according to UI selection.
- *
- * @returns {Cart.Table} self.
- */
-Cart.Table.prototype.updateFilter = function() {
-	var filter = Cart.getFilter();
-	var orders = 0;
-	for( var i = 0; i < this.items.length; ++i ) {
-		if( this.items[i].isMatch( filter.pattern, filter.phases ) ) {
-			++orders;
-			this.items[i].getElement().show();
-		} else {
-			this.items[i].getElement().hide();
-		}
-	}
-	var currentOrders = $( '#current-orders' );
-	currentOrders.text( orders );
-
 	return this;
 };
 

@@ -182,7 +182,7 @@ Cart.DynamicRow =  function( data ) {
 	this.vendor = data.vendor;
 	this.date = data.date;
 	this.uri = data.uri;
-	this.phase = data.phase.toString();
+	this.phase = data.phase;
 	this.volume = data.volume;
 
 	// container element
@@ -218,6 +218,9 @@ Cart.DynamicRow =  function( data ) {
 	this.phaseCell = $( '<td class="phase"></d>' ).hide().text( this.phase );
 
 	this.element.append( this.titleCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
+	this.element.data( 'title', this.title );
+	this.element.data( 'vendor', this.vendor );
+	this.element.data( 'phase', this.phase );
 
 	this.__post_new__();
 };

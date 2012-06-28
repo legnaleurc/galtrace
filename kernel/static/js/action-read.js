@@ -22,20 +22,18 @@
 	} );
 
 	// apply filter
-	function update() {
-		Cart.view.updateFilter();
-	}
 	$( '.phase-filter' ).click( function( event ) {
 		event.preventDefault();
-		$( this ).toggleClass( 'active' );
-		update();
+		var self = $( this );
+		self.toggleClass( 'active' );
+		Cart.emit( 'GalTrace.phaseChanged', [ self.data( 'value' ), self.hasClass( 'active' ) ] );
 	} );
 	var previous = $( '#search' ).text();
 	$( '#search' ).keyup( function( event ) {
 		var current = $( this ).val();
-		if( previous != current ) {
+		if( previous !== current ) {
+			Cart.emit( 'GalTrace.searchChanged', [ current, current.indexOf( previous ) < 0 && previous.indexOf( current ) < 0, current.length > previous.length ] );
 			previous = current;
-			update();
 		}
 	} );
 	// set initial filter
