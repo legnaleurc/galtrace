@@ -101,50 +101,6 @@ var Cart = {
 	},
 
 	/**
-	 * Create rows from static page.
-	 *
-	 * @class Pre-exists row.
-	 * @augments Cart.Row
-	 * @param element The selector of row.
-	 */
-	StaticRow: function( element ) {
-		// call super
-		Cart.Row.apply( this, arguments );
-
-		// container element
-		this.element = $( element );
-
-		// title cell
-		this.titleCell = this.element.find( 'td.title' ).click( function( event ) {
-			if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {
-				return;
-			}
-			Cart.googleSearch( $( this ).text() );
-		} );
-		this.title = this.titleCell.text();
-
-		// link cell
-		this.link = this.element.find( 'td > a' );
-		this.linkCell = this.link.parent();
-		this.uri = this.link.attr( 'href' );
-
-		// vendor cell
-		this.vendorCell = this.element.find( 'td.vendor' );
-		this.vendorText = this.vendorCell.children().first();
-		this.vendor = this.vendorText.text();
-
-		// date cell
-		this.dateCell = this.element.find( 'td.date' );
-		this.dateText = this.dateCell.children().first();
-		this.date = this.dateText.text();
-
-		// phase
-		this.phase = this.element.data( 'phase' );
-
-		this.__post_new__();
-	},
-
-	/**
 	 * Creates table.
 	 *
 	 * @class The table.
@@ -153,10 +109,6 @@ var Cart = {
 	Table: function( selector ) {
 		this.items = [];
 		this.view = $( selector );
-		this.view.children().each( Cart.bind( function( table ) {
-			var row = new Cart.StaticRow( this );
-			table.items.push( row );
-		}, this ) );
 		this.view.on( 'GalTrace.currentOrdersChanged', function( event, diff ) {
 			var tmp = $( '#current-orders' );
 			tmp.text( parseInt( tmp.text(), 10 ) + diff );
@@ -426,5 +378,3 @@ Cart.Row.prototype.getPhase = function() {
 Cart.Row.prototype.__post_new__ = function() {
 	// NOTE this function provides a post-initialization
 };
-
-Cart.StaticRow.prototype = new Cart.Row();

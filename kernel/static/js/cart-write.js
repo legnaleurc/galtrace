@@ -136,38 +136,6 @@ Cart.__utilities__ = {
 };
 
 /**
- * Post-initialization.
- *
- * @protected
- */
-Cart.StaticRow.prototype.__post_new__ = function() {
-		// checkbox cell
-		this.checkbox = this.element.find( 'input.check' );
-
-		// vendor cell
-		this.vendorEdit = this.vendorCell.children().last().blur( Cart.bind( function( row ) {
-			Cart.__utilities__.saveEdit( row.vendorText, row.vendorEdit, row.title, 'vendor' );
-			row.vendor = row.vendorText.text();
-			Cart.__utilities__.closeEdit( row.vendorText, row.vendorEdit );
-		}, this ) );
-		this.vendorCell.dblclick( Cart.bind( Cart.__utilities__.openEdit, this.vendorCell, this.vendorText, this.vendorEdit ) );
-
-		// date cell
-		this.dateEdit = this.dateCell.children().last().blur( Cart.bind( function( row ) {
-			if( /^\d\d\d\d\/\d\d\/\d\d$/.test( row.dateEdit.val() ) ) {
-				Cart.__utilities__.saveEdit( row.dateText, row.dateEdit, row.title, 'date' );
-				var result = Cart.view.find( row );
-				Cart.view.take( result.index );
-				row.date = row.dateText.text();
-				result = Cart.view.find( row );
-				Cart.view.insert( result.index, row );
-			}
-			Cart.__utilities__.closeEdit( row.dateText, row.dateEdit );
-		}, this ) );
-		this.dateCell.dblclick( Cart.bind( Cart.__utilities__.openEdit, this.dateCell, this.dateText, this.dateEdit ) );
-};
-
-/**
  * Create dynamic row from JSON data.
  *
  * @class Row from JSON to DOM.
