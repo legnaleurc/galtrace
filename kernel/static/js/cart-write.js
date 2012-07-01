@@ -220,11 +220,7 @@ GalTrace.Row.prototype.update = function( data, origIndex ) {
 	}
 };
 
-/**
- * @namespace Internal namespace.
- * @private
- */
-GalTrace.__utilities__ = {
+( function() {
 
 	/**
 	 * Show the inline edit widget.
@@ -233,9 +229,9 @@ GalTrace.__utilities__ = {
 	 * @param {jQuery} label The displaying label.
 	 * @param {jQuery} input The editing widget.
 	 */
-	openEdit: function( parent, label, input ) {
+	function openEdit( parent, label, input ) {
 		input.width( parent.width() ).val( label.hide().text() ).show().select();
-	},
+	}
 
 	/**
 	 * Hide the inline edit widget.
@@ -243,10 +239,10 @@ GalTrace.__utilities__ = {
 	 * @param {jQuery} label The displaying label.
 	 * @param {jQuery} input The editing widget.
 	 */
-	closeEdit: function( label, input ) {
+	function closeEdit( label, input ) {
 		label.show();
 		input.hide();
-	},
+	}
 
 	/**
 	 * Commit content.
@@ -257,7 +253,7 @@ GalTrace.__utilities__ = {
 	 * @param {String} field The field to be commit as change.
 	 * @returns {jqXHR} The AJAX object.
 	 */
-	saveEdit: function( label, input, key, field ) {
+	function saveEdit( label, input, key, field ) {
 		if( label.text() == input.val() ) {
 			return;
 		}
@@ -268,46 +264,46 @@ GalTrace.__utilities__ = {
 		args[field] = input.val();
 		// TODO add hook
 		return jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
-	},
+	}
 
-};
+	/**
+	 * Post-initialization.
+	 *
+	 * @protected
+	 */
+	GalTrace.DynamicRow.prototype.__post_new__ = function() {
+			// checkbox cell
+			this.selector = $( '<td></td>' );
+			this.checkbox = $( '<input type="checkbox" />' ).change( GalTrace.bind( function( row ) {
+				row.element.data( 'checked', row.checkbox.is( ':checked' ) );
+			}, this ) );
+			this.element.data( 'checked', false );
+			this.selector.append( this.checkbox );
+			this.element.prepend( this.selector );
 
-/**
- * Post-initialization.
- *
- * @protected
- */
-GalTrace.DynamicRow.prototype.__post_new__ = function() {
-		// checkbox cell
-		this.selector = $( '<td></td>' );
-		this.checkbox = $( '<input type="checkbox" />' ).change( GalTrace.bind( function( row ) {
-			row.element.data( 'checked', row.checkbox.is( ':checked' ) );
-		}, this ) );
-		this.element.data( 'checked', false );
-		this.selector.append( this.checkbox );
-		this.element.prepend( this.selector );
+			// vendor cell
+			this.vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
+				saveEdit( row.vendorText, row.vendorEdit, row.title, 'vendor' );
+				row.vendor = row.vendorText.text();
+				closeEdit( row.vendorText, row.vendorEdit );
+			}, this ) );
+			this.vendorCell.dblclick( GalTrace.bind( openEdit, this.vendorCell, this.vendorText, this.vendorEdit ) );
+			this.vendorCell.append( this.vendorEdit );
 
-		// vendor cell
-		this.vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
-			GalTrace.__utilities__.saveEdit( row.vendorText, row.vendorEdit, row.title, 'vendor' );
-			row.vendor = row.vendorText.text();
-			GalTrace.__utilities__.closeEdit( row.vendorText, row.vendorEdit );
-		}, this ) );
-		this.vendorCell.dblclick( GalTrace.bind( GalTrace.__utilities__.openEdit, this.vendorCell, this.vendorText, this.vendorEdit ) );
-		this.vendorCell.append( this.vendorEdit );
+			// date cell
+			this.dateEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
+				if( /^\d\d\d\d\/\d\d\/\d\d$/.test( row.dateEdit.val() ) ) {
+					saveEdit( row.dateText, row.dateEdit, row.title, 'date' );
+					var result = GalTrace.view.find( row );
+					GalTrace.view.take( result.index );
+					row.date = row.dateText.text();
+					result = GalTrace.view.find( row );
+					GalTrace.view.insert( result.index, row );
+				}
+				closeEdit( row.dateText, row.dateEdit );
+			}, this ) );
+			this.dateCell.dblclick( GalTrace.bind( openEdit, this.dateCell, this.dateText, this.dateEdit ) );
+			this.dateCell.append( this.dateEdit );
+	};
 
-		// date cell
-		this.dateEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
-			if( /^\d\d\d\d\/\d\d\/\d\d$/.test( row.dateEdit.val() ) ) {
-				GalTrace.__utilities__.saveEdit( row.dateText, row.dateEdit, row.title, 'date' );
-				var result = GalTrace.view.find( row );
-				GalTrace.view.take( result.index );
-				row.date = row.dateText.text();
-				result = GalTrace.view.find( row );
-				GalTrace.view.insert( result.index, row );
-			}
-			GalTrace.__utilities__.closeEdit( row.dateText, row.dateEdit );
-		}, this ) );
-		this.dateCell.dblclick( GalTrace.bind( GalTrace.__utilities__.openEdit, this.dateCell, this.dateText, this.dateEdit ) );
-		this.dateCell.append( this.dateEdit );
-};
+} )();
