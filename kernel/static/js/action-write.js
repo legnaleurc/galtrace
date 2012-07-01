@@ -57,7 +57,7 @@
 			$( '#id_vendor' ).val( data.vendor );
 			$( '#id_date' ).val( data.date );
 		} ).error( function( jqXHR, textStatus, message ) {
-				Cart.cerr( 'Unknown Error', message );
+			Cart.cerr( 'Unknown Error', message );
 		} );
 	} );
 	$( '#stdin button[type=submit]' ).click( function( event ) {
