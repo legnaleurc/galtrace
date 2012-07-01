@@ -1,7 +1,7 @@
 /**
  * @namespace All functionality of GalTrace.
  */
-var Cart = {
+var GalTrace = {
 
 	/**
 	 * Bind function but leave this untouched.
@@ -33,25 +33,25 @@ var Cart = {
 	},
 
 	emit: function( eventType, extraParameters ) {
-		return Cart.view.view.trigger( eventType, extraParameters );
+		return GalTrace.view.view.trigger( eventType, extraParameters );
 	},
 
 	initialize: function( selector ) {
 		function load( offset ) {
-			jQuery.post( Cart.urls.LOAD, {
+			jQuery.post( GalTrace.urls.LOAD, {
 				offset: offset,
 				limit: 100,
 			}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
 				if( !data.success ) {
-					Cart.cerr( data.type, data.message );
+					GalTrace.cerr( data.type, data.message );
 					return;
 				}
 				if( data.data === null ) {
 					// load finished
-					Cart.phaseSet = Cart.view.view.children().filter( ':visible' );
-					Cart.searchSet = Cart.view.view.children();
-					Cart.emit( 'GalTrace.totalOrdersChanged', Cart.searchSet.length );
-					Cart.emit( 'GalTrace.currentOrdersChanged', Cart.phaseSet.length );
+					GalTrace.phaseSet = GalTrace.view.view.children().filter( ':visible' );
+					GalTrace.searchSet = GalTrace.view.view.children();
+					GalTrace.emit( 'GalTrace.totalOrdersChanged', GalTrace.searchSet.length );
+					GalTrace.emit( 'GalTrace.currentOrdersChanged', GalTrace.phaseSet.length );
 					return;
 				}
 				data = data.data;
@@ -59,21 +59,21 @@ var Cart = {
 				load( offset + data.length );
 
 				jQuery.each( data, function( key, value ) {
-					var row = new Cart.DynamicRow( this );
-					if( !Cart.matchPhase( row ) ) {
+					var row = new GalTrace.DynamicRow( this );
+					if( !GalTrace.matchPhase( row ) ) {
 						row.getElement().hide();
 					}
-					Cart.view.append( row );
+					GalTrace.view.append( row );
 				} );
 			} ).error( function( jqXHR, textStatus, message ) {
-				Cart.cerr( 'Unknown Error', message );
+				GalTrace.cerr( 'Unknown Error', message );
 			} );
 		}
 
-		Cart.view = new Cart.Table( selector );
-		Cart.phaseSet = null;
-		Cart.searchSet = null;
-		Cart.selectedPhases = {
+		GalTrace.view = new GalTrace.Table( selector );
+		GalTrace.phaseSet = null;
+		GalTrace.searchSet = null;
+		GalTrace.selectedPhases = {
 			0: true,
 			1: false,
 			2: false,
@@ -91,7 +91,7 @@ var Cart = {
 	 * @return {boolean} true if matched.
 	 */
 	matchPhase: function( row ) {
-		return Cart.selectedPhases[row.phase];
+		return GalTrace.selectedPhases[row.phase];
 	},
 
 	/**
@@ -133,23 +133,23 @@ var Cart = {
 			tmp.text( parseInt( tmp.text(), 10 ) + diff );
 		} );
 		this.view.on( 'GalTrace.phaseChanged', function( event, phase, selected ) {
-			if( Cart.phaseSet === null || Cart.searchSet === null ) {
+			if( GalTrace.phaseSet === null || GalTrace.searchSet === null ) {
 				return;
 			}
 			function eq() {
 				return $( this ).data( 'phase' ) === phase;
 			}
-			Cart.selectedPhases[phase] = selected;
+			GalTrace.selectedPhases[phase] = selected;
 			if( selected ) {
 				// some orders should be inserted, p += dp
-				jQuery.merge( Cart.phaseSet, $( this ).children().filter( eq ) );
+				jQuery.merge( GalTrace.phaseSet, $( this ).children().filter( eq ) );
 			} else {
-				Cart.phaseSet = Cart.phaseSet.filter( function() {
+				GalTrace.phaseSet = GalTrace.phaseSet.filter( function() {
 					return !eq.bind( this )();
 				} );
 			}
 			// ( s && dp ).setVisible( selected )
-			var tmp = Cart.searchSet.filter( eq );
+			var tmp = GalTrace.searchSet.filter( eq );
 			if( selected ) {
 				tmp.show();
 				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
@@ -170,24 +170,24 @@ var Cart = {
 			// else if text length is increasing, strip from current visible set
 			// else add new matched result to visible set
 			if( brandNew ) {
-				Cart.searchSet = $( this ).children().filter( eq );
-				var a = Cart.phaseSet.filter( ':hidden' ).filter( eq );
-				var b = Cart.phaseSet.filter( ':visible' ).filter( function() {
+				GalTrace.searchSet = $( this ).children().filter( eq );
+				var a = GalTrace.phaseSet.filter( ':hidden' ).filter( eq );
+				var b = GalTrace.phaseSet.filter( ':visible' ).filter( function() {
 					return !eq.bind( this )();
 				} );
 				a.show();
 				b.hide();
 				$( this ).trigger( 'GalTrace.currentOrdersChanged', a.length - b.length );
 			} else if( increase ) {
-				Cart.searchSet = Cart.searchSet.filter( eq );
-				var tmp = Cart.phaseSet.filter( ':visible' ).filter( function() {
+				GalTrace.searchSet = GalTrace.searchSet.filter( eq );
+				var tmp = GalTrace.phaseSet.filter( ':visible' ).filter( function() {
 					return !eq.bind( this )();
 				} );
 				tmp.hide();
 				$( this ).trigger( 'GalTrace.currentOrdersChanged', -tmp.length );
 			} else {
-				Cart.searchSet = $( this ).children().filter( eq );
-				var tmp = Cart.phaseSet.filter( ':hidden' ).filter( eq );
+				GalTrace.searchSet = $( this ).children().filter( eq );
+				var tmp = GalTrace.phaseSet.filter( ':hidden' ).filter( eq );
 				tmp.show();
 				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
 			}
@@ -204,7 +204,7 @@ var Cart = {
 	 */
 	DynamicRow: function( data ) {
 		// call super
-		Cart.Row.apply( this, arguments );
+		GalTrace.Row.apply( this, arguments );
 
 		// data
 		this.title = data.title;
@@ -222,7 +222,7 @@ var Cart = {
 			if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {
 				return;
 			}
-			Cart.googleSearch( $( this ).text() );
+			GalTrace.googleSearch( $( this ).text() );
 		} );
 
 		// link cell
@@ -259,10 +259,10 @@ var Cart = {
 /**
  * Append a row to the table.
  *
- * @param {Cart.Row} row The appending row.
- * @returns {Cart.Table} self.
+ * @param {GalTrace.Row} row The appending row.
+ * @returns {GalTrace.Table} self.
  */
-Cart.Table.prototype.append = function( row ) {
+GalTrace.Table.prototype.append = function( row ) {
 	this.items.push( row );
 	this.view.append( row.getElement() );
 
@@ -273,9 +273,9 @@ Cart.Table.prototype.append = function( row ) {
  * Get index-th row.
  *
  * @param {int} index The row index.
- * @returns {Cart.Row} row.
+ * @returns {GalTrace.Row} row.
  */
-Cart.Table.prototype.at = function( index ) {
+GalTrace.Table.prototype.at = function( index ) {
 	return this.items[index];
 };
 
@@ -284,20 +284,20 @@ Cart.Table.prototype.at = function( index ) {
  *
  * @returns {int} Total rows.
  */
-Cart.Table.prototype.size = function() {
+GalTrace.Table.prototype.size = function() {
 	return this.items.length;
 };
 
 /**
  * Find row in table.
  *
- * @param {Cart.Row} row The row to be found.
+ * @param {GalTrace.Row} row The row to be found.
  * @param {Function} [compare] Comparator.
  * @returns {Object}
  * o.found indicates whether the row exists.
  * o.index indicates the position of row, or desired insert position.
  */
-Cart.Table.prototype.find = function( row, compare ) {
+GalTrace.Table.prototype.find = function( row, compare ) {
 	if( compare === undefined ) {
 		compare = function( l, r ) {
 			if( l.getDate() == r.getDate() ) {
@@ -349,9 +349,9 @@ Cart.Table.prototype.find = function( row, compare ) {
  *
  * @param index After insertion, row will appear here.
  * @param row The row to be insert.
- * @return {Cart.Table} self.
+ * @return {GalTrace.Table} self.
  */
-Cart.Table.prototype.insert = function( index, row ) {
+GalTrace.Table.prototype.insert = function( index, row ) {
 	if( this.items.length == 0 ) {
 		this.append( row );
 	} else if( index >= this.items.length ) {
@@ -367,7 +367,7 @@ Cart.Table.prototype.insert = function( index, row ) {
 	return this;
 };
 
-Cart.Table.prototype.__post_new__ = function() {
+GalTrace.Table.prototype.__post_new__ = function() {
 };
 
 /**
@@ -375,7 +375,7 @@ Cart.Table.prototype.__post_new__ = function() {
  *
  * @returns {jQuery} DOM object.
  */
-Cart.Row.prototype.getElement = function() {
+GalTrace.Row.prototype.getElement = function() {
 	return this.element;
 };
 
@@ -384,7 +384,7 @@ Cart.Row.prototype.getElement = function() {
  *
  * @return {boolean} true if selected.
  */
-Cart.Row.prototype.isChecked = function() {
+GalTrace.Row.prototype.isChecked = function() {
 	return this.checkbox.is( ":checked" );
 };
 
@@ -393,7 +393,7 @@ Cart.Row.prototype.isChecked = function() {
  *
  * @returns {String} Title.
  */
-Cart.Row.prototype.getTitle = function() {
+GalTrace.Row.prototype.getTitle = function() {
 	return this.title;
 };
 
@@ -402,7 +402,7 @@ Cart.Row.prototype.getTitle = function() {
  *
  * @returns {String} Release date.
  */
-Cart.Row.prototype.getDate = function() {
+GalTrace.Row.prototype.getDate = function() {
 	return this.date;
 };
 
@@ -411,7 +411,7 @@ Cart.Row.prototype.getDate = function() {
  *
  * @returns {int} Complete phase.
  */
-Cart.Row.prototype.getPhase = function() {
+GalTrace.Row.prototype.getPhase = function() {
 	return this.phase;
 };
 
@@ -422,8 +422,8 @@ Cart.Row.prototype.getPhase = function() {
  *
  * @protected
  */
-Cart.Row.prototype.__post_new__ = function() {
+GalTrace.Row.prototype.__post_new__ = function() {
 	// NOTE this function provides a post-initialization
 };
 
-Cart.DynamicRow.prototype = new Cart.Row();
+GalTrace.DynamicRow.prototype = new GalTrace.Row();

@@ -1,7 +1,7 @@
 ( function() {
 
 	// create table and load orders
-	Cart.initialize( '#cart' );
+	GalTrace.initialize( '#GalTrace' );
 
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
@@ -26,13 +26,13 @@
 		event.preventDefault();
 		var self = $( this );
 		self.toggleClass( 'active' );
-		Cart.emit( 'GalTrace.phaseChanged', [ self.data( 'value' ), self.hasClass( 'active' ) ] );
+		GalTrace.emit( 'GalTrace.phaseChanged', [ self.data( 'value' ), self.hasClass( 'active' ) ] );
 	} );
 	var previous = $( '#search' ).text();
 	$( '#search' ).keyup( function( event ) {
 		var current = $( this ).val();
 		if( previous !== current ) {
-			Cart.emit( 'GalTrace.searchChanged', [ current, current.indexOf( previous ) < 0 && previous.indexOf( current ) < 0, current.length > previous.length ] );
+			GalTrace.emit( 'GalTrace.searchChanged', [ current, current.indexOf( previous ) < 0 && previous.indexOf( current ) < 0, current.length > previous.length ] );
 			previous = current;
 		}
 	} );
@@ -49,7 +49,7 @@
 			var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
 			customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
 			customSearchControl.draw( 'cse' );
-			Cart.googleSearch = function( keyword ) {
+			GalTrace.googleSearch = function( keyword ) {
 				cseDialog.modal( 'show' );
 				customSearchControl.execute( keyword );
 			};

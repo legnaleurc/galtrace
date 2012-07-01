@@ -5,9 +5,9 @@
  * @param {Function} callback callback function on success.
  * @returns {jqXHR} AJAX object.
  */
-Cart.Table.prototype.createRow = function( args ) {
+GalTrace.Table.prototype.createRow = function( args ) {
 	// send request, server will handle INSERT/UPDATE by itself
-	var request = jQuery.post( Cart.urls.SAVE, args, null, 'json' );
+	var request = jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
 
 	// find if exists (by title); can not use binary search here
 	var row = null;
@@ -28,61 +28,61 @@ Cart.Table.prototype.createRow = function( args ) {
 	}
 
 	return request.success( function() {
-		var row = new Cart.DynamicRow( args );
-		var tmp = Cart.view.find( row );
-		Cart.view.insert( tmp.index, row );
+		var row = new GalTrace.DynamicRow( args );
+		var tmp = GalTrace.view.find( row );
+		GalTrace.view.insert( tmp.index, row );
 
 		// update hidden state
-		var phasePass = Cart.matchPhase( row );
+		var phasePass = GalTrace.matchPhase( row );
 		if( phasePass ) {
-			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
+			jQuery.merge( GalTrace.phaseSet, [ row.getElement() ] );
 		}
-		var searchPass = Cart.matchSearch( row );
+		var searchPass = GalTrace.matchSearch( row );
 		if( searchPass ) {
-			jQuery.merge( Cart.searchSet, [ row.getElement() ] );
+			jQuery.merge( GalTrace.searchSet, [ row.getElement() ] );
 		}
 		if( phasePass && searchPass ) {
-			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
+			GalTrace.emit( 'GalTrace.currentOrdersChanged', 1 );
 		} else {
 			row.getElement().hide();
 		}
 
 		// update total count
-		Cart.emit( 'GalTrace.totalOrdersChanged', 1 );
+		GalTrace.emit( 'GalTrace.totalOrdersChanged', 1 );
 	} );
 };
 
-Cart.deleteRows = function() {
-	var selected = Cart.view.view.children().filter( function() {
+GalTrace.deleteRows = function() {
+	var selected = GalTrace.view.view.children().filter( function() {
 		return $( this ).data( 'checked' );
 	} );
-	var request = jQuery.post( Cart.urls.DELETE, {
+	var request = jQuery.post( GalTrace.urls.DELETE, {
 		orders: jQuery.map( selected, function( value, key ) {
 			return $( value ).data( 'title' );
 		} ),
 	}, null, 'json' ).success( function() {
-		Cart.phaseSet = Cart.phaseSet.filter( function() {
+		GalTrace.phaseSet = GalTrace.phaseSet.filter( function() {
 			return !$( this ).data( 'checked' );
 		} );
-		Cart.searchSet = Cart.searchSet.filter( function() {
+		GalTrace.searchSet = GalTrace.searchSet.filter( function() {
 			return !$( this ).data( 'checked' );
 		} );
-		Cart.view.items = jQuery.grep( Cart.view.items, function( value, key ) {
+		GalTrace.view.items = jQuery.grep( GalTrace.view.items, function( value, key ) {
 			return !value.isChecked();
 		} );
 		var tmp = selected.filter( ':visible' );
-		Cart.emit( 'GalTrace.currentOrdersChanged', -tmp.length );
-		Cart.emit( 'GalTrace.totalOrdersChanged', -selected.length );
+		GalTrace.emit( 'GalTrace.currentOrdersChanged', -tmp.length );
+		GalTrace.emit( 'GalTrace.totalOrdersChanged', -selected.length );
 		selected.remove();
 	} );
 	return request;
 };
 
-Cart.movePhase = function( phase ) {
-	var selected = jQuery.grep( Cart.view.items, function( value, key ) {
+GalTrace.movePhase = function( phase ) {
+	var selected = jQuery.grep( GalTrace.view.items, function( value, key ) {
 		return value.isChecked();
 	} );
-	var request = jQuery.post( Cart.urls.MOVE, {
+	var request = jQuery.post( GalTrace.urls.MOVE, {
 		phase: phase,
 		orders: jQuery.map( selected, function( value, key ) {
 			return value.getTitle();
@@ -102,38 +102,38 @@ Cart.movePhase = function( phase ) {
  * The DOM object is temporary removed, but still exist.
  *
  * @param {int} index The index to be remove.
- * @returns {Cart.Row} The taken row.
+ * @returns {GalTrace.Row} The taken row.
  */
-Cart.Table.prototype.take = function( index ) {
+GalTrace.Table.prototype.take = function( index ) {
 	var taken = this.items.splice( index, 1 )[0];
 	taken.getElement().detach();
 	return taken;
 };
 
-Cart.Table.prototype.__post_new__ = function() {
+GalTrace.Table.prototype.__post_new__ = function() {
 	this.view.on( 'GalTrace.phaseOfRowChanged', function( event, row ) {
-		if( Cart.selectedPhases[row.phase] ) {
-			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
+		if( GalTrace.selectedPhases[row.phase] ) {
+			jQuery.merge( GalTrace.phaseSet, [ row.getElement() ] );
 			row.getElement().show();
-			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
+			GalTrace.emit( 'GalTrace.currentOrdersChanged', 1 );
 		} else {
 			var tmp = -1;
-			jQuery.each( Cart.phaseSet, function( key, value ) {
+			jQuery.each( GalTrace.phaseSet, function( key, value ) {
 				if( row.getElement().is( value ) ) {
 					tmp = key;
 					return false;
 				}
 			} );
-			Array.prototype.splice.call( Cart.phaseSet, tmp, 1 );
+			Array.prototype.splice.call( GalTrace.phaseSet, tmp, 1 );
 			row.getElement().hide();
-			Cart.emit( 'GalTrace.currentOrdersChanged', -1 );
+			GalTrace.emit( 'GalTrace.currentOrdersChanged', -1 );
 		}
 	} );
 
 	this.view.on( 'GalTrace.rowOrderChanged', function( event, row, origIndex ) {
-		Cart.view.take( origIndex );
-		var tmp = Cart.view.find( row );
-		Cart.view.insert( tmp.index, row );
+		GalTrace.view.take( origIndex );
+		var tmp = GalTrace.view.find( row );
+		GalTrace.view.insert( tmp.index, row );
 	} );
 };
 
@@ -141,9 +141,9 @@ Cart.Table.prototype.__post_new__ = function() {
  * Set selection state.
  *
  * @param {boolean} checked selection state.
- * @returns {Cart.Row} self.
+ * @returns {GalTrace.Row} self.
  */
-Cart.Row.prototype.setChecked = function( checked ) {
+GalTrace.Row.prototype.setChecked = function( checked ) {
 	this.checkbox.attr( 'checked', checked );
 	this.element.data( 'checked', checked );
 	return this;
@@ -153,13 +153,13 @@ Cart.Row.prototype.setChecked = function( checked ) {
  * Set complete phase.
  *
  * @param {int} phase Complete phase.
- * @returns {Cart.Row} self.
+ * @returns {GalTrace.Row} self.
  */
-Cart.Row.prototype.setPhase = function( phase ) {
+GalTrace.Row.prototype.setPhase = function( phase ) {
 	if( this.phase !== phase ) {
 		this.phase = phase;
 		this.element.data( 'phase', this.phase );
-		Cart.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
+		GalTrace.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
 	}
 	return this;
 };
@@ -169,8 +169,8 @@ Cart.Row.prototype.setPhase = function( phase ) {
  *
  * @returns {jqXHR} A AJAX object.
  */
-Cart.Row.prototype.save = function() {
-	return jQuery.post( Cart.urls.SAVE, {
+GalTrace.Row.prototype.save = function() {
+	return jQuery.post( GalTrace.urls.SAVE, {
 		title: this.title,
 		vendor: this.vendor,
 		date: this.date,
@@ -180,7 +180,7 @@ Cart.Row.prototype.save = function() {
 	}, null, 'json' );
 };
 
-Cart.Row.prototype.update = function( data, origIndex ) {
+GalTrace.Row.prototype.update = function( data, origIndex ) {
 	var orderChanged = false;
 
 	if( this.title !== data.title ) {
@@ -210,13 +210,13 @@ Cart.Row.prototype.update = function( data, origIndex ) {
 	if( this.phase !== data.phase ) {
 		this.phase = data.phase;
 		this.element.data( 'phase', this.phase );
-		Cart.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
+		GalTrace.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
 	}
 
 	this.volume = data.volume;
 
 	if( orderChanged ) {
-		Cart.emit( 'GalTrace.rowOrderChanged', [ this, origIndex ] );
+		GalTrace.emit( 'GalTrace.rowOrderChanged', [ this, origIndex ] );
 	}
 };
 
@@ -224,7 +224,7 @@ Cart.Row.prototype.update = function( data, origIndex ) {
  * @namespace Internal namespace.
  * @private
  */
-Cart.__utilities__ = {
+GalTrace.__utilities__ = {
 
 	/**
 	 * Show the inline edit widget.
@@ -267,7 +267,7 @@ Cart.__utilities__ = {
 		};
 		args[field] = input.val();
 		// TODO add hook
-		return jQuery.post( Cart.urls.SAVE, args, null, 'json' );
+		return jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
 	},
 
 };
@@ -277,10 +277,10 @@ Cart.__utilities__ = {
  *
  * @protected
  */
-Cart.DynamicRow.prototype.__post_new__ = function() {
+GalTrace.DynamicRow.prototype.__post_new__ = function() {
 		// checkbox cell
 		this.selector = $( '<td></td>' );
-		this.checkbox = $( '<input type="checkbox" />' ).change( Cart.bind( function( row ) {
+		this.checkbox = $( '<input type="checkbox" />' ).change( GalTrace.bind( function( row ) {
 			row.element.data( 'checked', row.checkbox.is( ':checked' ) );
 		}, this ) );
 		this.element.data( 'checked', false );
@@ -288,26 +288,26 @@ Cart.DynamicRow.prototype.__post_new__ = function() {
 		this.element.prepend( this.selector );
 
 		// vendor cell
-		this.vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( Cart.bind( function( row ) {
-			Cart.__utilities__.saveEdit( row.vendorText, row.vendorEdit, row.title, 'vendor' );
+		this.vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
+			GalTrace.__utilities__.saveEdit( row.vendorText, row.vendorEdit, row.title, 'vendor' );
 			row.vendor = row.vendorText.text();
-			Cart.__utilities__.closeEdit( row.vendorText, row.vendorEdit );
+			GalTrace.__utilities__.closeEdit( row.vendorText, row.vendorEdit );
 		}, this ) );
-		this.vendorCell.dblclick( Cart.bind( Cart.__utilities__.openEdit, this.vendorCell, this.vendorText, this.vendorEdit ) );
+		this.vendorCell.dblclick( GalTrace.bind( GalTrace.__utilities__.openEdit, this.vendorCell, this.vendorText, this.vendorEdit ) );
 		this.vendorCell.append( this.vendorEdit );
 
 		// date cell
-		this.dateEdit = $( '<input type="text" style="display: none;" />' ).blur( Cart.bind( function( row ) {
+		this.dateEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( row ) {
 			if( /^\d\d\d\d\/\d\d\/\d\d$/.test( row.dateEdit.val() ) ) {
-				Cart.__utilities__.saveEdit( row.dateText, row.dateEdit, row.title, 'date' );
-				var result = Cart.view.find( row );
-				Cart.view.take( result.index );
+				GalTrace.__utilities__.saveEdit( row.dateText, row.dateEdit, row.title, 'date' );
+				var result = GalTrace.view.find( row );
+				GalTrace.view.take( result.index );
 				row.date = row.dateText.text();
-				result = Cart.view.find( row );
-				Cart.view.insert( result.index, row );
+				result = GalTrace.view.find( row );
+				GalTrace.view.insert( result.index, row );
 			}
-			Cart.__utilities__.closeEdit( row.dateText, row.dateEdit );
+			GalTrace.__utilities__.closeEdit( row.dateText, row.dateEdit );
 		}, this ) );
-		this.dateCell.dblclick( Cart.bind( Cart.__utilities__.openEdit, this.dateCell, this.dateText, this.dateEdit ) );
+		this.dateCell.dblclick( GalTrace.bind( GalTrace.__utilities__.openEdit, this.dateCell, this.dateText, this.dateEdit ) );
 		this.dateCell.append( this.dateEdit );
 };
