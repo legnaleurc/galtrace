@@ -9,17 +9,14 @@
 	$( '#button-delete' ).click( function( event ) {
 		event.preventDefault();
 
-		for( var i = Cart.view.size() - 1; i >= 0; --i ) {
-			if( Cart.view.at( i ).isChecked() ) {
-				Cart.view.take( i ).remove().success( function( data, textStatus, jqXHR ) {
-					if( !data.success ) {
-						Cart.cerr( data.type, data.message );
-					}
-				} ).error( function( jqXHR, textStatus, message ) {
-					Cart.cerr( 'Unknown Error', message );
-				} );
+		Cart.deleteRows().success( function( data, textStatus, jqXHR ) {
+			if( !data.success ) {
+				Cart.cerr( data.type, data.message );
+				return;
 			}
-		}
+		} ).error( function( jqXHR, textStatus, message ) {
+			Cart.cerr( 'Unknown Error', message );
+		} );
 	} );
 
 	// move phase event

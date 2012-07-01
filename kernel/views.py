@@ -134,15 +134,11 @@ def move( request ):
 @login_required
 @ajaxView
 def delete( request ):
-	args = getArgs( request )
-	if u'title' not in args or len( args[u'title'] ) == 0:
-		raise ValueError( '`title` is empty' )
+	orders = request.POST.getlist( u'orders[]' )
 
-	result = Order.objects.filter( title__exact = args[u'title'] )
-	if len( result ) == 0:
-		raise RuntimeError( '{0} not found'.format( args[u'title'] ) )
-
+	result = Order.objects.filter( title__in = orders )
 	result.delete()
+
 	return None
 
 @login_required

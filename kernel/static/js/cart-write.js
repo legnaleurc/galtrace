@@ -52,8 +52,31 @@ Cart.Table.prototype.createRow = function( args ) {
 	} );
 };
 
+Cart.deleteRows = function() {
+	var selected = Cart.view.view.children().filter( function() {
+		return $( this ).data( 'checked' );
+	} );
+	var request = jQuery.post( Cart.urls.DELETE, {
+		orders: jQuery.map( selected, function( value, key ) {
+			return $( value ).data( 'title' );
+		} ),
+	}, null, 'json' ).success( function() {
+		Cart.phaseSet = Cart.phaseSet.filter( function() {
+			return !$( this ).data( 'checked' );
+		} );
+		Cart.searchSet = Cart.searchSet.filter( function() {
+			return !$( this ).data( 'checked' );
+		} );
+		Cart.view.items = jQuery.grep( Cart.view.items, function( value, key ) {
+			return !value.isChecked();
+		} );
+		selected.remove();
+	} );
+	return request;
+};
+
 Cart.movePhase = function( phase ) {
-	var selected = jQuery.grep( Cart.view.items, function( value, key) {
+	var selected = jQuery.grep( Cart.view.items, function( value, key ) {
 		return value.isChecked();
 	} );
 	var request = jQuery.post( Cart.urls.MOVE, {
@@ -119,6 +142,7 @@ Cart.Table.prototype.__post_new__ = function() {
  */
 Cart.Row.prototype.setChecked = function( checked ) {
 	this.checkbox.attr( 'checked', checked );
+	this.element.data( 'checked', checked );
 	return this;
 };
 
@@ -135,19 +159,6 @@ Cart.Row.prototype.setPhase = function( phase ) {
 		Cart.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
 	}
 	return this;
-};
-
-/**
- * Totally remove row from DOM and database.
- *
- * @returns {jqXHR} A AJAX object.
- */
-Cart.Row.prototype.remove = function() {
-	this.element.remove();
-
-	return jQuery.post( Cart.urls.DELETE, {
-		title: this.title
-	}, null, 'json' );
 };
 
 /**
@@ -266,7 +277,10 @@ Cart.__utilities__ = {
 Cart.DynamicRow.prototype.__post_new__ = function() {
 		// checkbox cell
 		this.selector = $( '<td></td>' );
-		this.checkbox = $( '<input type="checkbox" class="check" />' );
+		this.checkbox = $( '<input type="checkbox" />' ).change( Cart.bind( function( row ) {
+			row.element.data( 'checked', row.checkbox.is( ':checked' ) );
+		}, this ) );
+		this.element.data( 'checked', false );
 		this.selector.append( this.checkbox );
 		this.element.prepend( this.selector );
 
