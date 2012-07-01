@@ -123,6 +123,18 @@ def save( request ):
 @require_POST
 @login_required
 @ajaxView
+def move( request ):
+	phase = int( request.POST[u'phase'] )
+	orders = request.POST.getlist( u'orders[]' )
+
+	result = Order.objects.filter( title__in = orders )
+	result.update( phase = phase )
+
+	return None
+
+@require_POST
+@login_required
+@ajaxView
 def delete( request ):
 	args = getArgs( request )
 	if u'title' not in args or len( args[u'title'] ) == 0:

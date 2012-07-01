@@ -52,6 +52,24 @@ Cart.Table.prototype.createRow = function( args ) {
 	} );
 };
 
+Cart.movePhase = function( phase ) {
+	var selected = jQuery.grep( Cart.view.items, function( value, key) {
+		return value.isChecked();
+	} );
+	var request = jQuery.post( Cart.urls.MOVE, {
+		phase: phase,
+		orders: jQuery.map( selected, function( value, key ) {
+			return value.getTitle();
+		} ),
+	}, null, 'json' ).success( function() {
+		jQuery.each( selected, function() {
+			this.setPhase( phase );
+			this.setChecked( false );
+		} );
+	} );
+	return request;
+};
+
 /**
  * Take row from table.
  *
@@ -111,7 +129,11 @@ Cart.Row.prototype.setChecked = function( checked ) {
  * @returns {Cart.Row} self.
  */
 Cart.Row.prototype.setPhase = function( phase ) {
-	this.phase = phase;
+	if( this.phase !== phase ) {
+		this.phase = phase;
+		this.element.data( 'phase', this.phase );
+		Cart.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
+	}
 	return this;
 };
 

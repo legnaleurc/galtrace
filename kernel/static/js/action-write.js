@@ -27,37 +27,14 @@
 		event.preventDefault();
 
 		var phase = $( this ).data( 'phase' );
-		var visible = $( '.phase-filter[data-value="' + phase + '"]' ).hasClass( 'active' );
-		for( var i = 0; i < Cart.view.size(); ++i ) {
-			var row = Cart.view.at( i );
-			// if not selected or phase no need to change, skip this part
-			if( !row.isChecked() || phase === row.getPhase() ) {
-				continue;
+		Cart.movePhase( phase ).success( function( data, textStatus, jqXHR ) {
+			if( !data.success ) {
+				Cart.cerr( data.type, data.message );
+				return;
 			}
-
-			var currentOrders = $( '#current-orders' );
-			var diff = parseInt( currentOrders.text(), 10 );
-			// update phase and clear selection
-			row.setPhase( phase ).setChecked( false );
-			// update hidden state
-			if( visible ) {
-				++diff;
-				row.getElement().show();
-			} else {
-				--diff;
-				row.getElement().hide();
-			}
-			currentOrders.text( diff );
-			// sync to database
-			row.save().success( function( data, textStatus, jqXHR ) {
-				if( !data.success ) {
-					Cart.cerr( data.type, data.message );
-					return;
-				}
-			} ).error( function( jqXHR, textStatus, message ) {
-				Cart.cerr( 'Unknown Error', message );
-			} );
-		}
+		} ).error( function( jqXHR, textStatus, message ) {
+			Cart.cerr( 'Unknown Error', message );
+		} );
 	} );
 
 	// insert dialog
