@@ -77,7 +77,7 @@
 			return false;
 		}
 
-		GalTrace.view.createRow( args ).success( function( data, textStatus, jqXHR ) {
+		GalTrace.createRow( args ).success( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
 				return;

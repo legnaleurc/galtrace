@@ -5,14 +5,14 @@
  * @param {Function} callback callback function on success.
  * @returns {jqXHR} AJAX object.
  */
-GalTrace.Table.prototype.createRow = function( args ) {
+GalTrace.createRow = function( args ) {
 	// send request, server will handle INSERT/UPDATE by itself
 	var request = jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
 
 	// find if exists (by title); can not use binary search here
 	var row = null;
 	var tmp = -1;
-	jQuery.each( this.items, function( key, value ) {
+	jQuery.each( GalTrace.view.items, function( key, value ) {
 		if( this.title === args.title ) {
 			tmp = key;
 			row = value;
