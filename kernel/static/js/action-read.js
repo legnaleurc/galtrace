@@ -1,7 +1,7 @@
 ( function() {
 
 	// create table and load orders
-	GalTrace.initialize( '#GalTrace' );
+	GalTrace.initialize( '#orders' );
 
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
