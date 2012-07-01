@@ -70,6 +70,9 @@ Cart.deleteRows = function() {
 		Cart.view.items = jQuery.grep( Cart.view.items, function( value, key ) {
 			return !value.isChecked();
 		} );
+		var tmp = selected.filter( ':visible' );
+		Cart.emit( 'GalTrace.currentOrdersChanged', -tmp.length );
+		Cart.emit( 'GalTrace.totalOrdersChanged', -selected.length );
 		selected.remove();
 	} );
 	return request;
