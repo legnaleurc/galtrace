@@ -108,15 +108,13 @@ def save( request ):
 		raise ValueError( '`title` is empty' )
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
-	if( len( result ) == 0 ):
+	if len( result ) == 0:
 		# new item, insert
 		result = Order( user = request.user, **args )
 		result.save()
 	else:
 		# item exists, update
 		result.update( **args )
-		for x in result:
-			x.save()
 
 	return None
 
@@ -141,10 +139,10 @@ def delete( request ):
 		raise ValueError( '`title` is empty' )
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
-	if( len( result ) == 0 ):
+	if len( result ) == 0:
 		raise RuntimeError( '{0} not found'.format( args[u'title'] ) )
 
-	result[0].delete()
+	result.delete()
 	return None
 
 @login_required
