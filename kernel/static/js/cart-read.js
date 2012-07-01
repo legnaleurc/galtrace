@@ -192,6 +192,8 @@ var Cart = {
 				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
 			}
 		} );
+
+		this.__post_new__();
 	},
 
 	/**
@@ -363,6 +365,9 @@ Cart.Table.prototype.insert = function( index, row ) {
 		this.items.splice( 0, 0, row );
 	}
 	return this;
+};
+
+Cart.Table.prototype.__post_new__ = function() {
 };
 
 /**

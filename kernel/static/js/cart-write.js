@@ -11,16 +11,19 @@ Cart.Table.prototype.createRow = function( args ) {
 
 	// find if exists (by title); can not use binary search here
 	var row = null;
+	var tmp = -1;
 	jQuery.each( this.items, function( key, value ) {
 		if( this.title === args.title ) {
-			row = this;
+			tmp = key;
+			row = value;
 			return false;
 		}
 	} );
 	// only update data and move order if success
 	if( row !== null ) {
 		return request.success( function() {
-			row.update( args );
+			// update data and HTML
+			row.update( args, tmp );
 		} );
 	}
 
@@ -61,6 +64,33 @@ Cart.Table.prototype.take = function( index ) {
 	var taken = this.items.splice( index, 1 )[0];
 	taken.getElement().detach();
 	return taken;
+};
+
+Cart.Table.prototype.__post_new__ = function() {
+	this.view.on( 'GalTrace.phaseOfRowChanged', function( event, row ) {
+		if( Cart.selectedPhases[row.phase] ) {
+			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
+			row.getElement().show();
+			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
+		} else {
+			var tmp = -1;
+			jQuery.each( Cart.phaseSet, function( key, value ) {
+				if( row.getElement().is( value ) ) {
+					tmp = key;
+					return false;
+				}
+			} );
+			Array.prototype.splice.call( Cart.phaseSet, tmp, 1 );
+			row.getElement().hide();
+			Cart.emit( 'GalTrace.currentOrdersChanged', -1 );
+		}
+	} );
+
+	this.view.on( 'GalTrace.rowOrderChanged', function( event, row, origIndex ) {
+		Cart.view.take( origIndex );
+		var tmp = Cart.view.find( row );
+		Cart.view.insert( tmp.index, row );
+	} );
 };
 
 /**
@@ -114,25 +144,44 @@ Cart.Row.prototype.save = function() {
 	}, null, 'json' );
 };
 
-Cart.Row.prototype.update = function( data ) {
-	this.title = data.title;
-	this.titleCell.text( this.title );
-	this.element.data( 'title', this.title );
+Cart.Row.prototype.update = function( data, origIndex ) {
+	var orderChanged = false;
 
-	this.vendor = data.vendor;
-	this.vendorText.text( this.vendor );
-	this.element.data( 'vendor', this.vendor );
+	if( this.title !== data.title ) {
+		this.title = data.title;
+		this.titleCell.text( this.title );
+		this.element.data( 'title', this.title );
+		orderChanged = true;
+	}
 
-	this.date = data.date;
-	this.dateText.text( this.date );
+	if( this.vendor !== data.vendor ) {
+		this.vendor = data.vendor;
+		this.vendorText.text( this.vendor );
+		this.element.data( 'vendor', this.vendor );
+	}
 
-	this.uri = data.uri;
-	this.link.attr( 'href', this.uri );
+	if( this.date !== data.date ) {
+		this.date = data.date;
+		this.dateText.text( this.date );
+		orderChanged = true;
+	}
 
-	this.phase = data.phase;
-	this.element.data( 'phase', this.phase );
+	if( this.uri !== data.uri ) {
+		this.uri = data.uri;
+		this.link.attr( 'href', this.uri );
+	}
+
+	if( this.phase !== data.phase ) {
+		this.phase = data.phase;
+		this.element.data( 'phase', this.phase );
+		Cart.emit( 'GalTrace.phaseOfRowChanged', [ this ] );
+	}
 
 	this.volume = data.volume;
+
+	if( orderChanged ) {
+		Cart.emit( 'GalTrace.rowOrderChanged', [ this, origIndex ] );
+	}
 };
 
 /**
