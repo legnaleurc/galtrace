@@ -5,17 +5,48 @@
  * @param {Function} callback callback function on success.
  * @returns {jqXHR} AJAX object.
  */
-Cart.Table.prototype.newRow = function( args ) {
-	var row = new Cart.DynamicRow( args );
-	var result = this.find( row );
-	if( result.found ) {
-		// FIXME the remove here well delete record in database,
-		// instead of update it, please check this in someday
-		this.take( result.index ).remove();
-	}
-	this.insert( result.index, row );
+Cart.Table.prototype.createRow = function( args ) {
+	// send request, server will handle INSERT/UPDATE by itself
+	var request = jQuery.post( Cart.urls.SAVE, args, null, 'json' );
 
-	return row.save();
+	// find if exists (by title); can not use binary search here
+	var row = null;
+	jQuery.each( this.items, function( key, value ) {
+		if( this.title === args.title ) {
+			row = this;
+			return false;
+		}
+	} );
+	// only update data and move order if success
+	if( row !== null ) {
+		return request.success( function() {
+			row.update( args );
+		} );
+	}
+
+	return request.success( function() {
+		var row = new Cart.DynamicRow( args );
+		var tmp = Cart.view.find( row );
+		Cart.view.insert( tmp.index, row );
+
+		// update hidden state
+		var phasePass = Cart.matchPhase( row );
+		if( phasePass ) {
+			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
+		}
+		var searchPass = Cart.matchSearch( row );
+		if( searchPass ) {
+			jQuery.merge( Cart.searchSet, [ row.getElement() ] );
+		}
+		if( phasePass && searchPass ) {
+			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
+		} else {
+			row.getElement().hide();
+		}
+
+		// update total count
+		Cart.emit( 'GalTrace.totalOrdersChanged', 1 );
+	} );
 };
 
 /**
@@ -81,6 +112,27 @@ Cart.Row.prototype.save = function() {
 		phase: this.phase,
 		volume: this.volume
 	}, null, 'json' );
+};
+
+Cart.Row.prototype.update = function( data ) {
+	this.title = data.title;
+	this.titleCell.text( this.title );
+	this.element.data( 'title', this.title );
+
+	this.vendor = data.vendor;
+	this.vendorText.text( this.vendor );
+	this.element.data( 'vendor', this.vendor );
+
+	this.date = data.date;
+	this.dateText.text( this.date );
+
+	this.uri = data.uri;
+	this.link.attr( 'href', this.uri );
+
+	this.phase = data.phase;
+	this.element.data( 'phase', this.phase );
+
+	this.volume = data.volume;
 };
 
 /**

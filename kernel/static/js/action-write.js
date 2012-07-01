@@ -103,7 +103,7 @@
 			return false;
 		}
 
-		Cart.view.newRow( args ).success( function( data, textStatus, jqXHR ) {
+		Cart.view.createRow( args ).success( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				Cart.cerr( data.type, data.message );
 				return;

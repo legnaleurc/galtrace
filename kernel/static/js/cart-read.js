@@ -50,14 +50,20 @@ var Cart = {
 					// load finished
 					Cart.phaseSet = Cart.view.view.children().filter( ':visible' );
 					Cart.searchSet = Cart.view.view.children();
+					Cart.emit( 'GalTrace.totalOrdersChanged', Cart.searchSet.length );
+					Cart.emit( 'GalTrace.currentOrdersChanged', Cart.phaseSet.length );
 					return;
 				}
 				data = data.data;
 
 				load( offset + data.length );
 
-				$( data ).each( function() {
-					Cart.view.append( new Cart.DynamicRow( this ) );
+				jQuery.each( data, function( key, value ) {
+					var row = new Cart.DynamicRow( this );
+					if( !Cart.matchPhase( row ) ) {
+						row.getElement().hide();
+					}
+					Cart.view.append( row );
 				} );
 			} ).error( function( jqXHR, textStatus, message ) {
 				Cart.cerr( 'Unknown Error', message );
@@ -67,6 +73,13 @@ var Cart = {
 		Cart.view = new Cart.Table( selector );
 		Cart.phaseSet = null;
 		Cart.searchSet = null;
+		Cart.selectedPhases = {
+			0: true,
+			1: false,
+			2: false,
+			3: false,
+			4: false,
+		};
 		load( 0 );
 	},
 
@@ -77,28 +90,20 @@ var Cart = {
 	 * @param {Array} phases Selected phases.
 	 * @return {boolean} true if matched.
 	 */
-	applyFilter: function( row ) {
-		// NOTE should only call by row's constructor
-		// FIXME ugly global operation
-		var phases = jQuery.map( $( '.phase-filter.active' ), function( v ) {
-			return $( v ).data( 'value' );
-		} );
+	matchPhase: function( row ) {
+		return Cart.selectedPhases[row.phase];
+	},
+
+	/**
+	 * Matches given condition.
+	 *
+	 * @param {String} pattern Matches title or vendor.
+	 * @param {Array} phases Selected phases.
+	 * @return {boolean} true if matched.
+	 */
+	matchSearch: function( row ) {
 		var pattern = $( '#search' ).val().toLowerCase();
-
-		var patternPass = false;
-		if( row.title.toLowerCase().indexOf( pattern ) >= 0 || row.vendor.toLowerCase().indexOf( pattern ) >= 0 ) {
-			patternPass = true;
-		}
-		if( patternPass ) {
-			jQuery.merge( Cart.searchSet, [ row.getElement() ] );
-		}
-
-		var phasePass = phases.indexOf( row.phase ) >= 0;
-		if( phasePass ) {
-			jQuery.merge( Cart.phaseSet, [ row.getElement() ] );
-		}
-
-		return patternPass && phasePass;
+		return ( row.title.toLowerCase().indexOf( pattern ) >= 0 || row.vendor.toLowerCase().indexOf( pattern ) >= 0 );
 	},
 
 	/**
@@ -123,6 +128,10 @@ var Cart = {
 			var tmp = $( '#current-orders' );
 			tmp.text( parseInt( tmp.text(), 10 ) + diff );
 		} );
+		this.view.on( 'GalTrace.totalOrdersChanged', function( event, diff ) {
+			var tmp = $( '#total-orders' );
+			tmp.text( parseInt( tmp.text(), 10 ) + diff );
+		} );
 		this.view.on( 'GalTrace.phaseChanged', function( event, phase, selected ) {
 			if( Cart.phaseSet === null || Cart.searchSet === null ) {
 				return;
@@ -130,6 +139,7 @@ var Cart = {
 			function eq() {
 				return $( this ).data( 'phase' ) === phase;
 			}
+			Cart.selectedPhases[phase] = selected;
 			if( selected ) {
 				// some orders should be inserted, p += dp
 				jQuery.merge( Cart.phaseSet, $( this ).children().filter( eq ) );
@@ -239,15 +249,6 @@ var Cart = {
 		this.element.data( 'vendor', this.vendor );
 		this.element.data( 'phase', this.phase );
 
-		// update hidden state
-		var matched = Cart.applyFilter( this );
-		if( matched ) {
-			// FIXME assuming creation is insertion
-			Cart.emit( 'GalTrace.currentOrdersChanged', 1 );
-		} else {
-			this.element.hide();
-		}
-
 		this.__post_new__();
 	},
 
@@ -262,9 +263,6 @@ var Cart = {
 Cart.Table.prototype.append = function( row ) {
 	this.items.push( row );
 	this.view.append( row.getElement() );
-
-	var totalOrders = $( '#total-orders' );
-	totalOrders.text( parseInt( totalOrders.text(), 10 ) + 1 );
 
 	return this;
 };
