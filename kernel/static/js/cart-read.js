@@ -270,25 +270,6 @@ GalTrace.Table.prototype.append = function( row ) {
 };
 
 /**
- * Get index-th row.
- *
- * @param {int} index The row index.
- * @returns {GalTrace.Row} row.
- */
-GalTrace.Table.prototype.at = function( index ) {
-	return this.items[index];
-};
-
-/**
- * Get row's count.
- *
- * @returns {int} Total rows.
- */
-GalTrace.Table.prototype.size = function() {
-	return this.items.length;
-};
-
-/**
  * Find row in table.
  *
  * @param {GalTrace.Row} row The row to be found.
