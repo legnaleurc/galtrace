@@ -1,4 +1,4 @@
-Cart.urls = {
+GalTrace.urls = {
 	DELETE: '{% url kernel.views.delete %}',
 	FETCH: '{% url kernel.views.fetch %}',
 	LOAD: '{% url kernel.views.load %}',
