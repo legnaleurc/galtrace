@@ -243,9 +243,6 @@ var GalTrace = {
 		this.dateText = $( '<span />' ).text( this.date );
 		this.dateCell.append( this.dateText );
 
-		// phase cell
-		this.phaseCell = $( '<td class="phase"></d>' ).hide().text( this.phase );
-
 		this.element.append( this.titleCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
 		this.element.data( 'title', this.title );
 		this.element.data( 'vendor', this.vendor );
