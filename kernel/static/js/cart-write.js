@@ -35,11 +35,11 @@ GalTrace.createRow = function( args ) {
 		// update hidden state
 		var phasePass = GalTrace.matchPhase( row );
 		if( phasePass ) {
-			jQuery.merge( GalTrace.phaseSet, [ row.getElement() ] );
+			jQuery.merge( GalTrace.phaseSet, row.getElement() );
 		}
 		var searchPass = GalTrace.matchSearch( row );
 		if( searchPass ) {
-			jQuery.merge( GalTrace.searchSet, [ row.getElement() ] );
+			jQuery.merge( GalTrace.searchSet, row.getElement() );
 		}
 		if( phasePass && searchPass ) {
 			GalTrace.emit( 'GalTrace.currentOrdersChanged', 1 );
@@ -113,7 +113,7 @@ GalTrace.Table.prototype.take = function( index ) {
 GalTrace.Table.prototype.__post_new__ = function() {
 	this.view.on( 'GalTrace.phaseOfRowChanged', function( event, row ) {
 		if( GalTrace.selectedPhases[row.phase] ) {
-			jQuery.merge( GalTrace.phaseSet, [ row.getElement() ] );
+			jQuery.merge( GalTrace.phaseSet, row.getElement() );
 			row.getElement().show();
 			GalTrace.emit( 'GalTrace.currentOrdersChanged', 1 );
 		} else {
