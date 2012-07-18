@@ -218,12 +218,15 @@ var GalTrace = {
 		this.element = $( '<tr />' );
 
 		// title cell
-		this.titleCell = $( '<td class="title"></td>' ).text( this.title ).click( function( event ) {
-			if( !event.ctrlKey && !event.metaKey || event.which != 1 ) {
-				return;
-			}
-			GalTrace.googleSearch( $( this ).text() );
-		} );
+		this.titleCell = $( '<td class="title"></td>' ).text( this.title );
+
+		// search cell
+		this.searchCell = $( '<td></td>' );
+		this.search = $( '<a href="#"><i class="icon-search"></i></a>' ).click( GalTrace.bind( function( title, event ) {
+			event.preventDefault();
+			GalTrace.googleSearch( title );
+		}, this.title ) );
+		this.searchCell.append( this.search );
 
 		// link cell
 		this.linkCell = $( '<td></td>' );
@@ -243,7 +246,7 @@ var GalTrace = {
 		this.dateText = $( '<span />' ).text( this.date );
 		this.dateCell.append( this.dateText );
 
-		this.element.append( this.titleCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
+		this.element.append( this.titleCell ).append( this.searchCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
 		this.element.data( 'title', this.title );
 		this.element.data( 'vendor', this.vendor );
 		this.element.data( 'phase', this.phase );
