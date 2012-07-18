@@ -227,7 +227,7 @@ var GalTrace = {
 
 		// link cell
 		this.linkCell = $( '<td></td>' );
-		this.link = $( '<a rel="external">Link</a>' ).click( function( event ) {
+		this.link = $( '<a rel="external"><i class="icon-link"></i></a>' ).click( function( event ) {
 			event.preventDefault();
 			window.open( $( this ).attr( 'href' ), '_blank' );
 		} ).attr( 'href', this.uri );
