@@ -1,5 +1,7 @@
-body {
-	padding-top: 60px;
+@media ( min-width: 481px ) {
+	body {
+		padding-top: 60px;
+	}
 }
 
 td.vendor input, td.date input {
