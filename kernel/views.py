@@ -66,7 +66,8 @@ def auth( request ):
 		return redirect( 'kernel.views.index' )
 
 def csrf( request ):
-	return render_to_response( 'csrf.js', {}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
+	return render_to_response( 'csrf.js', {
+	}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
 
 def urls( request ):
 	return render_to_response( 'urls.js', {
