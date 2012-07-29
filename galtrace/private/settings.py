@@ -15,7 +15,7 @@ def load( *args, **kwargs ):
 				'default': dj_database_url.config(),
 			},
 			'DEBUG': False,
-			'STATIC_URL': data['STATIC_URL'],
+			'STATIC_URL': '/static/',
 		}
 	else:
 		private = {
