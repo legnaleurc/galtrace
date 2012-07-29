@@ -10,16 +10,13 @@ def load( *args, **kwargs ):
 		data = json.loads( os.environ[PRIVATE_KEY] )
 		import dj_database_url
 		private = {
-			'ADMIN_MEDIA_PREFIX': data['ADMIN_MEDIA_PREFIX'],
 			'DATABASES': {
 				'default': dj_database_url.config(),
 			},
 			'DEBUG': False,
-			'STATIC_URL': '/static/',
 		}
 	else:
 		private = {
-			'ADMIN_MEDIA_PREFIX': '/static/admin/',
 			'DATABASES': {
 				'default': {
 					'ENGINE': 'django.db.backends.sqlite3',
@@ -31,7 +28,6 @@ def load( *args, **kwargs ):
 				},
 			},
 			'DEBUG': True,
-			'STATIC_URL': '/static/',
 		}
 		data = json.load( open( PRIVATE_DATA_PATH, 'r' ) )
 
