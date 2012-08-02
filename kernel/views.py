@@ -148,7 +148,7 @@ def backup( request ):
 	response = HttpResponse( content_type = 'text/plain; charset="utf-8"' )
 	response['Content-Disposition'] = 'attachment; filename=galtrace_{0}.json'.format( datetime.now().strftime( '%Y%m%d%H%M%S' ) )
 	data = Order.objects.dump( request.user )
-	json.dump( data, response, ensure_ascii = False )
+	json.dump( data, response, ensure_ascii = False, separators = ( ',', ':' ) )
 	return response
 
 @login_required
