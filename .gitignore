@@ -1,7 +1,6 @@
 /venv
 *.pyc
 *~
-/galtrace/galtrace/private/data.json
-/galtrace/galtrace/private/default.sqlite
-/galtrace/static
+/galtrace/private/data.json
+/galtrace/private/default.sqlite
 .DS_Store
