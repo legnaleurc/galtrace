@@ -47,6 +47,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+	'beproud.django.ssl.middleware.SSLProxyMiddleware',
 	'django.middleware.gzip.GZipMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
@@ -55,6 +56,18 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'django.middleware.transaction.TransactionMiddleware',
+	'beproud.django.ssl.middleware.SSLRedirectMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+	'django.contrib.auth.context_processors.auth',
+	'django.core.context_processors.debug',
+	'django.core.context_processors.i18n',
+	'django.core.context_processors.media',
+	'django.core.context_processors.static',
+	'django.core.context_processors.tz',
+	'django.contrib.messages.context_processors.messages',
+	'beproud.django.ssl.context_processors.conf',
 )
 
 ROOT_URLCONF = 'galtrace.urls'
@@ -74,6 +87,7 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 
 	'gunicorn',
+	'beproud.django.ssl',
 
 	'kernel',
 )
@@ -112,3 +126,8 @@ SERVER_EMAIL = PRIVATE_SETTINGS['SERVER_EMAIL']
 
 # login settings
 LOGIN_URL = '/'
+
+# ssl settings
+SSL_URLS = (
+	r'^.*$$',
+)
