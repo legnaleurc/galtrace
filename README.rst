@@ -29,6 +29,8 @@ How To Upload Private Settings
 Note
 ----
 
+`Heroku`_ won't collectstatic if **user_env_compile** turns off somehow.
+
 This project doesn't provide registering right now.
 
 Development configuration will read **galtrace/private/data.json**, which is
