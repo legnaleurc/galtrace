@@ -14,6 +14,7 @@ Dependencies
 * `PycURL`_
 * `PyQuery`_
 * `Gunicorn`_
+* `bpssl`_
 * `Psycopg`_ (only needed on production)
 * `gevent`_ (only needed on production)
 * `DJ-Database-URL`_ (only needed on production)
@@ -36,6 +37,7 @@ This project doesn't provide registering right now.
 Development configuration will read **galtrace/private/data.json**, which is
 encrypted by my private gpg key. You must create your own one.
 
+.. _bpssl: https://bitbucket.org/beproud/bpssl/
 .. _DJ-Database-URL: https://github.com/kennethreitz/dj-database-url
 .. _Django: https://www.djangoproject.com/
 .. _gevent: http://www.gevent.org/
