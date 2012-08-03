@@ -15,6 +15,8 @@ Dependencies
 * `PyQuery`_
 * `Gunicorn`_
 * `Psycopg`_ (only needed on production)
+* `gevent`_ (only needed on production)
+* `DJ-Database-URL`_ (only needed on production)
 
 How To Deploy Static Files
 --------------------------
@@ -43,7 +45,9 @@ This project doesn't provide registering right now.
 Development configuration will read **galtrace/private/data.json**, which is
 encrypted by my private gpg key. You must create your own one.
 
+.. _DJ-Database-URL: https://github.com/kennethreitz/dj-database-url
 .. _Django: https://www.djangoproject.com/
+.. _gevent: http://www.gevent.org/
 .. _Gunicorn: http://gunicorn.org/
 .. _Heroku: http://www.heroku.com/
 .. _Psycopg: http://initd.org/psycopg/
