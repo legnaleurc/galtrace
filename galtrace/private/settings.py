@@ -14,6 +14,9 @@ def load( *args, **kwargs ):
 				'default': dj_database_url.config(),
 			},
 			'DEBUG': False,
+			'SSL_URLS': (
+				r'^.*$',
+			),
 		}
 	else:
 		private = {
@@ -28,6 +31,7 @@ def load( *args, **kwargs ):
 				},
 			},
 			'DEBUG': True,
+			'SSL_URLS': (),
 		}
 		data = json.load( open( PRIVATE_DATA_PATH, 'r' ) )
 
