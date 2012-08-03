@@ -40,7 +40,7 @@ def load( *args, **kwargs ):
 		'EMAIL_USE_TLS': data['EMAIL_USE_TLS'],
 		'SECRET_KEY': data['SECRET_KEY'],
 		'SERVER_EMAIL': data['SERVER_EMAIL'],
-		'STATIC_ROOT': os.path.join( PRIVATE_DIR, '../static/' ),
+		'STATIC_ROOT': os.path.join( PRIVATE_DIR, 'static/' ),
 	} )
 
 	return private
