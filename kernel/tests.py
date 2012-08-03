@@ -282,7 +282,12 @@ class DeleteTest( TestCase ):
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
 		response = c.post( self.url, {
-			'title': 'non-exists',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+		response = c.post( self.url, {
+			'orders[]': 'non-exists',
 		} )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
@@ -297,7 +302,7 @@ class DeleteTest( TestCase ):
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
 		response = c.post( self.url, {
-			'title': 'to-be-deleted',
+			'orders[]': 'to-be-deleted',
 		} )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
