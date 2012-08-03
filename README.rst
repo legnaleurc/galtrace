@@ -18,17 +18,6 @@ Dependencies
 * `gevent`_ (only needed on production)
 * `DJ-Database-URL`_ (only needed on production)
 
-How To Deploy Static Files
---------------------------
-
-::
-
-    # ensure you are on working branch
-    python manage.py collectstatic
-    git checkout gh-pages
-    python sync.py
-    # commit and push changes
-
 How To Upload Private Settings
 ------------------------------
 
