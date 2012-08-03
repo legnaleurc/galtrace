@@ -28,7 +28,7 @@ class SiteTest( unittest.TestCase ):
 		result = sites.fetch( 'http://dl.getchu.com/index.php?action=gd&gcd=D0006562&cirid=72&cp=&c=' )
 		self.assertEqual( result['date'], '2009/07/24' )
 		self.assertEqual( result['title'], 'Tentacle and Witches' )
-		self.assertEqual( result['vendor'], 'Lilith / Pixy' )
+		self.assertEqual( result['vendor'], u'Lilith / PIXY / ZIZ' )
 
 	def testDLGetchuShougyou( self ):
 		result = sites.fetch( 'http://dl.getchu.com/index.php?action=gdSoft&gcd=74749&cp=&c=' )
