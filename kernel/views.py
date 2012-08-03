@@ -136,8 +136,13 @@ def move( request ):
 @ajaxView
 def delete( request ):
 	orders = request.POST.getlist( u'orders[]' )
+	if len( orders ) == 0:
+		raise ValueError( u'empty request' )
 
 	result = Order.objects.filter( title__in = orders )
+	if len( result ) == 0:
+		raise ValueError( u'no order matched' )
+
 	result.delete()
 
 	return None
