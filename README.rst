@@ -13,11 +13,11 @@ Dependencies
 * `Django`_ >= 1.4
 * `PycURL`_
 * `PyQuery`_
-* `Gunicorn`_
 * `bpssl`_
-* `Psycopg`_ (only needed on production)
-* `gevent`_ (only needed on production)
-* `DJ-Database-URL`_ (only needed on production)
+* `Gunicorn`_ (production only)
+* `gevent`_ (production only)
+* `Psycopg`_ (production only)
+* `DJ-Database-URL`_ (production only)
 
 How To Upload Private Settings
 ------------------------------
