@@ -86,7 +86,6 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'django.contrib.admin',
 
-	'gunicorn',
 	'beproud.django.ssl',
 
 	'kernel',
