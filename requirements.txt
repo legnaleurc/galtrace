@@ -1,4 +1,4 @@
-Django >= 1.4
+Django >= 1.4.1
 pyquery >= 1.2.1
 pycurl
 psycopg2 >= 2.4.5
