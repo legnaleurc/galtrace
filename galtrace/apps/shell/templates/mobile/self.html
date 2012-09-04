@@ -2,6 +2,12 @@
 {% load url from future %}
 {% load i18n %}
 
+{% block head %}
+	<script id="order-template" type="text/template">
+		<h3><%= title %></h3>
+	</script>
+{% endblock %}
+
 {% block body %}
 	<div data-role="page">
 		<div data-role="header" data-position="fixed">
@@ -9,13 +15,13 @@
 			<h1>GalTrace</h1>
 			<a href="#search-widget" data-role="button" data-rel="dialog">Search</a>
 		</div>
-		<div data-role="content">
+		<div id="orders" data-role="content">
 		</div>
 		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
 					{% for phase in phases %}
-						<li data-value="{{ phase.0 }}" class="phase-filter"><a href="#">{{ phase.1 }}</a></li>
+						<li><a data-value="{{ phase.0 }}" class="phase-filter" href="#">{{ phase.1 }}</a></li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -62,4 +68,12 @@
 			</form>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/backbone-min.js"></script>
+	<script type="text/javascript" src="{% url 'galtrace.apps.shell.views.csrf' %}"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/model.js"></script>
+	<script type="text/javascript" src="{% url 'galtrace.apps.shell.views.urls' %}"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/view.mobile.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/read.mobile.js"></script>
 {% endblock %}
