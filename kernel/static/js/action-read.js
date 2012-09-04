@@ -1,7 +1,8 @@
 ( function() {
+	'use strict';
 
 	// create table and load orders
-	GalTrace.initialize( '#orders' );
+	GalTrace.initialize();
 
 	// apply filter
 	$( '.phase-filter' ).click( function( event ) {
