@@ -5,6 +5,19 @@
 {% block head %}
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
 	{{ block.super }}
+	<script type="text/template" id="order-template">
+		<td><input type="checkbox" class="check" /></td>
+		<td><span><%= title %></span></td>
+		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
+		<td><a class="uri" href="<%= uri %>" rel="external"><i class="icon-link"></i></a></td>
+		<td><span class="vendor"><%= vendor %></span></td>
+		<td><span class="date"><%= date %></span></td>
+	</script>
+	<script type="text/template" id="counter-template">
+			<span id="current-orders"><%= current %></span>
+			<span>&nbsp;/&nbsp;</span>
+			<span id="total-orders"><%= total %></span>
+	</script>
 {% endblock %}
 
 {% block navbar %}
@@ -36,11 +49,7 @@
 		</form>
 	</ul>
 	<ul class="nav pull-right">
-		<li class="navbar-text">
-			<span id="current-orders">0</span>
-			<span>&nbsp;/&nbsp;</span>
-			<span id="total-orders">0</span>
-		</li>
+		<li id="counter" class="navbar-text"></li>
 		<li class="divider-vertical"></li>
 		<li><a href="{% url 'kernel.views.auth' %}">Sign Out</a></li>
 	</ul>

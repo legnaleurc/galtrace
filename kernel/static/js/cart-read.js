@@ -1,410 +1,433 @@
-/**
- * @namespace All functionality of GalTrace.
- */
-var GalTrace = {
-
-	/**
-	 * Bind function but leave this untouched.
-	 *
-	 * Unlike Function.bind in JavaScript 1.8, this version only binds
-	 * arguments, the instance will not change.
-	 *
-	 * @param {Function} fn The binding function.
-	 * @param [args ...] The binding arguments.
-	 * @returns The binded function.
-	 */
-	bind: function( fn ) {
+( function() {
+	function bind_( fn ) {
 		var args = Array.prototype.slice.call( arguments, 1 );
 		return function() {
 			fn.apply( this, args.concat( Array.prototype.slice.call( arguments ) ) );
 		};
-	},
+	}
 
-	/**
-	 * Show error message.
-	 *
-	 * @param {String} title Error message title.
-	 * @param {String} msg The error message.
-	 */
-	cerr: function( title, msg ) {
-		$( '#error-title' ).text( title );
-		$( '#error-message' ).text( msg );
-		$( '#stderr' ).fadeIn( 'slow' );
-	},
+	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
 
-	emit: function( eventType, extraParameters ) {
-		return GalTrace.view.view.trigger( eventType, extraParameters );
-	},
+	var COUNTER_TEMPLATE = _.template( $( '#counter-template' ).html() );
 
-	initialize: function( selector ) {
-		function load( offset ) {
-			jQuery.post( GalTrace.urls.LOAD, {
-				offset: offset,
-				limit: 100,
-			}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
-				if( !data.success ) {
-					GalTrace.cerr( data.type, data.message );
-					return;
-				}
-				if( data.data === null ) {
-					// load finished
-					GalTrace.phaseSet = GalTrace.view.view.children().filter( ':visible' );
-					GalTrace.searchSet = GalTrace.view.view.children();
-					GalTrace.emit( 'GalTrace.totalOrdersChanged', GalTrace.searchSet.length );
-					GalTrace.emit( 'GalTrace.currentOrdersChanged', GalTrace.phaseSet.length );
-					return;
-				}
-				data = data.data;
+	var OrderFilter = Backbone.Model.extend();
 
-				load( offset + data.length );
-
-				jQuery.each( data, function( key, value ) {
-					var row = new GalTrace.DynamicRow( this );
-					if( !GalTrace.matchPhase( row ) ) {
-						row.getElement().hide();
-					}
-					GalTrace.view.append( row );
-				} );
-			} ).error( function( jqXHR, textStatus, message ) {
-				GalTrace.cerr( 'Unknown Error', message );
-			} );
-		}
-
-		GalTrace.view = new GalTrace.Table( selector );
-		GalTrace.phaseSet = null;
-		GalTrace.searchSet = null;
-		GalTrace.selectedPhases = {
-			0: true,
+	var orderFilter = new OrderFilter( {
+		phases: {
+			0: false,
 			1: false,
 			2: false,
 			3: false,
 			4: false,
-		};
-		load( 0 );
-	},
+		},
+		search: '',
+	} );
 
-	/**
-	 * Matches given condition.
-	 *
-	 * @param {String} pattern Matches title or vendor.
-	 * @param {Array} phases Selected phases.
-	 * @return {boolean} true if matched.
-	 */
-	matchPhase: function( row ) {
-		return GalTrace.selectedPhases[row.phase];
-	},
+	var Order = Backbone.Model.extend( {
+		defaults: {
+			selected: false,
+			updating: false,
+		},
+	} );
 
-	/**
-	 * Matches given condition.
-	 *
-	 * @param {String} pattern Matches title or vendor.
-	 * @param {Array} phases Selected phases.
-	 * @return {boolean} true if matched.
-	 */
-	matchSearch: function( row ) {
-		var pattern = $( '#search' ).val().toLowerCase();
-		return ( row.title.toLowerCase().indexOf( pattern ) >= 0 || row.vendor.toLowerCase().indexOf( pattern ) >= 0 );
-	},
+	var OrderList = Backbone.Collection.extend( {
+		model: Order,
 
-	/**
-	 * Do nothing.
-	 *
-	 * @class Base class of table row.
-	 */
-	Row: function() {
-		// NOTE base class
-	},
-
-	/**
-	 * Creates table.
-	 *
-	 * @class The table.
-	 * @param selector The selector on DOM.
-	 */
-	Table: function( selector ) {
-		this.items = [];
-		this.view = $( selector );
-		this.view.on( 'GalTrace.currentOrdersChanged', function( event, diff ) {
-			var tmp = $( '#current-orders' );
-			tmp.text( parseInt( tmp.text(), 10 ) + diff );
-		} );
-		this.view.on( 'GalTrace.totalOrdersChanged', function( event, diff ) {
-			var tmp = $( '#total-orders' );
-			tmp.text( parseInt( tmp.text(), 10 ) + diff );
-		} );
-		this.view.on( 'GalTrace.phaseChanged', function( event, phase, selected ) {
-			if( GalTrace.phaseSet === null || GalTrace.searchSet === null ) {
-				return;
-			}
-			function eq() {
-				return $( this ).data( 'phase' ) === phase;
-			}
-			GalTrace.selectedPhases[phase] = selected;
-			if( selected ) {
-				// some orders should be inserted, p += dp
-				jQuery.merge( GalTrace.phaseSet, $( this ).children().filter( eq ) );
-			} else {
-				GalTrace.phaseSet = GalTrace.phaseSet.filter( function() {
-					return !eq.bind( this )();
-				} );
-			}
-			// ( s && dp ).setVisible( selected )
-			var tmp = GalTrace.searchSet.filter( eq );
-			if( selected ) {
-				tmp.show();
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
-			} else {
-				tmp.hide();
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', -tmp.length );
-			}
-		} );
-		this.view.on( 'GalTrace.searchChanged', function( event, searchText, brandNew, increase ) {
-			function eq() {
-				var self = $( this );
-				if( self.data( 'title' ).toLowerCase().indexOf( searchText.toLowerCase() ) >= 0 || self.data( 'vendor' ).toLowerCase().indexOf( searchText.toLowerCase() ) >= 0 ) {
-					return true;
-				}
-				return false;
-			}
-			// if brand new search string, re-search whole orders
-			// else if text length is increasing, strip from current visible set
-			// else add new matched result to visible set
-			if( brandNew ) {
-				GalTrace.searchSet = $( this ).children().filter( eq );
-				var a = GalTrace.phaseSet.filter( ':hidden' ).filter( eq );
-				var b = GalTrace.phaseSet.filter( ':visible' ).filter( function() {
-					return !eq.bind( this )();
-				} );
-				a.show();
-				b.hide();
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', a.length - b.length );
-			} else if( increase ) {
-				GalTrace.searchSet = GalTrace.searchSet.filter( eq );
-				var tmp = GalTrace.phaseSet.filter( ':visible' ).filter( function() {
-					return !eq.bind( this )();
-				} );
-				tmp.hide();
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', -tmp.length );
-			} else {
-				GalTrace.searchSet = $( this ).children().filter( eq );
-				var tmp = GalTrace.phaseSet.filter( ':hidden' ).filter( eq );
-				tmp.show();
-				$( this ).trigger( 'GalTrace.currentOrdersChanged', tmp.length );
-			}
-		} );
-
-		this.__post_new__();
-	},
-
-	/**
-	 * Create dynamic row from JSON data.
-	 *
-	 * @class Row from JSON to DOM.
-	 * @param data The JSON data.
-	 */
-	DynamicRow: function( data ) {
-		// call super
-		GalTrace.Row.apply( this, arguments );
-
-		// data
-		this.title = data.title;
-		this.vendor = data.vendor;
-		this.date = data.date;
-		this.uri = data.uri;
-		this.phase = data.phase;
-		this.volume = data.volume;
-
-		// container element
-		this.element = $( '<tr />' );
-
-		// title cell
-		this.titleCell = $( '<td class="title"></td>' ).text( this.title );
-
-		// search cell
-		this.searchCell = $( '<td></td>' );
-		this.search = $( '<a href="#"><i class="icon-search"></i></a>' ).click( GalTrace.bind( function( title, event ) {
-			event.preventDefault();
-			GalTrace.googleSearch( title );
-		}, this.title ) );
-		this.searchCell.append( this.search );
-
-		// link cell
-		this.linkCell = $( '<td></td>' );
-		this.link = $( '<a rel="external"><i class="icon-link"></i></a>' ).click( function( event ) {
-			event.preventDefault();
-			window.open( $( this ).attr( 'href' ), '_blank' );
-		} ).attr( 'href', this.uri );
-		this.linkCell.append( this.link );
-
-		// vendor cell
-		this.vendorCell = $( '<td class="vendor" />' );
-		this.vendorText = $( '<span />' ).text( this.vendor );
-		this.vendorCell.append( this.vendorText );
-
-		// date cell
-		this.dateCell = $( '<td class="date" />' );
-		this.dateText = $( '<span />' ).text( this.date );
-		this.dateCell.append( this.dateText );
-
-		this.element.append( this.titleCell ).append( this.searchCell ).append( this.linkCell ).append( this.vendorCell ).append( this.dateCell ).append( this.phaseCell );
-		this.element.data( 'title', this.title );
-		this.element.data( 'vendor', this.vendor );
-		this.element.data( 'phase', this.phase );
-
-		this.__post_new__();
-	},
-
-};
-
-/**
- * Append a row to the table.
- *
- * @param {GalTrace.Row} row The appending row.
- * @returns {GalTrace.Table} self.
- */
-GalTrace.Table.prototype.append = function( row ) {
-	this.items.push( row );
-	this.view.append( row.getElement() );
-
-	return this;
-};
-
-/**
- * Find row in table.
- *
- * @param {GalTrace.Row} row The row to be found.
- * @param {Function} [compare] Comparator.
- * @returns {Object}
- * o.found indicates whether the row exists.
- * o.index indicates the position of row, or desired insert position.
- */
-GalTrace.Table.prototype.find = function( row, compare ) {
-	if( compare === undefined ) {
-		compare = function( l, r ) {
-			if( l.getDate() == r.getDate() ) {
-				if( l.getTitle() == r.getTitle() ) {
+		comparator: function( l, r ) {
+			if( l.get( 'date' ) === r.get( 'date' ) ) {
+				if( l.get( 'title' ) === r.get( 'title' ) ) {
 					return 0;
 				}
-				return ( l.getTitle() < r.getTitle() ) ? -1 : 1;
+				return ( l.get( 'title' ) < r.get( 'title' ) ) ? -1 : 1;
 			}
-			return ( l.getDate() < r.getDate() ) ? -1 : 1;
-		};
-	}
-	function binarySearch( row, list, begin, end ) {
-		var middle = Math.floor( ( begin + end ) / 2 );
-		var that = list[middle];
-		var tmp = compare( row, that );
-		if( tmp < 0 ) {
-			if( end - begin == 1 ) {
-				return {
-					found: false,
-					index: middle
+			return ( l.get( 'date' ) < r.get( 'date' ) ) ? -1 : 1;
+		},
+	} );
+
+	var OrderView = Backbone.View.extend( {
+		tagName: 'tr',
+
+		initialize: function() {
+			this.model.on( 'change:vendor', this.onVendorChanged, this );
+			this.model.on( 'change:date', this.onDateChanged, this );
+			this.model.on( 'change:uri', this.onUriChanged, this );
+			this.model.on( 'change:phase', this.onFilterChanged, this );
+			this.model.on( 'change:selected', this.onSelectionChanged, this );
+			this.model.on( 'change:updating', this.onStateChanged, this );
+			orderFilter.on( 'change:phases change:search', this.onFilterChanged, this );
+
+			// bookkeeping
+			this.$el.data( 'view', this );
+		},
+
+		render: function() {
+			var title = this.model.get( 'title' );
+			var vendor = this.model.get( 'vendor' );
+			var date = this.model.get( 'date' );
+			var uri = this.model.get( 'uri' );
+
+			var template = ORDER_TEMPLATE( {
+				title: title,
+				vendor: vendor,
+				date: date,
+				uri: uri,
+			} );
+			this.$el.html( template );
+
+			this.$( '.check' ).change( bind_( function( model_ ) {
+				model_.set( 'selected', $( this ).is( ':checked' ), {
+					silent: true,
+				} );
+			}, this.model ) );
+
+			this.$( '.search' ).click( function( event ) {
+				event.preventDefault();
+				GalTrace.googleSearch( title );
+			} );
+
+			/**
+			 * Show the inline edit widget.
+			 *
+			 * @param {jQuery} parent Parent HTML element.
+			 * @param {jQuery} label The displaying label.
+			 * @param {jQuery} input The editing widget.
+			 */
+			function openEdit( parent, label, input ) {
+				input.width( parent.width() ).val( label.hide().text() ).show().select();
+			}
+
+			/**
+			 * Hide the inline edit widget.
+			 *
+			 * @param {jQuery} label The displaying label.
+			 * @param {jQuery} input The editing widget.
+			 */
+			function closeEdit( label, input ) {
+				label.show();
+				input.hide();
+			}
+
+			/**
+			 * Commit content.
+			 *
+			 * @param {jQuery} label The displaying label.
+			 * @param {jQuery} input The editing widget.
+			 * @param {String} key Editing row's title.
+			 * @param {String} field The field to be commit as change.
+			 * @returns {jqXHR} The AJAX object.
+			 */
+			function saveEdit( label, input, key, field ) {
+				if( label.text() == input.val() ) {
+					return;
+				}
+				label.text( input.val() );
+				var args = {
+					title: key
 				};
-			} else {
-				return binarySearch( row, list, begin, middle );
+				args[field] = input.val();
+				// TODO add hook
+				return jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
 			}
-		} else if( tmp > 0 ) {
-			if( end - begin == 1 ) {
-				return {
-					found: false,
-					index: end
-				};
-			} else {
-				return binarySearch( row, list, middle, end );
+
+			// vendor cell
+			var vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( bind_( function( vendorLabel, model ) {
+				saveEdit( vendorLabel, vendorEdit, title, 'vendor' );
+				model.set( 'vendor', vendorLabel.text() );
+				closeEdit( vendorLabel, vendorEdit );
+			}, this.$( '.vendor' ), this.model ) );
+			var vendorCell = this.$( '.vendor' ).parent();
+			vendorCell.dblclick( bind_( openEdit, vendorCell, this.$( '.vendor' ), vendorEdit ) );
+			vendorCell.append( vendorEdit );
+
+			// date cell
+			var dateEdit = $( '<input type="text" style="display: none;" />' ).blur( bind_( function( dateLabel, model ) {
+				if( /^\d\d\d\d\/\d\d\/\d\d$/.test( dateEdit.val() ) ) {
+					saveEdit( dateLabel, dateEdit, title, 'date' );
+					model.set( 'date', dateLabel.text() );
+					orderList.sort();
+				}
+				closeEdit( dateLabel, dateEdit );
+			}, this.$( '.date' ), this.model ) );
+			var dateCell = this.$( '.date' ).parent();
+			dateCell.dblclick( bind_( openEdit, dateCell, this.$( '.date' ), dateEdit ) );
+			dateCell.append( dateEdit );
+
+			var phases = orderFilter.get( 'phases' );
+			var search = orderFilter.get( 'search' ).toLowerCase();
+			var phase = this.model.get( 'phase' );
+			if( !phases[phase] || ( title.toLowerCase().indexOf( search ) < 0 && vendor.toLowerCase().indexOf( search ) < 0 ) ) {
+				this.$el.css( {
+					display: 'none',
+				} );
 			}
-		} else {
-			return {
-				found: true,
-				index: middle
-			};
-		}
-	}
-	return ( this.items.length == 0 ) ? {
-		found: false,
-		index: 0
-	} : binarySearch( row, this.items, 0, this.items.length );
-};
 
-/**
- * Insert row to index.
- *
- * @param index After insertion, row will appear here.
- * @param row The row to be insert.
- * @return {GalTrace.Table} self.
- */
-GalTrace.Table.prototype.insert = function( index, row ) {
-	if( this.items.length == 0 ) {
-		this.append( row );
-	} else if( index >= this.items.length ) {
-		this.items[ this.items.length - 1 ].getElement().after( row.getElement() );
-		this.items.push( row );
-	} else if( index > 0 ) {
-		this.items[index].getElement().before( row.getElement() );
-		this.items.splice( index, 0, row );
-	} else {
-		this.items[0].getElement().before( row.getElement() );
-		this.items.splice( 0, 0, row );
-	}
-	return this;
-};
+			return this;
+		},
 
-GalTrace.Table.prototype.__post_new__ = function() {
-};
+		onVendorChanged: function() {
+			this.$( '.vendor' ).text( this.model.get( 'vendor' ) );
+		},
 
-/**
- * Get DOM jQuery object.
- *
- * @returns {jQuery} DOM object.
- */
-GalTrace.Row.prototype.getElement = function() {
-	return this.element;
-};
+		onDateChanged: function() {
+			this.$( '.date' ).text( this.model.get( 'date' ) );
+		},
 
-/**
- * Selection state.
- *
- * @return {boolean} true if selected.
- */
-GalTrace.Row.prototype.isChecked = function() {
-	return this.checkbox.is( ":checked" );
-};
+		onUriChanged: function() {
+			this.$( '.uri' ).attr( {
+				href: this.model.get( 'uri' ),
+			} );
+		},
 
-/**
- * Get title.
- *
- * @returns {String} Title.
- */
-GalTrace.Row.prototype.getTitle = function() {
-	return this.title;
-};
+		onFilterChanged: function() {
+			var search = orderFilter.get( 'search' ).toLowerCase();
+			var title = this.model.get( 'title' ).toLowerCase();
+			var vendor = this.model.get( 'vendor' ).toLowerCase();
+			if( orderFilter.get( 'phases' )[this.model.get( 'phase' )] && ( title.indexOf( search ) >= 0 || vendor.indexOf( search ) >= 0 ) ) {
+				this.$el.css( {
+					display: 'table-row',
+				} );
+			} else {
+				this.$el.css( {
+					display: 'none',
+				} );
+			}
+		},
 
-/**
- * Get release date.
- *
- * @returns {String} Release date.
- */
-GalTrace.Row.prototype.getDate = function() {
-	return this.date;
-};
+		onSelectionChanged: function() {
+			this.$( '.check' ).attr( {
+				checked: this.model.get( 'selected' ),
+			} );
+		},
 
-/**
- * Get complete phase.
- *
- * @returns {int} Complete phase.
- */
-GalTrace.Row.prototype.getPhase = function() {
-	return this.phase;
-};
+		onStateChanged: function() {
+			var updating = this.model.get( 'updating' );
+			if( updating ) {
+				this.$el.removeClass( 'success error' ).addClass( 'info' );
+			} else {
+				this.$el.removeClass( 'info' ).addClass( 'success' );
+				var tmp = this.$el;
+				var handle = setTimeout( function() {
+					tmp.removeClass( 'success' );
+				}, 5000 );
+			}
+		},
+	} );
 
-/**
- * Post-initialization.
- *
- * Please override this function.
- *
- * @protected
- */
-GalTrace.Row.prototype.__post_new__ = function() {
-	// NOTE this function provides a post-initialization
-};
+	var OrderListView = Backbone.View.extend( {
+		initialize: function() {
+			this.model.on( 'add', this.onAdd, this );
+			this.model.on( 'remove', this.onRemove, this );
+			this.model.on( 'reset', this.reRender, this );
+		},
 
-GalTrace.DynamicRow.prototype = new GalTrace.Row();
+		onAdd: function( model_, self, options ) {
+			var view = new OrderView( {
+				model: model_,
+			} );
+			var children = this.$el.children();
+			if( children.length === 0 ) {
+				// first but empty
+				this.$el.append( view.$el );
+			} else if( options.index === children.length ) {
+				// last
+				children.last().after( view.$el );
+			} else if( options.index > 0 ) {
+				// middle
+				$( children[options.index] ).before( view.$el );
+			} else {
+				// first
+				children.first().before( view.$el );
+			}
+			view.render();
+		},
+
+		onRemove: function( model_, self, options ) {
+			$( this.$el.children()[options.index] ).remove();
+		},
+
+		reRender: function() {
+			var els = this.$el.children().detach();
+			els.sort( function( l, r ) {
+				l = this.model.indexOf( $( l ).data( 'view' ).model );
+				r = this.model.indexOf( $( r ).data( 'view' ).model );
+				if( l === r ) {
+					return 0;
+				}
+				return ( l < r ) ? -1 : 1;
+			}.bind( this ) );
+			els.each( function( index, element ) {
+				this.$el.append( element );
+			}.bind( this ) );
+		},
+	} );
+
+	var CounterView = Backbone.View.extend( {
+		initialize: function() {
+			this.model.on( 'add', this.onAdd, this );
+			this.model.on( 'remove', this.onRemove, this );
+			orderFilter.on( 'change:phases change:search', this.onFilterChanged, this );
+
+			this.render();
+		},
+
+		render: function() {
+			var total = this.model.length;
+			var phases = orderFilter.get( 'phases' );
+			var count = this.model.filter( function( model ) {
+				return phases[model.get( 'phase' )];
+			} ).length;
+			var template = COUNTER_TEMPLATE( {
+				total: total,
+				current: count,
+			} );
+			this.$el.html( template );
+		},
+
+		onAdd: function( model_ ) {
+			model_.on( 'change:phase', this.onModelPhaseChange, this );
+			if( orderFilter.get( 'phases' )[model_.get( 'phase' )] ) {
+				var tmp = $( '#current-orders' );
+				tmp.text( parseInt( tmp.text(), 10 ) + 1 );
+			}
+			$( '#total-orders' ).text( this.model.length );
+		},
+
+		onRemove: function( model_ ) {
+			if( orderFilter.get( 'phases' )[model_.get( 'phase' )] ) {
+				var tmp = $( '#current-orders' );
+				tmp.text( parseInt( tmp.text(), 10 ) - 1 );
+			}
+			$( '#total-orders' ).text( this.model.length );
+		},
+
+		onFilterChanged: function() {
+			var phases = orderFilter.get( 'phases' );
+			var count = this.model.filter( function( model ) {
+				return phases[model.get( 'phase' )];
+			} ).length;
+			var tmp = $( '#current-orders' );
+			tmp.text( count );
+		},
+
+		onModelPhaseChange: function( model_, value ) {
+			var tmp = $( '#current-orders' );
+			if( orderFilter.get( 'phases' )[value] ) {
+				tmp.text( parseInt( tmp.text(), 10 ) + 1 );
+			} else {
+				tmp.text( parseInt( tmp.text(), 10 ) - 1 );
+			}
+		},
+	} );
+
+	var orderList = new OrderList();
+	var orderListView = null;
+	var counterView = new CounterView( {
+		el: '#counter',
+		model: orderList,
+	} );
+
+	window.GalTrace = {
+		orderFilter: orderFilter,
+
+		initialize: function( selector ) {
+			function load( offset ) {
+				jQuery.post( GalTrace.urls.LOAD, {
+					offset: offset,
+					limit: 100,
+				}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+					if( !data.success ) {
+						GalTrace.cerr( data.type, data.message );
+						return;
+					}
+					if( data.data === null ) {
+						// load finished
+						return;
+					}
+					data = data.data;
+
+					load( offset + data.length );
+
+					orderList.add( data );
+				} ).error( function( jqXHR, textStatus, message ) {
+					GalTrace.cerr( 'Unknown Error', message );
+				} );
+			}
+
+			orderListView = new OrderListView( {
+				el: selector,
+				model: orderList,
+			} );
+
+			load( 0 );
+		},
+
+		addOrder: function( args ) {
+			// send request, server will handle INSERT/UPDATE by itself
+			var request = jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
+
+			// find if exists (by title); can not use binary search here
+			var model = orderList.find( function( model_ ) {
+				return model_.get( 'title' ) === args.title;
+			} );
+			// only update data and move order if success
+			if( model !== undefined ) {
+				model.set( 'updating', true );
+				return request.success( function() {
+					// update data and HTML
+					model.set( {
+						title: args.title,
+						vendor: args.vendor,
+						date: args.date,
+						uri: args.uri,
+						phase: args.phase,
+						volume: args.volume,
+						updating: false,
+					} );
+					orderList.sort();
+				} );
+			}
+
+			return request.success( function() {
+				var model = new Order( args );
+				orderList.add( model );
+			} );
+		},
+
+		movePhase: function( phase ) {
+			var selected = orderList.filter( function( model ) {
+				return model.get( 'selected' );
+			} );
+			var request = jQuery.post( GalTrace.urls.MOVE, {
+				phase: phase,
+				orders: _.map( selected, function( value ) {
+					return value.get( 'title' );
+				} ),
+			}, null, 'json' ).success( function() {
+				_.each( selected, function( element ) {
+					element.set( {
+						phase: phase,
+						selected: false,
+					} );
+				} );
+			} );
+			return request;
+		},
+
+		deleteOrders: function() {
+			var selected = orderList.filter( function( model ) {
+				return model.get( 'selected' );
+			} );
+			var request = jQuery.post( GalTrace.urls.DELETE, {
+				orders: _.map( selected, function( value ) {
+					return value.get( 'title' );
+				} ),
+			}, null, 'json' ).success( function() {
+				orderList.remove( selected );
+			} );
+			return request;
+		},
+
+		cerr: function() {
+		},
+	};
+} )();

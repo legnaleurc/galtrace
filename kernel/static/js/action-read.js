@@ -3,6 +3,47 @@
 	// create table and load orders
 	GalTrace.initialize( '#orders' );
 
+	// apply filter
+	$( '.phase-filter' ).click( function( event ) {
+		event.preventDefault();
+		var self = $( this );
+		self.toggleClass( 'active' );
+		var tmp = GalTrace.orderFilter.get( 'phases' );
+		tmp[self.data( 'value' )] = self.hasClass( 'active' );
+		GalTrace.orderFilter.set( 'phases', tmp );
+		// FIXME somehow I must trigger this manually
+		GalTrace.orderFilter.trigger( 'change:phases' );
+	} );
+	// set initial filter
+	$( '.phase-filter[data-value="0"]' ).click();
+	// search filter
+	var previous = $( '#search' ).text();
+	$( '#search' ).keyup( function( event ) {
+		var current = $( this ).val();
+		if( previous !== current ) {
+			GalTrace.orderFilter.set( 'search', current );
+			GalTrace.orderFilter.trigger( 'change:search' );
+			previous = current;
+		}
+	} );
+
+	// Google CSE
+	var cseDialog = $( '#search-modal' ).modal( {
+		show: false
+	} );
+	google.load( 'search', '1', {
+		language: 'en',
+		callback: function() {
+			var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
+			customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
+			customSearchControl.draw( 'cse' );
+			GalTrace.googleSearch = function( keyword ) {
+				cseDialog.modal( 'show' );
+				customSearchControl.execute( keyword );
+			};
+		},
+	} );
+
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
 		event.preventDefault();
@@ -19,41 +60,6 @@
 	$( 'a[rel=external]' ).click( function( event ) {
 		event.preventDefault();
 		window.open( $( this ).attr( 'href' ), '_blank' );
-	} );
-
-	// apply filter
-	$( '.phase-filter' ).click( function( event ) {
-		event.preventDefault();
-		var self = $( this );
-		self.toggleClass( 'active' );
-		GalTrace.emit( 'GalTrace.phaseChanged', [ self.data( 'value' ), self.hasClass( 'active' ) ] );
-	} );
-	var previous = $( '#search' ).text();
-	$( '#search' ).keyup( function( event ) {
-		var current = $( this ).val();
-		if( previous !== current ) {
-			GalTrace.emit( 'GalTrace.searchChanged', [ current, current.indexOf( previous ) < 0 && previous.indexOf( current ) < 0, current.length > previous.length ] );
-			previous = current;
-		}
-	} );
-	// set initial filter
-	$( '.phase-filter[data-value="0"]' ).click();
-
-	var cseDialog = $( '#search-modal' ).modal( {
-		show: false
-	} );
-	// Google CSE
-	google.load( 'search', '1', {
-		language: 'en',
-		callback: function() {
-			var customSearchControl = new google.search.CustomSearchControl( '006869288663536695394:98h-trd0op0' );
-			customSearchControl.setResultSetSize( google.search.Search.FILTERED_CSE_RESULTSET );
-			customSearchControl.draw( 'cse' );
-			GalTrace.googleSearch = function( keyword ) {
-				cseDialog.modal( 'show' );
-				customSearchControl.execute( keyword );
-			};
-		},
 	} );
 
 } )();
