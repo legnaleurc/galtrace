@@ -5,6 +5,10 @@
 {% block head %}
 	<script id="order-template" type="text/template">
 		<h3><%= title %></h3>
+		<ul data-role="listview" data-inset="true">
+			<li><%= vendor %></li>
+			<li><%= date %></li>
+		</ul>
 	</script>
 {% endblock %}
 

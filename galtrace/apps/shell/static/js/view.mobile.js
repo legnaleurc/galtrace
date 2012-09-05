@@ -9,6 +9,7 @@ var GalTrace = GalTrace || {};
 
 		attributes: {
 			'data-role': 'collapsible',
+			'data-collapsed': true,
 			'data-iconpos': 'right',
 		},
 
@@ -37,6 +38,8 @@ var GalTrace = GalTrace || {};
 				uri: uri,
 			} );
 			this.$el.html( template );
+			this.$el.trigger( 'create' );
+			this.$el.collapsible();
 
 			this.$( '.search' ).click( function( event ) {
 				event.preventDefault();
