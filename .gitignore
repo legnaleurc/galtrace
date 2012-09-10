@@ -1,4 +1,3 @@
-/venv
 *.pyc
 *~
 /galtrace/private/data.json
