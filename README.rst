@@ -4,7 +4,7 @@ GalTrace
 This project is intend to trace my interested galgames. It records game's
 release date, and my playing status.
 
-This is a `Django`_ project and is hosting on `Heroku`_ currently.
+This is a `Django`_ project and currently host on `Heroku`_.
 
 Dependencies
 ------------
@@ -13,8 +13,8 @@ Dependencies
 * `Django`_ >= 1.4
 * `PycURL`_
 * `PyQuery`_
-* `bpssl`_
-* `Gunicorn`_ (production only)
+* `bpssl`_ (for production, but necessary)
+* `Gunicorn`_ (for production, but necessary)
 * `gevent`_ (production only)
 * `Psycopg`_ (production only)
 * `DJ-Database-URL`_ (production only)
