@@ -5,11 +5,12 @@ var GalTrace = GalTrace || {};
 	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
 
 	var OrderView = Backbone.View.extend( {
-		tagName: 'div',
+		tagName: 'a',
 
 		attributes: {
-			'data-role': 'collapsible',
-			'data-collapsed': true,
+			'href': '#order-page',
+			'data-role': 'button',
+			'data-icon': 'arrow-r',
 			'data-iconpos': 'right',
 		},
 
@@ -37,13 +38,14 @@ var GalTrace = GalTrace || {};
 				date: date,
 				uri: uri,
 			} );
-			this.$el.html( template );
-			this.$el.trigger( 'create' );
-			this.$el.collapsible();
+			this.$el.text( title );
+			this.$el.button();
 
-			this.$( '.search' ).click( function( event ) {
-				event.preventDefault();
-				GalTrace.googleSearch( title );
+			this.$el.click( function() {
+				$( '#order-title' ).text( title );
+				var content = $( '#order-content' );
+				content.html( template );
+				content.trigger( 'create' );
 			} );
 
 			var phases = GalTrace.orderFilter.get( 'phases' );

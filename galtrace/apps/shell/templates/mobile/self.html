@@ -4,7 +4,6 @@
 
 {% block head %}
 	<script id="order-template" type="text/template">
-		<h3><%= title %></h3>
 		<ul data-role="listview" data-inset="true">
 			<li><%= vendor %></li>
 			<li><%= date %></li>
@@ -13,7 +12,7 @@
 {% endblock %}
 
 {% block body %}
-	<div data-role="page">
+	<div id="main-page" data-role="page">
 		<div data-role="header" data-position="fixed">
 			<a href="#tool-widget" data-role="button" data-rel="dialog">Tool</a>
 			<h1>GalTrace</h1>
@@ -29,6 +28,14 @@
 					{% endfor %}
 				</ul>
 			</div>
+		</div>
+	</div>
+	<div id="order-page" data-role="page">
+		<div data-role="header" data-position="fixed">
+			<a href="#main-page" data-role="button" data-rel="page">Back</a>
+			<h1 id="order-title"></h1>
+		</div>
+		<div id="order-content" data-role="content">
 		</div>
 	</div>
 	<div id="tool-widget" data-role="page">
