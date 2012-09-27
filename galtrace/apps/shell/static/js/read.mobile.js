@@ -8,7 +8,7 @@
 	$( '.phase-filter' ).click( function( event ) {
 		event.preventDefault();
 		var self = $( this );
-		self.toggleClass( 'ui-btn-active' );
+		self.toggleClass( 'ui-btn-active ui-state-persist' );
 		var tmp = GalTrace.orderFilter.get( 'phases' );
 		tmp[self.data( 'value' )] = self.hasClass( 'ui-btn-active' );
 		GalTrace.orderFilter.set( 'phases', tmp );
