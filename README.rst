@@ -1,10 +1,10 @@
 GalTrace
 ========
 
-This project is intend to trace my interested galgames. It records game's
+This project is used to trace my interested galgames. It records each game's
 release date, and my playing status.
 
-This is a `Django`_ project and currently host on `Heroku`_.
+This is a `Django`_ project and currently hosting on `Heroku`_.
 
 Dependencies
 ------------
