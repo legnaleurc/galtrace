@@ -106,7 +106,7 @@ var GalTrace = GalTrace || {};
 				if( /^\d\d\d\d\/\d\d\/\d\d$/.test( dateEdit.val() ) ) {
 					saveEdit( dateLabel, dateEdit, title, 'date' );
 					model.set( 'date', dateLabel.text() );
-					orderList.sort();
+					GalTrace.orderList.sort();
 				}
 				closeEdit( dateLabel, dateEdit );
 			}, this.$( '.date' ), this.model ) );
