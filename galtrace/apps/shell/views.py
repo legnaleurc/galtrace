@@ -98,13 +98,18 @@ def getArgs( request ):
 @login_required
 @ajaxView
 def load( request ):
+	phase = int( request.POST.get( 'phase', -1 ) )
 	offset = int( request.POST['offset'] )
 	limit = offset + int( request.POST['limit'] )
 
 	if offset < 0 or limit <= 0:
 		raise ValueError( 'invalid interval' )
 
-	result = Order.objects.filter( user__exact = request.user ).order_by( 'date', 'title' )[offset:limit].values()
+	if phase < 0:
+		result = Order.objects.filter( user__exact = request.user )
+	else:
+		result = Order.objects.filter( user__exact = request.user, phase__exact = phase )
+	result = result.order_by( 'date', 'title' )[offset:limit].values()
 	if not result:
 		return None
 	else:

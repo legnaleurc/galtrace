@@ -159,6 +159,7 @@ var GalTrace = GalTrace || {};
 	GalTrace.initialize = function() {
 		function load( offset ) {
 			jQuery.post( GalTrace.urls.LOAD, {
+				phase: 0,
 				offset: offset,
 				limit: 100,
 			}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
