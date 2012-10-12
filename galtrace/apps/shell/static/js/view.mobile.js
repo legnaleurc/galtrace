@@ -2,8 +2,6 @@ var GalTrace = GalTrace || {};
 ( function() {
 	'use strict';
 
-	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
-
 	var OrderView = Backbone.View.extend( {
 		tagName: 'a',
 
@@ -31,20 +29,13 @@ var GalTrace = GalTrace || {};
 			var date = this.model.get( 'date' );
 			var uri = this.model.get( 'uri' );
 
-			var template = ORDER_TEMPLATE( {
-				title: title,
-				vendor: vendor,
-				date: date,
-				uri: uri,
-			} );
 			this.$el.text( title );
 			this.$el.button();
 
 			this.$el.click( function() {
 				$( '#order-title' ).text( title );
-				var content = $( '#order-content' );
-				content.html( template );
-				content.trigger( 'create' );
+				$( '#order-vendor' ).text( vendor );
+				$( '#order-date' ).text( date );
 			} );
 
 			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();

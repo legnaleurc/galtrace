@@ -2,15 +2,6 @@
 {% load url from future %}
 {% load i18n %}
 
-{% block head %}
-	<script id="order-template" type="text/template">
-		<ul data-role="listview" data-inset="true">
-			<li><%= vendor %></li>
-			<li><%= date %></li>
-		</ul>
-	</script>
-{% endblock %}
-
 {% block body %}
 	<div id="main-page" data-role="page">
 		<div data-role="header" data-position="fixed">
@@ -35,7 +26,11 @@
 			<a href="#main-page" data-role="button" data-rel="page">Back</a>
 			<h1 id="order-title"></h1>
 		</div>
-		<div id="order-content" data-role="content">
+		<div data-role="content">
+			<ul data-role="listview" data-inset="true">
+				<li id="order-vendor"></li>
+				<li id="order-date"></li>
+			</ul>
 		</div>
 	</div>
 	<div id="tool-widget" data-role="page">
