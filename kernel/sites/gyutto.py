@@ -40,7 +40,9 @@ def create( uri ):
 	m = re.match( ur'^(\d\d\d\d)年(\d\d)月(\d\d)日$', date_ )
 	if not m:
 		error.append( 'invalid date' )
-	date_ = '{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
+		date_ = u''
+	else:
+		date_ = u'{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
 
 	return {
 		'title': title,
