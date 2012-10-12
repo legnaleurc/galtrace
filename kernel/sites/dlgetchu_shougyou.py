@@ -18,13 +18,10 @@ def create( uri ):
 
 	opener = urllib2.build_opener( urllib2.HTTPCookieProcessor( cookielib.CookieJar() ) )
 	link = opener.open( 'http://dl.getchu.com/index.php', urllib.urlencode( query ) )
-	data = { 'error': [] }
+	data = {}
 	key = None
 	for line in link:
-		try:
-			line = line.decode( 'EUC-JP' )
-		except UnicodeError as e:
-			data['error'].append( [ unicode( e ), line.decode( 'EUC-JP', 'replace' ) ] )
+		line = line.decode( 'EUC-JP', 'replace' )
 		if key is None:
 			if 'title' not in data and re.search( ur'imgs/pts_line_312\.gif', line ) is not None:
 				key = 'title'
