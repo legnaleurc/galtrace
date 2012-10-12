@@ -58,7 +58,7 @@
 	} );
 
 	// open in new window/tab
-	$( 'a[rel=external]' ).click( function( event ) {
+	$( document.body ).on( 'click', 'a[rel="external"]', function( event ) {
 		event.preventDefault();
 		window.open( $( this ).attr( 'href' ), '_blank' );
 	} );
