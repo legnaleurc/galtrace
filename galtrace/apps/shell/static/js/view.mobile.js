@@ -18,9 +18,8 @@ var GalTrace = GalTrace || {};
 			this.model.on( 'change:vendor', this.onVendorChanged, this );
 			this.model.on( 'change:date', this.onDateChanged, this );
 			this.model.on( 'change:uri', this.onUriChanged, this );
-			this.model.on( 'change:phase', this.onFilterChanged, this );
 			this.model.on( 'change:updating', this.onStateChanged, this );
-			GalTrace.orderFilter.on( 'change:phases change:search', this.onFilterChanged, this );
+			GalTrace.orderFilter.on( 'change:search', this.onFilterChanged, this );
 
 			// bookkeeping
 			this.$el.data( 'view', this );
@@ -48,10 +47,8 @@ var GalTrace = GalTrace || {};
 				content.trigger( 'create' );
 			} );
 
-			var phases = GalTrace.orderFilter.get( 'phases' );
 			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
-			var phase = this.model.get( 'phase' );
-			if( !phases[phase] || ( title.toLowerCase().indexOf( search ) < 0 && vendor.toLowerCase().indexOf( search ) < 0 ) ) {
+			if( title.toLowerCase().indexOf( search ) < 0 && vendor.toLowerCase().indexOf( search ) < 0 ) {
 				this.$el.css( {
 					display: 'none',
 				} );
@@ -78,7 +75,7 @@ var GalTrace = GalTrace || {};
 			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
 			var title = this.model.get( 'title' ).toLowerCase();
 			var vendor = this.model.get( 'vendor' ).toLowerCase();
-			if( GalTrace.orderFilter.get( 'phases' )[this.model.get( 'phase' )] && ( title.indexOf( search ) >= 0 || vendor.indexOf( search ) >= 0 ) ) {
+			if( title.indexOf( search ) >= 0 || vendor.indexOf( search ) >= 0 ) {
 				this.$el.css( {
 					display: 'block',
 				} );
