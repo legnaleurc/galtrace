@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 
 from kernel.models import Order, PHASES
 from kernel.forms import RestoreForm, OrderForm
-from kernel import sites
+import crawler
 
 def ajaxView( f ):
 	'''
@@ -169,7 +169,7 @@ def restore( request ):
 @ajaxView
 def fetch( request ):
 	args = getArgs( request )
-	result = sites.fetch( args[u'uri'] )
+	result = crawler.fetch( args[u'uri'] )
 	return result
 
 def robots( request ):

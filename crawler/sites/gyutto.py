@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import re, urlparse, urllib2, cookielib, urllib, pyquery
@@ -12,8 +11,7 @@ def verify( uri ):
 def create( uri ):
 	m = re.match( r'^/i/item(\d+)$', uri.path )
 	if not m:
-		# TODO error
-		pass
+		raise RuntimeError( u'invalid url path' )
 	query = {
 		'_adult_check': 'yes',
 		'item_flag': '1',

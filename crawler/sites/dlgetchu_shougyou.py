@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import re, urllib, urllib2, cookielib, urlparse
@@ -6,7 +5,7 @@ import re, urllib, urllib2, cookielib, urlparse
 def verify( uri ):
 	if uri.netloc == 'dl.getchu.com':
 		result = urlparse.parse_qs( uri.query )
-		if result['action'][0] == 'gd':
+		if result['action'][0] == 'gdSoft':
 			return 100
 	return 0
 
@@ -23,11 +22,11 @@ def create( uri ):
 	for line in link:
 		line = line.decode( 'EUC-JP', 'replace' )
 		if not key:
-			if re.search( ur'images/shosai_tl_new\.gif', line ):
+			if 'title' not in data and re.search( ur'imgs/pts_line_312\.gif', line ):
 				key = 'title'
-			elif re.search( ur'>サークル</td>', line ):
+			elif re.search( ur'>ブランド：</td>', line ):
 				key = 'vendor'
-			elif re.search( ur'>登録日</td>', line ):
+			elif re.search( ur'>登録日：</td>', line ):
 				key = 'date'
 		elif key == 'title':
 			m = re.search( ur'<div.+>(.+)</div>', line )
@@ -40,9 +39,9 @@ def create( uri ):
 				data[key] = m.group( 1 )
 				key = None
 		elif key == 'date':
-			m = re.search( ur'>(.+)</td>', line )
+			m = re.search( ur'>(\d\d\d\d)年(\d\d)月(\d\d)日<', line )
 			if m:
-				data[key] = m.group( 1 )
+				data[key] = '{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
 				key = None
 	link.close()
 
