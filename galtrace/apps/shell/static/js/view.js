@@ -289,4 +289,31 @@ var GalTrace = GalTrace || {};
 		el: '#counter',
 		model: GalTrace.orderList,
 	} );
+
+	GalTrace.initialize = function() {
+		function load( offset ) {
+			jQuery.post( GalTrace.urls.LOAD, {
+				offset: offset,
+				limit: 100,
+			}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+				if( !data.success ) {
+					GalTrace.cerr( data.type, data.message );
+					return;
+				}
+				if( data.data === null ) {
+					// load finished
+					return;
+				}
+				data = data.data;
+
+				load( offset + data.length );
+
+				GalTrace.orderList.add( data );
+			} ).error( function( jqXHR, textStatus, message ) {
+				GalTrace.cerr( 'Unknown Error', message );
+			} );
+		}
+
+		load( 0 );
+	};
 } )();
