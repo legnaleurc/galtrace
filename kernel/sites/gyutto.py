@@ -11,7 +11,7 @@ def verify( uri ):
 
 def create( uri ):
 	m = re.match( r'^/i/item(\d+)$', uri.path )
-	if m is None:
+	if not m:
 		# TODO error
 		pass
 	query = {
@@ -38,7 +38,7 @@ def create( uri ):
 	vendor = pyquery.PyQuery( tmp[2] ).find( 'dd a' ).text()
 	date_ = pyquery.PyQuery( tmp[9] ).find( 'dd' ).text()
 	m = re.match( ur'^(\d\d\d\d)年(\d\d)月(\d\d)日$', date_ )
-	if m is None:
+	if not m:
 		error.append( 'invalid date' )
 	date_ = '{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
 

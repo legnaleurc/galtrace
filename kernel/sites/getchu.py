@@ -13,7 +13,7 @@ def create( uri ):
 	query = urlparse.parse_qs( uri.query )
 	for key in query:
 		query[key] = query[key][0]
-	if( 'gc' not in query ):
+	if 'gc' not in query:
 		query['gc'] = 'gc'
 	uri_ = urlparse.urlunsplit( ( uri.scheme, uri.netloc, uri.path, urllib.urlencode( query ), '' ) )
 
@@ -31,7 +31,12 @@ def create( uri ):
 	title = pq( '#soft-title' ).remove( 'nobr' ).remove( '#wish' ).text()
 	log.append( title )
 	title = title.strip()
-	return { 'title': title, 'vendor': pq( '#brandsite' ).text(), 'date': pq( '#tooltip-day' ).text(), 'log': log }
+	return {
+		'title': title,
+		'vendor': pq( '#brandsite' ).text(),
+		'date': pq( '#tooltip-day' ).text(),
+		'log': log,
+	}
 
 if __name__ == '__main__':
 	import sys

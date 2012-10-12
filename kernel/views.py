@@ -53,7 +53,7 @@ def auth( request ):
 	userName = request.POST[u'user'] if u'user' in request.POST else ''
 	password = request.POST[u'pswd'] if u'user' in request.POST else ''
 	user = authenticate( username = userName, password = password )
-	if user is not None:
+	if user:
 		if user.is_active:
 			login( request, user )
 			# redirect
@@ -93,7 +93,7 @@ def load( request ):
 		raise ValueError( 'invalid interval' )
 
 	result = Order.objects.filter( user__exact = request.user ).order_by( 'date', 'title' )[offset:limit].values()
-	if len( result ) <= 0:
+	if not result:
 		return None
 	else:
 		result = [ x for x in result ]
@@ -105,11 +105,11 @@ def load( request ):
 def save( request ):
 	args = getArgs( request )
 	# title should not be null
-	if u'title' not in args or len( args[u'title'] ) == 0:
+	if u'title' not in args or not args[u'title']:
 		raise ValueError( '`title` is empty' )
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
-	if len( result ) == 0:
+	if not result:
 		# new item, insert
 		result = Order( user = request.user, **args )
 		result.save()
@@ -136,11 +136,11 @@ def move( request ):
 @ajaxView
 def delete( request ):
 	orders = request.POST.getlist( u'orders[]' )
-	if len( orders ) == 0:
+	if not orders:
 		raise ValueError( u'empty request' )
 
 	result = Order.objects.filter( title__in = orders )
-	if len( result ) == 0:
+	if not result:
 		raise ValueError( u'no order matched' )
 
 	result.delete()
