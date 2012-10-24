@@ -5,6 +5,9 @@ admin.autodiscover()
 
 urlpatterns = patterns( '',
 	url( r'', include( 'kernel.urls' ) ),
+	url( r'^favicon\.ico|apple-touch-icon\.png$', 'django.views.generic.simple.redirect_to', {
+		'url': '/static/img/favicon.ico',
+	} ),
 
 	# url( r'^admin/doc/', include( 'django.contrib.admindocs.urls' ) ),
 	url( r'^admin/', include( admin.site.urls ) ),
