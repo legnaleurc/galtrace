@@ -1,5 +1,5 @@
 bpssl >= 1.0.1
-Django >= 1.4.1
+Django >= 1.4.2
 dj-database-url >= 0.2.1
 gevent >= 0.13.8
 gunicorn >= 0.14.6
