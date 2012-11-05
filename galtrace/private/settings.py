@@ -1,6 +1,7 @@
 import os, json
 
 PRIVATE_DIR = os.path.dirname( os.path.abspath( __file__ ) )
+PROJECT_DIR = os.path.normpath( os.path.join( PRIVATE_DIR, '../..' ) )
 PRIVATE_KEY = 'GALTRACE_DATA'
 PRIVATE_DATA_PATH = os.path.join( PRIVATE_DIR, 'data.json' )
 PRIVATE_DATABASE_PATH = os.path.join( PRIVATE_DIR, 'default.sqlite' )

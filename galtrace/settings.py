@@ -1,4 +1,5 @@
 import private.settings
+import os
 
 PRIVATE_SETTINGS = private.settings.load()
 
@@ -32,6 +33,7 @@ STATIC_ROOT = PRIVATE_SETTINGS['STATIC_ROOT']
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
+	os.path.join( private.settings.PROJECT_DIR, 'galtrace/static' ),
 )
 
 STATICFILES_FINDERS = (

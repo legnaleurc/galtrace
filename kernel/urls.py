@@ -12,6 +12,5 @@ urlpatterns = patterns( 'kernel.views',
 	url( r'^restore\.cgi$', 'restore' ),
 	url( r'^fetch\.cgi$', 'fetch' ),
 	url( r'^urls\.js$', 'urls' ),
-	url( r'^robots\.txt$', 'robots' ),
 	url( r'^(?P<user_name>.+)$', 'member' ),
 )

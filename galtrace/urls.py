@@ -5,12 +5,13 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns( '',
-	url( r'^favicon\.ico|apple-touch-icon\.png$', RedirectView.as_view( url = '/static/img/favicon.ico' ) ),
-
-	url( r'', include( 'kernel.urls' ) ),
+	url( r'^favicon\.ico|apple-touch-icon\.png$', RedirectView.as_view( url = '/static/favicon.ico' ) ),
+	url( r'^robots\.txt$', RedirectView.as_view( url = '/static/robots.txt' ) ),
 
 	# url( r'^admin/doc/', include( 'django.contrib.admindocs.urls' ) ),
 	# url( r'^admin/', include( admin.site.urls ) ),
+
+	url( r'', include( 'kernel.urls' ) ),
 )
 
 from django.conf import settings

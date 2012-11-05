@@ -183,9 +183,3 @@ def fetch( request ):
 	args = getArgs( request )
 	result = crawler.fetch( args[u'uri'] )
 	return result
-
-def robots( request ):
-	response = HttpResponse( mimetype = 'text/plain' )
-	response.write( 'User-agent: *\n' )
-	response.write( 'Disallow: /\n' )
-	return response
