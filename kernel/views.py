@@ -40,6 +40,18 @@ def index( request ):
 	if not request.user.is_authenticated():
 		return render_to_response( 'login.html', context )
 
+	return redirect( 'kernel.views.member', user_name = request.user.username )
+
+def member( request, user_name ):
+	context = RequestContext( request )
+	if not request.user.is_authenticated():
+		# TODO show read only page
+		return redirect( 'kernel.views.index' )
+
+	if request.user.username != user_name:
+		# TODO show read only page
+		return redirect( 'kernel.views.index' )
+
 	form = OrderForm()
 	restoreForm = RestoreForm()
 	return render_to_response( 'self.html', {
