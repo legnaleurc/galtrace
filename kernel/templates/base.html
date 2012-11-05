@@ -1,3 +1,4 @@
+{% load url from future %}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -19,7 +20,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a href="{% url kernel.views.index %}" class="brand">GalTrace</a>
+					<a href="{% url 'kernel.views.index' %}" class="brand">GalTrace</a>
 					<div class="nav-collapse">
 						{% block navbar %}
 						{% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load url from future %}
 
 {% block head %}
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
@@ -22,7 +23,7 @@
 			<a id="data-menu-anchor" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Data<b class="caret"></b></a>
 			<ul class="dropdown-menu" aria-labelledby="data-menu-anchor" role="menu">
 				<li><a href="#" id="button-delete">Delete</a></li>
-				<li><a href="{% url kernel.views.backup %}">Backup</a></li>
+				<li><a href="{% url 'kernel.views.backup' %}">Backup</a></li>
 				<li><a href="#restore-modal" data-toggle="modal">Restore</a></li>
 			</ul>
 		</li>
@@ -41,7 +42,7 @@
 			<span id="total-orders">0</span>
 		</li>
 		<li class="divider-vertical"></li>
-		<li><a href="{% url kernel.views.auth %}">Sign Out</a></li>
+		<li><a href="{% url 'kernel.views.auth' %}">Sign Out</a></li>
 	</ul>
 {% endblock %}
 
@@ -109,7 +110,7 @@
 			<h3>Restore</h3>
 		</div>
 		<div class="modal-body">
-			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url kernel.views.restore %}">
+			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url 'kernel.views.restore' %}">
 				<fieldset>
 					{% for field in restoreForm %}
 						<div class="control-group">
@@ -145,9 +146,9 @@
 	<script src="https://www.google.com/jsapi" type="text/javascript"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="{% url kernel.views.csrf %}"></script>
+	<script type="text/javascript" src="{% url 'kernel.views.csrf' %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/cart-read.js"></script>
-	<script type="text/javascript" src="{% url kernel.views.urls %}"></script>
+	<script type="text/javascript" src="{% url 'kernel.views.urls' %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/cart-write.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/action-read.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/action-write.js"></script>

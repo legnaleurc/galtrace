@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load url from future %}
 
 {% block body %}
-	<form class="well form-horizontal" id="login" method="post" action="{% url kernel.views.auth %}">
+	<form class="well form-horizontal" id="login" method="post" action="{% url 'kernel.views.auth' %}">
 		<fieldset>
 			<legend>{% trans 'Please sign in or sign up' %}</legend>
 			<div class="control-group">
