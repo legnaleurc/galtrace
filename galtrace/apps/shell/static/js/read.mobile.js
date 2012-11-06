@@ -1,6 +1,9 @@
 ( function() {
 	'use strict';
 
+	// disable effects
+	jQuery.mobile.defaultPageTransition = 'none';
+
 	// create table and load orders
 	GalTrace.initialize();
 

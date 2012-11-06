@@ -3,14 +3,7 @@ var GalTrace = GalTrace || {};
 	'use strict';
 
 	var OrderView = Backbone.View.extend( {
-		tagName: 'a',
-
-		attributes: {
-			'href': '#order-page',
-			'data-role': 'button',
-			'data-icon': 'arrow-r',
-			'data-iconpos': 'right',
-		},
+		tagName: 'li',
 
 		initialize: function() {
 			this.model.on( 'change:vendor', this.onVendorChanged, this );
@@ -29,14 +22,16 @@ var GalTrace = GalTrace || {};
 			var date = this.model.get( 'date' );
 			var uri = this.model.get( 'uri' );
 
-			this.$el.text( title );
-			this.$el.button();
+			this.$el.append( $( '<a href="#order-page" />' ).text( title ) );
+			$( '#orders' ).listview( 'refresh' );
 
+			/*
 			this.$el.click( function() {
 				$( '#order-title' ).text( title );
 				$( '#order-vendor' ).text( vendor );
 				$( '#order-date' ).text( date );
 			} );
+			*/
 
 			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
 			if( title.toLowerCase().indexOf( search ) < 0 && vendor.toLowerCase().indexOf( search ) < 0 ) {
