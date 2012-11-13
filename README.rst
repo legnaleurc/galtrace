@@ -14,7 +14,7 @@ Dependencies
 * `PycURL`_
 * `PyQuery`_
 * `bpssl`_ (for production, but necessary)
-* `Gunicorn`_ (production only)
+* `Gunicorn`_ >= 0.15 (production only)
 * `gevent`_ (production only)
 * `Psycopg`_ (production only)
 * `DJ-Database-URL`_ (production only)
