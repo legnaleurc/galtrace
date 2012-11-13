@@ -87,7 +87,7 @@ def urls( request ):
 
 def getArgs( request ):
 	args = {}
-	for item in request.POST.items():
+	for item in request.POST.iteritems():
 		if item[0] in [ u'phase', u'volume' ]:
 			args[item[0]] = int( item[1] )
 		else:
