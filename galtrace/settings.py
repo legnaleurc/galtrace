@@ -1,5 +1,8 @@
-import private.settings
+#-*- coding: utf-8 -*-
+
 import os
+
+import private.settings
 
 PRIVATE_SETTINGS = private.settings.load()
 

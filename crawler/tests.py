@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import unittest
+
 import crawler
 
 class SiteTest( unittest.TestCase ):

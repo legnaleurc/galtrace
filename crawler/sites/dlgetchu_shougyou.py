@@ -1,6 +1,10 @@
 #-*- coding: utf-8 -*-
 
-import re, urllib, urllib2, cookielib, urlparse
+import re
+import urllib
+import urllib2
+import cookielib
+import urlparse
 
 def verify( uri ):
 	if uri.netloc == 'dl.getchu.com':

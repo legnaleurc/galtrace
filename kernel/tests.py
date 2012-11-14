@@ -1,10 +1,12 @@
-from kernel.models import Order
+#-*- coding: utf-8 -*-
+
+import json
 
 from django.test import TestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
 
-import json
+from kernel.models import Order
 
 class LoadTest( TestCase ):
 

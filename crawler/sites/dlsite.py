@@ -1,6 +1,10 @@
 #-*- coding: utf-8 -*-
 
-import re, urlparse, urllib2, pyquery
+import re
+import urlparse
+import urllib2
+
+import pyquery
 
 def verify( uri ):
 	if uri.netloc == 'www.dlsite.com':

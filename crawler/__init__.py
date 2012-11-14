@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import urlparse
+
 import sites
 
 def fetch( uri ):

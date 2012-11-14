@@ -1,4 +1,7 @@
-import os, json
+#-*- coding: utf-8 -*-
+
+import json
+import os
 
 PRIVATE_DIR = os.path.dirname( os.path.abspath( __file__ ) )
 PROJECT_DIR = os.path.normpath( os.path.join( PRIVATE_DIR, '../..' ) )
@@ -8,8 +11,8 @@ PRIVATE_DATABASE_PATH = os.path.join( PRIVATE_DIR, 'default.sqlite' )
 
 def load( *args, **kwargs ):
 	if PRIVATE_KEY in os.environ:
-		data = json.loads( os.environ[PRIVATE_KEY] )
 		import dj_database_url
+		data = json.loads( os.environ[PRIVATE_KEY] )
 		private = {
 			'DATABASES': {
 				'default': dj_database_url.config(),

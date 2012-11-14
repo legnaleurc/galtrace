@@ -1,4 +1,7 @@
-import sys, pkgutil
+#-*- coding: utf-8 -*-
+
+import pkgutil
+import sys
 
 def __module_filter():
 	for importer, name, isPackage in pkgutil.walk_packages( sys.modules[__name__].__path__ ):

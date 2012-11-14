@@ -1,8 +1,10 @@
+#-*- coding: utf-8 -*-
+
+import json
+
 from django import forms
 
 from kernel.models import Order, PHASES
-
-import json
 
 class RestoreForm( forms.Form ):
 	data = forms.FileField()

@@ -1,6 +1,12 @@
 #-*- coding: utf-8 -*-
 
-import re, urlparse, urllib2, cookielib, urllib, pyquery
+import re
+import urlparse
+import urllib2
+import cookielib
+import urllib
+
+import pyquery
 
 def verify( uri ):
 	if uri.netloc == 'gyutto.com':
