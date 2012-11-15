@@ -160,7 +160,7 @@ class SaveTest( TestCase ):
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
 
-	def testWrongPhase( self ):
+	def testNonIntPhase( self ):
 		"""
 		Call with wrong phase
 		Should get a JSON which success is False
@@ -171,6 +171,38 @@ class SaveTest( TestCase ):
 		response = c.post( self.url, {
 			'title': '1',
 			'phase': 'a',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+
+	def testNegativePhase( self ):
+		"""
+		Call with wrong phase
+		Should get a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.url, {
+			'title': '1',
+			'phase': '-1',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertFalse( result['success'] )
+
+	def testGreaterThanFivePhase( self ):
+		"""
+		Call with wrong phase
+		Should get a JSON which success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.url, {
+			'title': '1',
+			'phase': '6',
 		} )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
