@@ -40,7 +40,7 @@ def load( *args, **kwargs ):
 		data = json.load( open( PRIVATE_DATA_PATH, 'r' ) )
 
 	private.update( {
-		'ADMINS': ( ( t[0], t[1] ) for t in data['ADMINS'] ),
+		'ADMINS': tuple( ( t[0], t[1] ) for t in data['ADMINS'] ),
 		'EMAIL_HOST': data['EMAIL_HOST'],
 		'EMAIL_HOST_PASSWORD': data['EMAIL_HOST_PASSWORD'],
 		'EMAIL_HOST_USER': data['EMAIL_HOST_USER'],
