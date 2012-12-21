@@ -45,5 +45,5 @@ encrypted by my private gpg key. You must create your own one.
 .. _Heroku: http://www.heroku.com/
 .. _Psycopg: http://initd.org/psycopg/
 .. _PycURL: http://pycurl.sourceforge.net/
-.. _PyQuery: https://bitbucket.org/olauzanne/pyquery/
+.. _PyQuery: https://github.com/gawel/pyquery
 .. _Python: http://www.python.org/
