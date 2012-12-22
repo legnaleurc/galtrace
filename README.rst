@@ -22,24 +22,26 @@ Dependencies
 How To Upload Private Settings
 ------------------------------
 
-::
+.. code:: bash 
 
-    # ensure your **galtrace/private/data.json** exists
-    python galtrace/private/settings.py
+  # ensure your **galtrace/private/data.json** exists, see below section
+  python galtrace/private/settings.py
 
 Note
 ----
 
-`Heroku`_ won't collectstatic if **user_env_compile** turns off somehow.
+``user_env_compile`` must turns on to let `Heroku`_ collect static assets. For
+more information, please see `Django and Static Assets | Heroku Dev Center`_.
 
 This project doesn't provide registering right now.
 
-Development configuration will read **galtrace/private/data.json**, which is
+Development configuration will read ``galtrace/private/data.json``, which is
 encrypted by my private gpg key. You must create your own one.
 
 .. _bpssl: https://bitbucket.org/beproud/bpssl/
 .. _DJ-Database-URL: https://github.com/kennethreitz/dj-database-url
 .. _Django: https://www.djangoproject.com/
+.. _Django and Static Assets | Heroku Dev Center: https://devcenter.heroku.com/articles/django-assets
 .. _gevent: http://www.gevent.org/
 .. _Gunicorn: http://gunicorn.org/
 .. _Heroku: http://www.heroku.com/
