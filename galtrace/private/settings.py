@@ -46,6 +46,8 @@ def load( *args, **kwargs ):
 		'EMAIL_HOST_USER': data['EMAIL_HOST_USER'],
 		'EMAIL_PORT': data['EMAIL_PORT'],
 		'EMAIL_USE_TLS': data['EMAIL_USE_TLS'],
+		'GOOGLE_API_CLIENT_ID': data['GOOGLE_API_CLIENT_ID'],
+		'GOOGLE_API_CLIENT_SECRET': data['GOOGLE_API_CLIENT_SECRET'],
 		'SECRET_KEY': data['SECRET_KEY'],
 		'SERVER_EMAIL': data['SERVER_EMAIL'],
 		'STATIC_ROOT': os.path.join( PRIVATE_DIR, 'static/' ),
