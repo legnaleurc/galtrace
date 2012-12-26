@@ -33,6 +33,13 @@ Note
 ``user_env_compile`` must turns on to let `Heroku`_ collect static assets. For
 more information, please see `Django and Static Assets | Heroku Dev Center`_.
 
+I use `Google API`_ to send emails on `Heroku`_.
+Please create an **installed application** client ID, then set
+``GOOGLE_API_CLIENT_ID`` and ``GOOGLE_API_CLIENT_SECRET`` in
+``galtrace/private/data.json`` respectively.
+Follow `oauth2.py example`_ to gain a **refresh token**, and save the token as
+``EMAIL_HOST_PASSWORD``.
+
 This project doesn't provide registering right now.
 
 Development configuration will read ``galtrace/private/data.json``, which is
@@ -43,8 +50,10 @@ encrypted by my private gpg key. You must create your own one.
 .. _Django: https://www.djangoproject.com/
 .. _Django and Static Assets | Heroku Dev Center: https://devcenter.heroku.com/articles/django-assets
 .. _gevent: http://www.gevent.org/
+.. _Google API: https://code.google.com/apis/console/
 .. _Gunicorn: http://gunicorn.org/
 .. _Heroku: http://www.heroku.com/
+.. _oauth2.py example: http://code.google.com/p/google-mail-oauth2-tools/wiki/OAuth2DotPyRunThrough
 .. _Psycopg: http://initd.org/psycopg/
 .. _PycURL: http://pycurl.sourceforge.net/
 .. _PyQuery: https://github.com/gawel/pyquery
