@@ -1,0 +1,6 @@
+-r __init__.txt
+bpssl >= 1.0.2
+dj-database-url >= 0.2.1
+gevent >= 0.13.8
+gunicorn >= 0.17.1
+psycopg2 >= 2.4.6
