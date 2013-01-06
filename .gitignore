@@ -1,5 +1,5 @@
 *.pyc
 *~
-/galtrace/private/data.json
-/galtrace/private/default.sqlite
+/galtrace/settings/secret.json
+/galtrace/settings/default.sqlite
 .DS_Store

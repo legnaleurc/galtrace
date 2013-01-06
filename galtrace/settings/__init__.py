@@ -1,19 +1,10 @@
-#-*- coding: utf-8 -*-
+from os.path import abspath, dirname, join, normpath
 
-import os
 
-import private.settings
+GALTRACE_SETTINGS_ROOT = dirname( abspath( __file__ ) )
+GALTRACE_ROOT = normpath( join( GALTRACE_SETTINGS_ROOT, '../..' ) )
+GALTRACE_HEROKU_CONFIG_KEY = 'GALTRACE_SECRET'
 
-PRIVATE_SETTINGS = private.settings.load()
-
-DEBUG = PRIVATE_SETTINGS['DEBUG']
-TEMPLATE_DEBUG = DEBUG
-
-ADMINS = PRIVATE_SETTINGS['ADMINS']
-
-MANAGERS = ADMINS
-
-DATABASES = PRIVATE_SETTINGS['DATABASES']
 
 TIME_ZONE = 'Asia/Taipei'
 
@@ -31,12 +22,12 @@ MEDIA_ROOT = ''
 
 MEDIA_URL = ''
 
-STATIC_ROOT = PRIVATE_SETTINGS['STATIC_ROOT']
+STATIC_ROOT = join( GALTRACE_ROOT, 'static/' )
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-	os.path.join( private.settings.PROJECT_DIR, 'galtrace/static' ),
+	join( GALTRACE_ROOT, 'galtrace/static' ),
 )
 
 STATICFILES_FINDERS = (
@@ -44,15 +35,12 @@ STATICFILES_FINDERS = (
 	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-SECRET_KEY = PRIVATE_SETTINGS['SECRET_KEY']
-
 TEMPLATE_LOADERS = (
 	'django.template.loaders.filesystem.Loader',
 	'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
-	'beproud.django.ssl.middleware.SSLProxyMiddleware',
 	'django.middleware.gzip.GZipMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,7 +49,6 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'django.middleware.transaction.TransactionMiddleware',
-	'beproud.django.ssl.middleware.SSLRedirectMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -72,7 +59,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.core.context_processors.static',
 	'django.core.context_processors.tz',
 	'django.contrib.messages.context_processors.messages',
-	'beproud.django.ssl.context_processors.conf',
 )
 
 ROOT_URLCONF = 'galtrace.urls'
@@ -90,8 +76,6 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'django.contrib.admin',
-
-	'beproud.django.ssl',
 
 	'kernel',
 )
@@ -120,20 +104,5 @@ LOGGING = {
 	}
 }
 
-# email settings
-EMAIL_BACKEND = 'galtrace.mail.GmailBackend'
-EMAIL_HOST = PRIVATE_SETTINGS['EMAIL_HOST']
-EMAIL_HOST_PASSWORD = PRIVATE_SETTINGS['EMAIL_HOST_PASSWORD']
-EMAIL_HOST_USER = PRIVATE_SETTINGS['EMAIL_HOST_USER']
-EMAIL_PORT = PRIVATE_SETTINGS['EMAIL_PORT']
-EMAIL_USE_TLS = PRIVATE_SETTINGS['EMAIL_USE_TLS']
-GOOGLE_API_CLIENT_ID = PRIVATE_SETTINGS['GOOGLE_API_CLIENT_ID']
-GOOGLE_API_CLIENT_SECRET = PRIVATE_SETTINGS['GOOGLE_API_CLIENT_SECRET']
-SERVER_EMAIL = PRIVATE_SETTINGS['SERVER_EMAIL']
-
 # login settings
 LOGIN_URL = '/'
-
-# ssl settings
-SECURE_PROXY_SSL_HEADER = ( 'HTTP_X_FORWARDED_PROTO', 'https' )
-SSL_URLS = PRIVATE_SETTINGS['SSL_URLS']
