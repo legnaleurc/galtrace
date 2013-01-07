@@ -4,7 +4,7 @@ import json
 
 from django import forms
 
-from kernel.models import Order, PHASES
+from galtrace.apps.shell.models import Order, PHASES
 
 class RestoreForm( forms.Form ):
 	data = forms.FileField()

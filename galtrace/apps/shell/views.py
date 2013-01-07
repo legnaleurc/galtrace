@@ -6,9 +6,9 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-from kernel.models import Order, PHASES
-from kernel.forms import RestoreForm, OrderForm
-import crawler
+from galtrace.apps.shell.models import Order, PHASES
+from galtrace.apps.shell.forms import RestoreForm, OrderForm
+from galtrace.libs import crawler
 
 def ajaxView( f ):
 	'''
@@ -40,17 +40,17 @@ def index( request ):
 	if not request.user.is_authenticated():
 		return render_to_response( 'login.html', context )
 
-	return redirect( 'kernel.views.member', user_name = request.user.username )
+	return redirect( 'galtrace.apps.shell.views.member', user_name = request.user.username )
 
 def member( request, user_name ):
 	context = RequestContext( request )
 	if not request.user.is_authenticated():
 		# TODO show read only page
-		return redirect( 'kernel.views.index' )
+		return redirect( 'galtrace.apps.shell.views.index' )
 
 	if request.user.username != user_name:
 		# TODO show read only page
-		return redirect( 'kernel.views.index' )
+		return redirect( 'galtrace.apps.shell.views.index' )
 
 	form = OrderForm()
 	restoreForm = RestoreForm()
@@ -69,13 +69,13 @@ def auth( request ):
 		if user.is_active:
 			login( request, user )
 			# redirect
-			return redirect( 'kernel.views.index' )
+			return redirect( 'galtrace.apps.shell.views.index' )
 		else:
 			# redirect
-			return redirect( 'kernel.views.index' )
+			return redirect( 'galtrace.apps.shell.views.index' )
 	else:
 		logout( request )
-		return redirect( 'kernel.views.index' )
+		return redirect( 'galtrace.apps.shell.views.index' )
 
 def csrf( request ):
 	return render_to_response( 'csrf.js', {

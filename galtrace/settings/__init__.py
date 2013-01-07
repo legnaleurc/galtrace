@@ -27,7 +27,6 @@ STATIC_ROOT = join( GALTRACE_ROOT, 'static/' )
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-	join( GALTRACE_ROOT, 'galtrace/static' ),
 )
 
 STATICFILES_FINDERS = (
@@ -76,8 +75,8 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'django.contrib.admin',
-
-	'kernel',
+	'galtrace.libs.core',
+	'galtrace.apps.shell',
 )
 
 LOGGING = {

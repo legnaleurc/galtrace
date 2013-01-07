@@ -2,7 +2,8 @@
 
 import unittest
 
-import crawler
+from galtrace.libs import crawler
+
 
 class SiteTest( unittest.TestCase ):
 

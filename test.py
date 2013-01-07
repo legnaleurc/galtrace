@@ -3,5 +3,5 @@
 
 import subprocess
 
-subprocess.call( [ 'python', '-m', 'unittest', 'crawler.tests' ] )
-subprocess.call( [ 'python', 'manage.py', 'test', 'kernel' ] )
+subprocess.call( [ 'python', '-m', 'unittest', 'galtrace.libs.crawler.tests' ] )
+subprocess.call( [ 'python', 'manage.py', 'test', 'shell' ] )
