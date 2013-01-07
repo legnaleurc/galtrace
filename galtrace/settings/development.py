@@ -1,8 +1,5 @@
-import base64
 import json
 from os.path import join
-import subprocess
-import sys
 
 from . import *
 
@@ -33,9 +30,6 @@ DATABASES = {
 
 SECRET_KEY = GALTRACE_SECRET['SECRET_KEY']
 
-
-if __name__ == '__main__':
-	secret = json.dumps( GALTRACE_SECRET, separators = ( ',', ':' ) )
-	secret = base64.b64encode( secret )
-	ret = subprocess.call( [ 'heroku', 'config:set', '{0}={1}'.format( GALTRACE_HEROKU_CONFIG_KEY, secret ) ] )
-	sys.exit( ret )
+INSTALLED_APPS += (
+	'galtrace.libs.cmds',
+)
