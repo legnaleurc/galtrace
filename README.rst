@@ -9,26 +9,47 @@ This is a `Django`_ project and currently hosting on `Heroku`_.
 Dependencies
 ------------
 
-* `Python`_ >= 2.7
-* `Django`_ >= 1.4
-* `PycURL`_
-* `PyQuery`_
-* `bpssl`_ (for production, but necessary)
-* `Gunicorn`_ >= 0.15 (production only)
-* `gevent`_ (production only)
-* `Psycopg`_ (production only)
-* `DJ-Database-URL`_ (production only)
+* common
 
-How To Upload Private Settings
-------------------------------
+  * `Python`_ >= 2.7
+  * `Django`_ >= 1.4
+  * `PycURL`_
+  * `PyQuery`_
+
+* production (for `Heroku`_)
+
+  * `bpssl`_
+  * `Gunicorn`_ >= 0.15
+  * `gevent`_
+  * `Psycopg`_
+  * `DJ-Database-URL`_
+
+Special Commands
+----------------
+
+Upload Private Settings
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Avaliable in ``galtrace.settings.development``
+
+Precondition: ``galtrace/settings/secret.json`` exists.
+For more information, please see Notes_.
 
 .. code:: bash 
 
-  # ensure your **galtrace/private/data.json** exists, see below section
-  python galtrace/private/settings.py
+  python manage.py galtrace_push
 
-Note
-----
+Test
+~~~~
+
+Avaliable in ``galtrace.settings.development``
+
+.. code:: bash
+
+  python manage.py galtrace_test
+
+Notes
+-----
 
 ``user_env_compile`` must turns on to let `Heroku`_ collect static assets. For
 more information, please see `Django and Static Assets | Heroku Dev Center`_.
@@ -36,13 +57,13 @@ more information, please see `Django and Static Assets | Heroku Dev Center`_.
 I use `Google API`_ to send emails on `Heroku`_.
 Please create an **installed application** client ID, then set
 ``GOOGLE_API_CLIENT_ID`` and ``GOOGLE_API_CLIENT_SECRET`` in
-``galtrace/private/data.json`` respectively.
+``galtrace/settings/secret.json`` respectively.
 Follow `oauth2.py example`_ to gain a **refresh token**, and save the token as
 ``EMAIL_HOST_PASSWORD``.
 
 This project doesn't provide registering right now.
 
-Development configuration will read ``galtrace/private/data.json``, which is
+Development configuration will read ``galtrace/settings/secret.json``, which is
 encrypted by my private gpg key. You must create your own one.
 
 .. _bpssl: https://bitbucket.org/beproud/bpssl/
