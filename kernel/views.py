@@ -31,7 +31,7 @@ def ajaxView( f ):
 			return toJSONResponse( {
 				'success': False,
 				'type': e.__class__.__name__,
-				'message': e.message,
+				'message': unicode( e ),
 			} )
 	return g
 
