@@ -136,6 +136,7 @@ var GalTrace = GalTrace || {};
 		return request;
 	};
 
-	GalTrace.cerr = function() {
+	GalTrace.cerr = function( type, message ) {
+		console.error( [ type, ': ', message ].join( '' ) );
 	};
 } )();
