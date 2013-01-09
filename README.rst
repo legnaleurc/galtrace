@@ -51,9 +51,6 @@ Avaliable in ``galtrace.settings.development``
 Notes
 -----
 
-``user_env_compile`` must turns on to let `Heroku`_ collect static assets. For
-more information, please see `Django and Static Assets | Heroku Dev Center`_.
-
 I use `Google API`_ to send emails on `Heroku`_.
 Please create an **installed application** client ID, then set
 ``GOOGLE_API_CLIENT_ID`` and ``GOOGLE_API_CLIENT_SECRET`` in
