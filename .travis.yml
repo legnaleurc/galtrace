@@ -1,0 +1,9 @@
+language: python
+python:
+  - 2.7
+install:
+  - pip install -q -M -r requirements/development.txt
+before_script:
+  - echo '{"ADMINS":[["",""]],"SECRET_KEY":"12345678901234567890123456789012345678901234567890"}' | cat > galtrace/settings/secret.json
+script:
+  - python manage.py galtrace_test --settings=galtrace.settings.development
