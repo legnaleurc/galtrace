@@ -1,9 +1,33 @@
+import base64
+import json
+import os
 from os.path import abspath, dirname, join, normpath
+import subprocess
 
 
 GALTRACE_SETTINGS_ROOT = dirname( abspath( __file__ ) )
 GALTRACE_ROOT = normpath( join( GALTRACE_SETTINGS_ROOT, '../..' ) )
 GALTRACE_HEROKU_CONFIG_KEY = 'GALTRACE_SECRET'
+
+def fromLocalEnvironment():
+	tmp = os.environ[GALTRACE_HEROKU_CONFIG_KEY]
+	tmp = base64.b64decode( tmp )
+	tmp = json.loads( tmp )
+	return tmp
+
+def fromRemoteEnvironment():
+	tmp = subprocess.check_output( [ 'heroku', 'config:get', GALTRACE_HEROKU_CONFIG_KEY ] )
+	tmp = tmp.strip()
+	tmp = base64.b64decode( tmp )
+	tmp = json.loads( tmp )
+	return tmp
+
+def fromJsonFile():
+	tmp = join( GALTRACE_SETTINGS_ROOT, 'secret.json' )
+	tmp = open( tmp, 'r' )
+	secret = json.load( tmp )
+	tmp.close()
+	return secret
 
 
 TIME_ZONE = 'Asia/Taipei'
@@ -60,8 +84,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.messages.context_processors.messages',
 )
 
-ROOT_URLCONF = 'galtrace.urls'
-
 WSGI_APPLICATION = 'galtrace.wsgi.application'
 
 TEMPLATE_DIRS = (
@@ -74,7 +96,6 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	'django.contrib.admin',
 	'galtrace.libs.core',
 	'galtrace.apps.frontend',
 )

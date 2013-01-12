@@ -1,12 +1,10 @@
-import json
 from os.path import join
 
 from . import *
 
 
 GALTRACE_DATABASE_PATH = join( GALTRACE_SETTINGS_ROOT, 'default.sqlite' )
-GALTRACE_SECRET_PATH = join( GALTRACE_SETTINGS_ROOT, 'secret.json' )
-GALTRACE_SECRET = json.load( open( GALTRACE_SECRET_PATH, 'r' ) )
+GALTRACE_SECRET = fromJsonFile()
 
 
 DEBUG = True
@@ -29,6 +27,8 @@ DATABASES = {
 }
 
 SECRET_KEY = GALTRACE_SECRET['SECRET_KEY']
+
+ROOT_URLCONF = 'galtrace.urls.development'
 
 INSTALLED_APPS += (
 	'galtrace.libs.cmds',

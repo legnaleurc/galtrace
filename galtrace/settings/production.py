@@ -1,13 +1,9 @@
-import base64
-import json
-import os
-
 import dj_database_url
 
 from . import *
 
 
-GALTRACE_SECRET = json.loads( base64.b64decode( os.environ[GALTRACE_HEROKU_CONFIG_KEY] ) )
+GALTRACE_SECRET = fromLocalEnvironment()
 
 
 DEBUG = False
@@ -33,6 +29,8 @@ MIDDLEWARE_CLASSES = (
 TEMPLATE_CONTEXT_PROCESSORS += (
 	'beproud.django.ssl.context_processors.conf',
 )
+
+ROOT_URLCONF = 'galtrace.urls.production'
 
 INSTALLED_APPS += (
 	'beproud.django.ssl',

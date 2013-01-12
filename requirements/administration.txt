@@ -1,0 +1,3 @@
+-r __init__.txt
+dj-database-url
+psycopg2
