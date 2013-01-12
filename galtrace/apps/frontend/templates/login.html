@@ -3,7 +3,7 @@
 {% load url from future %}
 
 {% block body %}
-	<form class="well form-horizontal" id="login" method="post" action="{% url 'galtrace.apps.shell.views.auth' %}">
+	<form class="well form-horizontal" id="login" method="post" action="{% url 'galtrace.apps.frontend.views.auth' %}">
 		<fieldset>
 			<legend>{% trans 'Please sign in or sign up' %}</legend>
 			<div class="control-group">

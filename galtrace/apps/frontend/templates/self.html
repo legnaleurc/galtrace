@@ -51,7 +51,7 @@
 	<ul class="nav pull-right">
 		<li id="counter" class="navbar-text"></li>
 		<li class="divider-vertical"></li>
-		<li><a href="{% url 'galtrace.apps.shell.views.auth' %}">Sign Out</a></li>
+		<li><a href="{% url 'galtrace.apps.frontend.views.auth' %}">Sign Out</a></li>
 	</ul>
 {% endblock %}
 
@@ -119,7 +119,7 @@
 			<h3>Restore</h3>
 		</div>
 		<div class="modal-body">
-			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url 'galtrace.apps.shell.views.restore' %}">
+			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url 'galtrace.apps.frontend.views.restore' %}">
 				<fieldset>
 					{% for field in restoreForm %}
 						<div class="control-group">
@@ -157,9 +157,9 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/backbone-min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="{% url 'galtrace.apps.shell.views.csrf' %}"></script>
+	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.csrf' %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/model.js"></script>
-	<script type="text/javascript" src="{% url 'galtrace.apps.shell.views.urls' %}"></script>
+	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.urls' %}"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/view.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/read.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/write.js"></script>

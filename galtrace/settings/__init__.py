@@ -76,7 +76,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'django.contrib.admin',
 	'galtrace.libs.core',
-	'galtrace.apps.shell',
+	'galtrace.apps.frontend',
 )
 
 LOGGING = {

@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns( 'galtrace.apps.shell.views',
+urlpatterns = patterns( 'galtrace.apps.frontend.views',
 	url( r'^$', 'index' ),
 	url( r'^auth\.cgi$', 'auth' ),
 	url( r'^csrf\.js$', 'csrf' ),
