@@ -1,8 +1,8 @@
 {% load url from future %}
 GalTrace.urls = {
-	DELETE: '{% url 'galtrace.apps.shell.views.delete' %}',
-	FETCH: '{% url 'galtrace.apps.shell.views.fetch' %}',
-	LOAD: '{% url 'galtrace.apps.shell.views.load' %}',
-	MOVE: '{% url 'galtrace.apps.shell.views.move' %}',
-	SAVE: '{% url 'galtrace.apps.shell.views.save' %}',
+	DELETE: '{% url 'galtrace.libs.core.views.delete' %}',
+	FETCH: '{% url 'galtrace.libs.core.views.fetch' %}',
+	LOAD: '{% url 'galtrace.libs.core.views.load' %}',
+	MOVE: '{% url 'galtrace.libs.core.views.move' %}',
+	SAVE: '{% url 'galtrace.libs.core.views.save' %}',
 };

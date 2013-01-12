@@ -1,10 +1,8 @@
-#-*- coding: utf-8 -*-
-
 import json
 
 from django import forms
 
-from galtrace.apps.shell.models import Order, PHASES
+from galtrace.libs.core.models import Order, PHASES
 
 class RestoreForm( forms.Form ):
 	data = forms.FileField()

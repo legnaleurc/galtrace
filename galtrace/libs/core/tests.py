@@ -1,12 +1,11 @@
-#-*- coding: utf-8 -*-
-
 import json
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
-from django.contrib.auth.models import User
 
-from galtrace.apps.shell.models import Order
+from galtrace.libs.core.models import Order
+
 
 class LoadTest( TestCase ):
 
