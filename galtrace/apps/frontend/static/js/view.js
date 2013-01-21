@@ -47,72 +47,59 @@ var GalTrace = GalTrace || {};
 				GalTrace.googleSearch( title );
 			} );
 
-			/**
-			 * Show the inline edit widget.
-			 *
-			 * @param {jQuery} parent Parent HTML element.
-			 * @param {jQuery} label The displaying label.
-			 * @param {jQuery} input The editing widget.
-			 */
-			function openEdit( parent, label, input ) {
-				input.width( parent.width() ).val( label.hide().text() ).show().select();
-			}
-
-			/**
-			 * Hide the inline edit widget.
-			 *
-			 * @param {jQuery} label The displaying label.
-			 * @param {jQuery} input The editing widget.
-			 */
-			function closeEdit( label, input ) {
-				label.show();
-				input.hide();
-			}
-
-			/**
-			 * Commit content.
-			 *
-			 * @param {jQuery} label The displaying label.
-			 * @param {jQuery} input The editing widget.
-			 * @param {String} key Editing row's title.
-			 * @param {String} field The field to be commit as change.
-			 * @returns {jqXHR} The AJAX object.
-			 */
-			function saveEdit( label, input, key, field ) {
-				if( label.text() == input.val() ) {
-					return;
+			function makeEditor( opts ) {
+				var $B = GalTrace.bind;
+				var label = opts.cell.children( 'span.inline-label' );
+				var edit = opts.cell.children( 'input.inline-edit' );
+				opts.cell.dblclick( function() {
+					opts.cell.addClass( 'editing' );
+					edit.focus();
+				} );
+				function onFinished() {
+					var labelText = label.text();
+					var inputText = edit.val();
+					if( labelText !== inputText && ( opts.validator ? opts.validator( inputText ) : true ) ) {
+						var args = {
+							title: opts.orderKey,
+						};
+						args[opts.fieldKey] = inputText;
+						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+							if( !data.success ) {
+								// TODO display error message
+								return;
+							}
+							opts.model.set( opts.fieldKey, inputText );
+							GalTrace.orderList.sort();
+						} );
+					}
+					opts.cell.removeClass( 'editing' );
 				}
-				label.text( input.val() );
-				var args = {
-					title: key
-				};
-				args[field] = input.val();
-				// TODO add hook
-				return jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
+				edit.blur( onFinished ).keypress( function( event ) {
+					if( event.which === 13 ) {
+						onFinished();
+					}
+				} );
 			}
 
 			// vendor cell
-			var vendorEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( vendorLabel, model ) {
-				saveEdit( vendorLabel, vendorEdit, title, 'vendor' );
-				model.set( 'vendor', vendorLabel.text() );
-				closeEdit( vendorLabel, vendorEdit );
-			}, this.$( '.vendor' ), this.model ) );
-			var vendorCell = this.$( '.vendor' ).parent();
-			vendorCell.dblclick( GalTrace.bind( openEdit, vendorCell, this.$( '.vendor' ), vendorEdit ) );
-			vendorCell.append( vendorEdit );
+			makeEditor( {
+				cell: this.$( '.vendor' ),
+				validator: null,
+				model: this.model,
+				orderKey: title,
+				fieldKey: 'vendor',
+			} );
 
 			// date cell
-			var dateEdit = $( '<input type="text" style="display: none;" />' ).blur( GalTrace.bind( function( dateLabel, model ) {
-				if( /^\d\d\d\d\/\d\d\/\d\d$/.test( dateEdit.val() ) ) {
-					saveEdit( dateLabel, dateEdit, title, 'date' );
-					model.set( 'date', dateLabel.text() );
-					GalTrace.orderList.sort();
-				}
-				closeEdit( dateLabel, dateEdit );
-			}, this.$( '.date' ), this.model ) );
-			var dateCell = this.$( '.date' ).parent();
-			dateCell.dblclick( GalTrace.bind( openEdit, dateCell, this.$( '.date' ), dateEdit ) );
-			dateCell.append( dateEdit );
+			makeEditor( {
+				cell: this.$( '.date' ),
+				validator: function( inputText ) {
+					return /^\d\d\d\d\/\d\d\/\d\d$/.test( inputText );
+				},
+				model: this.model,
+				orderKey: title,
+				fieldKey: 'vendor',
+			} );
 
 			var phases = GalTrace.orderFilter.get( 'phases' );
 			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
@@ -127,11 +114,11 @@ var GalTrace = GalTrace || {};
 		},
 
 		onVendorChanged: function() {
-			this.$( '.vendor' ).text( this.model.get( 'vendor' ) );
+			this.$( 'td.vendor span.inline-label' ).text( this.model.get( 'vendor' ) );
 		},
 
 		onDateChanged: function() {
-			this.$( '.date' ).text( this.model.get( 'date' ) );
+			this.$( 'td.date span.inline-label' ).text( this.model.get( 'date' ) );
 		},
 
 		onUriChanged: function() {

@@ -36,3 +36,41 @@ footer p {
 form.gsc-search-box, .gsc-adBlock {
 	display: none;
 }
+
+#orders td.date {
+	width: 100px;
+}
+
+#orders td.date span.inline-label {
+	display: inline-block;
+	width: 100px;
+}
+
+#orders td.date.editing input.inline-edit {
+	display: inline-block;
+	width: 100px;
+	margin: 0;
+}
+
+#orders td.vendor {
+	width: 200px;
+}
+
+#orders td.vendor span.inline-label {
+	display: inline-block;
+	width: 200px;
+}
+
+#orders td.vendor.editing input.inline-edit {
+	display: inline-block;
+	width: 200px;
+	margin: 0;
+}
+
+#orders td input.inline-edit {
+	display: none;
+}
+
+#orders td.editing span.inline-label {
+	display: none;
+}

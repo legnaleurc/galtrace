@@ -10,8 +10,14 @@
 		<td><span><%= title %></span></td>
 		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
 		<td><a class="uri" href="<%= uri %>" rel="external"><i class="icon-link"></i></a></td>
-		<td><span class="vendor"><%= vendor %></span></td>
-		<td><span class="date"><%= date %></span></td>
+		<td class="vendor">
+			<span class="inline-label"><%= vendor %></span>
+			<input type="text" class="inline-edit" value="<%= vendor %>" />
+		</td>
+		<td class="date">
+			<span class="inline-label"><%= date %></span>
+			<input type="text" class="inline-edit" value="<%= date %>" />
+		</td>
 	</script>
 	<script type="text/template" id="counter-template">
 			<span id="current-orders"><%= current %></span>
