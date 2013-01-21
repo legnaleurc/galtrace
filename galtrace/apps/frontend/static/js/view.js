@@ -114,7 +114,10 @@ var GalTrace = GalTrace || {};
 		},
 
 		onVendorChanged: function() {
-			this.$( 'td.vendor span.inline-label' ).text( this.model.get( 'vendor' ) );
+			var vendor = this.model.get( 'vendor' );
+			this.$( 'td.vendor span.inline-label' ).attr( {
+				title: vendor,
+			} ).text( vendor );
 		},
 
 		onDateChanged: function() {

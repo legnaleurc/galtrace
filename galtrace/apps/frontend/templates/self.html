@@ -7,11 +7,11 @@
 	{{ block.super }}
 	<script type="text/template" id="order-template">
 		<td><input type="checkbox" class="check" /></td>
-		<td><span><%= title %></span></td>
+		<td class="title"><span title="<%= title %>"><%= title %></span></td>
 		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
 		<td><a class="uri" href="<%= uri %>" rel="external"><i class="icon-link"></i></a></td>
 		<td class="vendor">
-			<span class="inline-label"><%= vendor %></span>
+			<span class="inline-label" title="<%= vendor %>"><%= vendor %></span>
 			<input type="text" class="inline-edit" value="<%= vendor %>" />
 		</td>
 		<td class="date">

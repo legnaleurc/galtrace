@@ -34,6 +34,8 @@ form.gsc-search-box, .gsc-adBlock {
 }
 
 .inline-editor ( @width ) {
+	overflow: hidden;
+	white-space: nowrap;
 	width: @width;
 
 	span.inline-label {
@@ -49,15 +51,29 @@ form.gsc-search-box, .gsc-adBlock {
 		}
 		input.inline-edit {
 			display: inline-block;
+			margin-bottom: 0;
+			border-width: 0;
+			padding: 0;
 			width: @width;
 		}
 	}
 }
 
-#orders td.date {
-	.inline-editor( 100px );
-}
-
-#orders td.vendor {
-	.inline-editor( 200px );
+#orders {
+	td.title {
+		@width: 748px;
+		overflow: hidden;
+		white-space: nowrap;
+		width: @width;
+		span {
+			display: inline-block;
+			width: @width;
+		}
+	}
+	td.vendor {
+		.inline-editor( 200px );
+	}
+	td.date {
+		.inline-editor( 100px );
+	}
 }
