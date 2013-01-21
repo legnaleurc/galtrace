@@ -1,0 +1,63 @@
+@media ( min-width: 481px ) {
+	body {
+		padding-top: 60px;
+	}
+}
+
+#stderr {
+	position: fixed;
+	z-index: 1045;	/* between dialog and background */
+	top: 60px;
+	left: 50%;
+	width: 560px;	/* dialog width */
+	margin-left: -280px;	/* centralize */
+	display: none;
+}
+
+footer p {
+	text-align: center;
+}
+
+/* Override for Google CSE */
+
+.gsc-control-cse, .gsc-result-info {
+	padding: 0px;
+}
+
+.gsc-resultsbox-visible {
+	overflow: auto;
+	max-height: 390px;
+}
+
+form.gsc-search-box, .gsc-adBlock {
+	display: none;
+}
+
+.inline-editor ( @width ) {
+	width: @width;
+
+	span.inline-label {
+		display: inline-block;
+		width: @width;
+	}
+	input.inline-edit {
+		display: none;
+	}
+	&.editing {
+		span.inline-label {
+			display: none;
+		}
+		input.inline-edit {
+			display: inline-block;
+			width: @width;
+		}
+	}
+}
+
+#orders td.date {
+	.inline-editor( 100px );
+}
+
+#orders td.vendor {
+	.inline-editor( 200px );
+}
