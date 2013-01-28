@@ -156,6 +156,9 @@ var GalTrace = GalTrace || {};
 			if( updating ) {
 				this.$el.removeClass( 'success error' ).addClass( 'info' );
 			} else {
+				$( 'html, body' ).animate( {
+					scrollTop: this.$el.offset().top,
+				}, 1000 );
 				this.$el.removeClass( 'info' ).addClass( 'success' );
 				var tmp = this.$el;
 				var handle = setTimeout( function() {
