@@ -99,6 +99,9 @@ var GalTrace = GalTrace || {};
 		return request.success( function() {
 			var model = new Order( args );
 			GalTrace.orderList.add( model );
+			// NOTE force update
+			model.set( 'updating', true );
+			model.set( 'updating', false );
 		} );
 	};
 
