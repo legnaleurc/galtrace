@@ -98,7 +98,7 @@ var GalTrace = GalTrace || {};
 				},
 				model: this.model,
 				orderKey: title,
-				fieldKey: 'vendor',
+				fieldKey: 'date',
 			} );
 
 			var phases = GalTrace.orderFilter.get( 'phases' );
