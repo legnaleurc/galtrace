@@ -179,20 +179,21 @@ var GalTrace = GalTrace || {};
 			this.model.on( 'reset', this.reRender, this );
 		},
 
-		onAdd: function( model_, self, options ) {
+		onAdd: function( model_, collection, options ) {
 			var view = new OrderView( {
 				model: model_,
 			} );
 			var children = this.$el.children();
+			var index = collection.indexOf( model_ );
 			if( children.length === 0 ) {
 				// first but empty
 				this.$el.append( view.$el );
-			} else if( options.index === children.length ) {
+			} else if( index === children.length ) {
 				// last
 				children.last().after( view.$el );
-			} else if( options.index > 0 ) {
+			} else if( index > 0 ) {
 				// middle
-				$( children[options.index] ).before( view.$el );
+				$( children[index] ).before( view.$el );
 			} else {
 				// first
 				children.first().before( view.$el );
@@ -200,8 +201,9 @@ var GalTrace = GalTrace || {};
 			view.render();
 		},
 
-		onRemove: function( model_, self, options ) {
-			$( this.$el.children()[options.index] ).remove();
+		onRemove: function( model_, collection, options ) {
+			var index = collection.indexOf( model_ );
+			$( this.$el.children()[index] ).remove();
 		},
 
 		reRender: function() {
