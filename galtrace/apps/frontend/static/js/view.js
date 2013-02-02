@@ -156,11 +156,12 @@ var GalTrace = GalTrace || {};
 			if( updating ) {
 				this.$el.removeClass( 'success error' ).addClass( 'info' );
 			} else {
+				var tmp = window.innerHeight / 2;
 				$( 'html, body' ).animate( {
-					scrollTop: this.$el.offset().top,
+					scrollTop: this.$el.offset().top - tmp,
 				}, 1000 );
 				this.$el.removeClass( 'info' ).addClass( 'success' );
-				var tmp = this.$el;
+				tmp = this.$el;
 				var handle = setTimeout( function() {
 					tmp.removeClass( 'success' );
 				}, 5000 );
