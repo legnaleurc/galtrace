@@ -63,13 +63,16 @@ var GalTrace = GalTrace || {};
 							title: opts.orderKey,
 						};
 						args[opts.fieldKey] = inputText;
+						opts.model.set( 'updating', true );
 						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).success( function( data, textStatus, jqXHR ) {
 							if( !data.success ) {
 								// TODO display error message
+								opts.model.set( 'updating', false );
 								return;
 							}
 							opts.model.set( opts.fieldKey, inputText );
 							GalTrace.orderList.sort();
+							opts.model.set( 'updating', false );
 						} );
 					}
 					opts.cell.removeClass( 'editing' );
