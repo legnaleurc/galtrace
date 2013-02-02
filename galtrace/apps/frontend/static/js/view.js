@@ -176,7 +176,7 @@ var GalTrace = GalTrace || {};
 		initialize: function() {
 			this.model.on( 'add', this.onAdd, this );
 			this.model.on( 'remove', this.onRemove, this );
-			this.model.on( 'reset', this.reRender, this );
+			this.model.on( 'sort', this.onSort, this );
 		},
 
 		onAdd: function( model_, collection, options ) {
@@ -206,7 +206,7 @@ var GalTrace = GalTrace || {};
 			$( this.$el.children()[index] ).remove();
 		},
 
-		reRender: function() {
+		onSort: function() {
 			var els = this.$el.children().detach();
 			els.sort( function( l, r ) {
 				l = this.model.indexOf( $( l ).data( 'view' ).model );
