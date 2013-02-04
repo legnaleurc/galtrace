@@ -185,8 +185,9 @@ var GalTrace = GalTrace || {};
 			} );
 			var children = this.$el.children();
 			var index = collection.indexOf( model_ );
-			if( children.length === 0 ) {
+			if( children.length === 0 || index > children.length ) {
 				// first but empty
+				// or overflowed
 				this.$el.append( view.$el );
 			} else if( index === children.length ) {
 				// last
