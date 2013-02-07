@@ -64,7 +64,7 @@ var GalTrace = GalTrace || {};
 						};
 						args[opts.fieldKey] = inputText;
 						opts.model.set( 'updating', true );
-						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).done( function( data, textStatus, jqXHR ) {
 							if( !data.success ) {
 								// TODO display error message
 								opts.model.set( 'updating', false );

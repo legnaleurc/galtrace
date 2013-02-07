@@ -48,7 +48,7 @@ var GalTrace = GalTrace || {};
 			jQuery.post( GalTrace.urls.LOAD, {
 				offset: offset,
 				limit: 100,
-			}, null, 'json' ).success( function( data, textStatus, jqXHR ) {
+			}, null, 'json' ).done( function( data, textStatus, jqXHR ) {
 				if( !data.success ) {
 					GalTrace.cerr( data.type, data.message );
 					return;
@@ -62,7 +62,7 @@ var GalTrace = GalTrace || {};
 				load( offset + data.length );
 
 				GalTrace.orderList.add( data );
-			} ).error( function( jqXHR, textStatus, message ) {
+			} ).fail( function( jqXHR, textStatus, message ) {
 				GalTrace.cerr( 'Unknown Error', message );
 			} );
 		}
@@ -81,7 +81,7 @@ var GalTrace = GalTrace || {};
 		// only update data and move order if success
 		if( model !== undefined ) {
 			model.set( 'updating', true );
-			return request.success( function() {
+			return request.done( function() {
 				// update data and HTML
 				model.set( {
 					title: args.title,
@@ -96,7 +96,7 @@ var GalTrace = GalTrace || {};
 			} );
 		}
 
-		return request.success( function() {
+		return request.done( function() {
 			var model = new Order( args );
 			GalTrace.orderList.add( model );
 			// NOTE force update
@@ -114,7 +114,7 @@ var GalTrace = GalTrace || {};
 			orders: _.map( selected, function( value ) {
 				return value.get( 'title' );
 			} ),
-		}, null, 'json' ).success( function() {
+		}, null, 'json' ).done( function() {
 			_.each( selected, function( element ) {
 				element.set( {
 					phase: phase,
@@ -133,7 +133,7 @@ var GalTrace = GalTrace || {};
 			orders: _.map( selected, function( value ) {
 				return value.get( 'title' );
 			} ),
-		}, null, 'json' ).success( function() {
+		}, null, 'json' ).done( function() {
 			GalTrace.orderList.remove( selected );
 		} );
 		return request;

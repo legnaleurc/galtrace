@@ -28,14 +28,14 @@
 		var self = $( this ).button( 'loading' );
 		GalTrace.addOrder( args ).complete( function() {
 			self.button( 'reset' );
-		} ).success( function( data, textStatus, jqXHR ) {
+		} ).done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
 				return;
 			}
 			// clear input fields
 			$( '#stdin input[type=text]' ).val( '' );
-		} ).error( function( jqXHR, textStatus, message ) {
+		} ).fail( function( jqXHR, textStatus, message ) {
 			GalTrace.cerr( 'Unknown Error', message );
 		} );
 	} );
@@ -50,9 +50,9 @@
 		$( '#fetch' ).button( 'loading' );
 		jQuery.post( GalTrace.urls.FETCH, {
 			uri: uri
-		}, null, 'json' ).complete( function( jqXHR, textStatus ) {
+		}, null, 'json' ).always( function( jqXHR, textStatus ) {
 			$( '#fetch' ).button( 'reset' );
-		} ).success( function( data, textStatus, jqXHR ) {
+		} ).done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
 				return;
@@ -61,7 +61,7 @@
 			$( '#id_title' ).val( data.title );
 			$( '#id_vendor' ).val( data.vendor );
 			$( '#id_date' ).val( data.date );
-		} ).error( function( jqXHR, textStatus, message ) {
+		} ).fail( function( jqXHR, textStatus, message ) {
 			GalTrace.cerr( 'Unknown Error', message );
 		} );
 	} );
@@ -71,7 +71,7 @@
 		event.preventDefault();
 
 		var phase = $( this ).data( 'phase' );
-		GalTrace.movePhase( phase ).success( function( data, textStatus, jqXHR ) {
+		GalTrace.movePhase( phase ).done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
 				return;
@@ -85,7 +85,7 @@
 	$( '#button-delete' ).click( function( event ) {
 		event.preventDefault();
 
-		GalTrace.deleteOrders().success( function( data, textStatus, jqXHR ) {
+		GalTrace.deleteOrders().done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
 				return;
