@@ -27,12 +27,14 @@ var GalTrace = GalTrace || {};
 			var vendor = this.model.get( 'vendor' );
 			var date = this.model.get( 'date' );
 			var uri = this.model.get( 'uri' );
+			var phase = this.model.get( 'phase' );
 
 			var template = ORDER_TEMPLATE( {
 				title: title,
 				vendor: vendor,
 				date: date,
 				uri: uri,
+				phase: phase,
 			} );
 			this.$el.html( template );
 
