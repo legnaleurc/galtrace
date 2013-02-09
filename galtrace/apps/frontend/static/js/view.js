@@ -191,8 +191,7 @@ var GalTrace = GalTrace || {};
 		},
 
 		onRemove: function( model_, collection, options ) {
-			var index = collection.indexOf( model_ );
-			$( this.$el.children()[index] ).remove();
+			$( this.$el.children()[options.index] ).remove();
 		},
 
 		onSort: function() {
