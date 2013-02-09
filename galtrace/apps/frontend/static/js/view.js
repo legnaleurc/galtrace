@@ -4,8 +4,6 @@ var GalTrace = GalTrace || {};
 
 	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
 
-	var COUNTER_TEMPLATE = _.template( $( '#counter-template' ).html() );
-
 	var OrderView = Backbone.View.extend( {
 		tagName: 'tr',
 
@@ -16,7 +14,7 @@ var GalTrace = GalTrace || {};
 			this.model.on( 'change:phase', this.onFilterChanged, this );
 			this.model.on( 'change:selected', this.onSelectionChanged, this );
 			this.model.on( 'change:updating', this.onStateChanged, this );
-			GalTrace.orderFilter.on( 'change:phases change:search', this.onFilterChanged, this );
+			GalTrace.orderFilter.on( 'change:phases change:queryString', this.onFilterChanged, this );
 
 			// bookkeeping
 			this.$el.data( 'view', this );
@@ -106,10 +104,7 @@ var GalTrace = GalTrace || {};
 				fieldKey: 'date',
 			} );
 
-			var phases = GalTrace.orderFilter.get( 'phases' );
-			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
-			var phase = this.model.get( 'phase' );
-			if( !phases[phase] || ( title.toLowerCase().indexOf( search ) < 0 && vendor.toLowerCase().indexOf( search ) < 0 ) ) {
+			if( GalTrace.orderFilter.match( this.model ) ) {
 				this.$el.css( {
 					display: 'none',
 				} );
@@ -136,18 +131,9 @@ var GalTrace = GalTrace || {};
 		},
 
 		onFilterChanged: function() {
-			var search = GalTrace.orderFilter.get( 'search' ).toLowerCase();
-			var title = this.model.get( 'title' ).toLowerCase();
-			var vendor = this.model.get( 'vendor' ).toLowerCase();
-			if( GalTrace.orderFilter.get( 'phases' )[this.model.get( 'phase' )] && ( title.indexOf( search ) >= 0 || vendor.indexOf( search ) >= 0 ) ) {
-				this.$el.css( {
-					display: 'table-row',
-				} );
-			} else {
-				this.$el.css( {
-					display: 'none',
-				} );
-			}
+			this.$el.css( {
+				display: ( GalTrace.orderFilter.match( this.model ) ? 'table-row' : 'none' ),
+			} );
 		},
 
 		onSelectionChanged: function() {
@@ -225,61 +211,70 @@ var GalTrace = GalTrace || {};
 		},
 	} );
 
-	var CounterView = Backbone.View.extend( {
+	var CurrentCounterView = Backbone.View.extend( {
 		initialize: function() {
 			this.model.on( 'add', this.onAdd, this );
 			this.model.on( 'remove', this.onRemove, this );
-			GalTrace.orderFilter.on( 'change:phases change:search', this.onFilterChanged, this );
+			GalTrace.orderFilter.on( 'change:phases change:queryString', this.onFilterChanged, this );
 
 			this.render();
 		},
 
 		render: function() {
-			var total = this.model.length;
 			var phases = GalTrace.orderFilter.get( 'phases' );
 			var count = this.model.filter( function( model ) {
 				return phases[model.get( 'phase' )];
-			} ).length;
-			var template = COUNTER_TEMPLATE( {
-				total: total,
-				current: count,
-			} );
-			this.$el.html( template );
+			} ).length;;
+			this.$el.text( count );
 		},
 
-		onAdd: function( model_ ) {
-			model_.on( 'change:phase', this.onModelPhaseChange, this );
-			if( GalTrace.orderFilter.get( 'phases' )[model_.get( 'phase' )] ) {
-				var tmp = $( '#current-orders' );
-				tmp.text( parseInt( tmp.text(), 10 ) + 1 );
+		onAdd: function( model ) {
+			model.on( 'change:phase', this.onModelPhaseChange, this );
+			if( GalTrace.orderFilter.match( model ) ) {
+				this.$el.text( parseInt( this.$el.text(), 10 ) + 1 );
 			}
-			$( '#total-orders' ).text( this.model.length );
 		},
 
-		onRemove: function( model_ ) {
-			if( GalTrace.orderFilter.get( 'phases' )[model_.get( 'phase' )] ) {
-				var tmp = $( '#current-orders' );
-				tmp.text( parseInt( tmp.text(), 10 ) - 1 );
+		onRemove: function( model ) {
+			if( GalTrace.orderFilter.match( model ) ) {
+				this.$el.text( parseInt( this.$el.text(), 10 ) - 1 );
 			}
-			$( '#total-orders' ).text( this.model.length );
 		},
 
 		onFilterChanged: function() {
-			var phases = GalTrace.orderFilter.get( 'phases' );
 			var count = this.model.filter( function( model ) {
-				return phases[model.get( 'phase' )];
+				return GalTrace.orderFilter.match( model );
 			} ).length;
-			var tmp = $( '#current-orders' );
-			tmp.text( count );
+			this.$el.text( count );
 		},
 
 		onModelPhaseChange: function( model_, value ) {
-			var tmp = $( '#current-orders' );
 			if( GalTrace.orderFilter.get( 'phases' )[value] ) {
-				tmp.text( parseInt( tmp.text(), 10 ) + 1 );
+				this.$el.text( parseInt( this.$el.text(), 10 ) + 1 );
 			} else {
-				tmp.text( parseInt( tmp.text(), 10 ) - 1 );
+				this.$el.text( parseInt( this.$el.text(), 10 ) - 1 );
 			}
+		},
+	} );
+
+	var TotalCounterView = Backbone.View.extend( {
+		initialize: function() {
+			this.model.on( 'add', this.onAdd, this );
+			this.model.on( 'remove', this.onRemove, this );
+
+			this.render();
+		},
+
+		render: function() {
+			this.$el.text( this.model.length );
+		},
+
+		onAdd: function() {
+			this.render();
+		},
+
+		onRemove: function( model ) {
+			this.render();
 		},
 	} );
 
@@ -287,8 +282,12 @@ var GalTrace = GalTrace || {};
 		el: '#orders',
 		model: GalTrace.orderList,
 	} );
-	var counterView = new CounterView( {
-		el: '#counter',
+	var currentCounterView = new CurrentCounterView( {
+		el: '#current-orders',
+		model: GalTrace.orderList,
+	} );
+	var totalCounterView = new TotalCounterView( {
+		el: '#total-orders',
 		model: GalTrace.orderList,
 	} );
 } )();

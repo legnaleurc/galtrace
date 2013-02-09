@@ -18,12 +18,12 @@
 	// set initial filter
 	$( '.phase-filter[data-value="0"]' ).click();
 	// search filter
-	var previous = $( '#search' ).text();
-	$( '#search' ).keyup( function( event ) {
+	var previous = $( '#query-string' ).text();
+	$( '#query-string' ).keyup( function( event ) {
 		var current = $( this ).val();
 		if( previous !== current ) {
-			GalTrace.orderFilter.set( 'search', current );
-			GalTrace.orderFilter.trigger( 'change:search' );
+			GalTrace.orderFilter.set( 'queryString', current );
+			GalTrace.orderFilter.trigger( 'change:queryString' );
 			previous = current;
 		}
 	} );

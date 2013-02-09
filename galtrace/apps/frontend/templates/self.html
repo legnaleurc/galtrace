@@ -20,11 +20,6 @@
 			<input type="text" class="inline-edit" value="<%= date %>" />
 		</td>
 	</script>
-	<script type="text/template" id="counter-template">
-			<span id="current-orders"><%= current %></span>
-			<span>&nbsp;/&nbsp;</span>
-			<span id="total-orders"><%= total %></span>
-	</script>
 {% endblock %}
 
 {% block navbar %}
@@ -52,11 +47,15 @@
 			<li data-value="{{ phase.0 }}" class="phase-filter"><a href="#">{{ phase.1 }}</a></li>
 		{% endfor %}
 		<form action="" class="navbar-search">
-			<input type="text" class="search-query" id="search" placeholder="Search" />
+			<input type="text" class="search-query" id="query-string" placeholder="Search" />
 		</form>
 	</ul>
 	<ul class="nav pull-right">
-		<li id="counter" class="navbar-text"></li>
+		<li class="navbar-text">
+			<span id="current-orders"></span>
+			<span>&nbsp;/&nbsp;</span>
+			<span id="total-orders"></span>
+		</li>
 		<li class="divider-vertical"></li>
 		<li><a href="{% url 'galtrace.apps.frontend.views.auth' %}">Sign Out</a></li>
 	</ul>
