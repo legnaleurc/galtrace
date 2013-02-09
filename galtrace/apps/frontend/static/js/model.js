@@ -125,6 +125,9 @@ var GalTrace = GalTrace || {};
 		var selected = GalTrace.orderList.filter( function( model ) {
 			return model.get( 'selected' );
 		} );
+		_.each( selected, function( model ) {
+			model.set( 'updating', true );
+		} );
 		var request = jQuery.post( GalTrace.urls.MOVE, {
 			phase: phase,
 			orders: _.map( selected, function( value ) {
@@ -136,6 +139,10 @@ var GalTrace = GalTrace || {};
 					phase: phase,
 					selected: false,
 				} );
+			} );
+		} ).always( function() {
+			_.each( selected, function( model ) {
+				model.set( 'updating', false );
 			} );
 		} );
 		return request;
