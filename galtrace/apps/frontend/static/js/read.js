@@ -4,30 +4,6 @@
 	// create table and load orders
 	GalTrace.initialize();
 
-	// apply filter
-	$( '.phase-filter' ).click( function( event ) {
-		event.preventDefault();
-		var self = $( this );
-		self.toggleClass( 'active' );
-		var tmp = GalTrace.orderFilter.get( 'phases' );
-		tmp[self.data( 'value' )] = self.hasClass( 'active' );
-		GalTrace.orderFilter.set( 'phases', tmp );
-		// FIXME somehow I must trigger this manually
-		GalTrace.orderFilter.trigger( 'change:phases' );
-	} );
-	// set initial filter
-	$( '.phase-filter[data-value="0"]' ).click();
-	// search filter
-	var previous = $( '#query-string' ).text();
-	$( '#query-string' ).keyup( function( event ) {
-		var current = $( this ).val();
-		if( previous !== current ) {
-			GalTrace.orderFilter.set( 'queryString', current );
-			GalTrace.orderFilter.trigger( 'change:queryString' );
-			previous = current;
-		}
-	} );
-
 	// Google CSE
 	var cseDialog = $( '#search-modal' ).modal( {
 		show: false

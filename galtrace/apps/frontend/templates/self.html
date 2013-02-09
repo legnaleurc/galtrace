@@ -43,13 +43,17 @@
 			</ul>
 		</li>
 		<li class="divider-vertical"></li>
+	</ul>
+	<ul id="phases" class="nav">
 		{% for phase in phases %}
-			<li data-value="{{ phase.0 }}" class="phase-filter"><a href="#">{{ phase.1 }}</a></li>
+			<li data-value="{{ phase.0 }}"><a href="#">{{ phase.1 }}</a></li>
 		{% endfor %}
+	</ul>
+	<div>
 		<form action="" class="navbar-search">
 			<input type="text" class="search-query" id="query-string" placeholder="Search" />
 		</form>
-	</ul>
+	</div>
 	<ul class="nav pull-right">
 		<li class="navbar-text">
 			<span id="current-orders"></span>

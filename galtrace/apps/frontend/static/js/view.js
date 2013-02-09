@@ -277,6 +277,46 @@ var GalTrace = GalTrace || {};
 		},
 	} );
 
+	var PhaseView = Backbone.View.extend( {
+		initialize: function() {
+			this.children = this.$el.children();
+			// apply filter
+			this.children.click( function( event ) {
+				event.preventDefault();
+				var self = $( this );
+				self.toggleClass( 'active' );
+				var tmp = GalTrace.orderFilter.get( 'phases' );
+				tmp[self.data( 'value' )] = self.hasClass( 'active' );
+				GalTrace.orderFilter.set( 'phases', tmp );
+				// FIXME somehow I must trigger this manually
+				GalTrace.orderFilter.trigger( 'change:phases' );
+			} );
+			// set initial filter
+			this.children[0].click();
+		},
+
+		render: function() {
+		},
+	} );
+
+	var QueryView = Backbone.View.extend( {
+		initialize: function() {
+			// query on-the-fly
+			var previous = this.$el.text();
+			this.$el.keyup( function( event ) {
+				var current = $( this ).val();
+				if( previous !== current ) {
+					GalTrace.orderFilter.set( 'queryString', current );
+					GalTrace.orderFilter.trigger( 'change:queryString' );
+					previous = current;
+				}
+			} );
+		},
+
+		render: function() {
+		},
+	} );
+
 	var orderListView = new OrderListView( {
 		el: '#orders',
 		model: GalTrace.orderList,
@@ -288,5 +328,13 @@ var GalTrace = GalTrace || {};
 	var totalCounterView = new TotalCounterView( {
 		el: '#total-orders',
 		model: GalTrace.orderList,
+	} );
+	var phaseView = new PhaseView( {
+		el: '#phases',
+		model: GalTrace.orderFilter,
+	} );
+	var queryView = new QueryView( {
+		el: '#query-string',
+		model: GalTrace.orderFilter,
 	} );
 } )();
