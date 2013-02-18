@@ -104,7 +104,7 @@ var GalTrace = GalTrace || {};
 				fieldKey: 'date',
 			} );
 
-			if( GalTrace.orderFilter.match( this.model ) ) {
+			if( !GalTrace.orderFilter.match( this.model ) ) {
 				this.$el.css( {
 					display: 'none',
 				} );
