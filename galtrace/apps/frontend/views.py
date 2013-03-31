@@ -16,13 +16,11 @@ def index( request ):
 def member( request, user_name ):
 	context = RequestContext( request )
 	if not request.user.is_authenticated():
-		# TODO show read only page
 		return render_to_response( 'other.html', {
 			'phases': PHASES,
 		}, context_instance = context )
 
 	if request.user.username != user_name:
-		# TODO show read only page
 		return render_to_response( 'other.html', {
 			'phases': PHASES,
 		}, context_instance = context )
@@ -37,20 +35,22 @@ def member( request, user_name ):
 
 def auth( request ):
 	from django.contrib.auth import authenticate, login, logout
-	userName = request.POST[u'user'] if u'user' in request.POST else ''
-	password = request.POST[u'pswd'] if u'user' in request.POST else ''
+	userName = request.POST.get( u'user', '' )
+	password = request.POST.get( u'pswd', '' )
+	nextPage = request.GET.get( u'next', u'/' )
+
 	user = authenticate( username = userName, password = password )
 	if user:
 		if user.is_active:
 			login( request, user )
 			# redirect
-			return redirect( 'galtrace.apps.frontend.views.index' )
+			return redirect( nextPage )
 		else:
-			# redirect
+			# TODO show error message
 			return redirect( 'galtrace.apps.frontend.views.index' )
 	else:
 		logout( request )
-		return redirect( 'galtrace.apps.frontend.views.index' )
+		return redirect( nextPage )
 
 def csrf( request ):
 	return render_to_response( 'csrf.js', {

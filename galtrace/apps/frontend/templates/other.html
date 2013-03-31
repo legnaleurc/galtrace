@@ -43,7 +43,7 @@
 		</li>
 		<li class="divider-vertical"></li>
 		{% if user.is_authtenticated %}
-			<li><a href="{% url 'galtrace.apps.frontend.views.auth' %}">Sign Out</a></li>
+			<li><a href="{% url 'galtrace.apps.frontend.views.auth' %}?next={{ request.path }}">Sign Out</a></li>
 		{% else %}
 			<li><a href="{% url 'galtrace.apps.frontend.views.index' %}">Sign In</a></li>
 		{% endif %}
