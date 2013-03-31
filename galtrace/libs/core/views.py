@@ -43,16 +43,24 @@ def getArgs( request ):
 	return args
 
 @require_POST
-@login_required
 @ajaxView
 def load( request ):
 	offset = int( request.POST['offset'] )
 	limit = offset + int( request.POST['limit'] )
+	user = request.POST['user_id']
 
 	if offset < 0 or limit <= 0:
 		raise ValueError( 'invalid interval' )
 
-	result = Order.objects.filter( user__exact = request.user ).order_by( 'date', 'title' )[offset:limit].values()
+	from django.contrib.auth.models import User
+	try:
+		user = User.objects.get( username__exact = user )
+	except User.DoesNotExist:
+		raise ValueError( u'user \'{0}\' does not exist'.format( user ) )
+	except User.MultipleObjectsReturned:
+		raise ValueError( 'user database corrupted' )
+
+	result = Order.objects.filter( user__exact = user ).order_by( 'date', 'title' )[offset:limit].values()
 	if not result:
 		return None
 	else:

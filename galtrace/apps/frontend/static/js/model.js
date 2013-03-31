@@ -60,10 +60,14 @@ var GalTrace = GalTrace || {};
 	} );
 
 	GalTrace.initialize = function() {
+		// FIXME: dirty hack, please pass uid properly
+		var user_id = location.pathname.substr( 1 );
+
 		function load( offset ) {
 			jQuery.post( GalTrace.urls.LOAD, {
 				offset: offset,
 				limit: 100,
+				user_id: user_id,
 			}, null, 'json' ).done( function( data, textStatus, jqXHR ) {
 				if( !data.success ) {
 					GalTrace.cerr( data.type, data.message );

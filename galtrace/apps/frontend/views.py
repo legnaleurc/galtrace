@@ -17,11 +17,15 @@ def member( request, user_name ):
 	context = RequestContext( request )
 	if not request.user.is_authenticated():
 		# TODO show read only page
-		return redirect( 'galtrace.apps.frontend.views.index' )
+		return render_to_response( 'other.html', {
+			'phases': PHASES,
+		}, context_instance = context )
 
 	if request.user.username != user_name:
 		# TODO show read only page
-		return redirect( 'galtrace.apps.frontend.views.index' )
+		return render_to_response( 'other.html', {
+			'phases': PHASES,
+		}, context_instance = context )
 
 	form = OrderForm()
 	restoreForm = RestoreForm()
