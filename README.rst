@@ -1,6 +1,8 @@
 GalTrace
 ========
 
+|build status|_
+
 This project is used to trace my interested galgames. It records each game's
 release date, and my playing status.
 
@@ -76,3 +78,7 @@ encrypted by my private gpg key. You must create your own one.
 .. _PycURL: http://pycurl.sourceforge.net/
 .. _PyQuery: https://github.com/gawel/pyquery
 .. _Python: http://www.python.org/
+
+.. Travis CI
+.. _build status: https://travis-ci.org/legnaleurc/galtrace
+.. |build status| image:: https://travis-ci.org/legnaleurc/galtrace.png
