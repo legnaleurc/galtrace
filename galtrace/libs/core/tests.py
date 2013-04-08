@@ -29,15 +29,6 @@ class LoadTest( TestCase ):
 		response = c.get( self.url )
 		self.assertEqual( response.status_code, 405 )
 
-	def testWithoutUser( self ):
-		"""
-		POST without login
-		Should redirect to /
-		"""
-		c = Client()
-		response = c.post( self.url )
-		self.assertRedirects( response, '/?next={0}'.format( self.url ) )
-
 	def testEmptyArgs( self ):
 		"""
 		Login but empty args
@@ -76,6 +67,7 @@ class LoadTest( TestCase ):
 		result = c.login( username = 'alpha', password = 'alpha' )
 		self.assertTrue( result )
 		response = c.post( self.url, {
+			'user_id': 'alpha',
 			'offset': 0,
 			'limit': 100,
 		} )
