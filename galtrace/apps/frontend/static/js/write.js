@@ -9,11 +9,11 @@
 		event.preventDefault();
 
 		var args = {
-			title: $( '#id_title' ).val(),
-			uri: $( '#id_uri' ).val(),
+			title: GalTrace.makeSafe( $( '#id_title' ).val() ),
+			uri: GalTrace.makeSafe( $( '#id_uri' ).val() ),
 			date: $( '#id_date' ).val(),
 			phase: parseInt( $( '#id_phase' ).val(), 10 ),
-			vendor: $( '#id_vendor' ).val(),
+			vendor: GalTrace.makeSafe( $( '#id_vendor' ).val() ),
 			volume: parseInt( $( '#id_volume' ).val(), 10 )
 		};
 		if( args.title.length <= 0 || args.uri.length <= 0 ) {

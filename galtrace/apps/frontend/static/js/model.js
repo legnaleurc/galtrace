@@ -169,4 +169,8 @@ var GalTrace = GalTrace || {};
 	GalTrace.cerr = function( type, message ) {
 		console.error( [ type, ': ', message ].join( '' ) );
 	};
+
+	GalTrace.makeSafe = function( unsafe ) {
+		return $( jQuery.parseHTML( unsafe ) ).text();
+	};
 } )();
