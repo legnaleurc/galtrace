@@ -34,12 +34,14 @@ def ajaxView( f ):
 	return g
 
 def getArgs( request ):
+	from django.utils.html import escape, strip_tags
 	args = {}
-	for item in request.POST.iteritems():
-		if item[0] in [ u'phase', u'volume' ]:
-			args[item[0]] = int( item[1] )
+	for k, v in request.POST.items():
+		if k in ( u'phase', u'volume' ):
+			args[k] = int( v )
 		else:
-			args[item[0]] = item[1]
+			# NOTE strip HTML tags and escape contents
+			args[k] = escape( strip_tags( v ) )
 	return args
 
 @require_POST
