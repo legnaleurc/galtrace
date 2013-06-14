@@ -2,13 +2,6 @@ var GalTrace = GalTrace || {};
 ( function() {
 	'use strict';
 
-	GalTrace.bind = function( fn ) {
-		var args = Array.prototype.slice.call( arguments, 1 );
-		return function() {
-			fn.apply( this, args.concat( Array.prototype.slice.call( arguments ) ) );
-		};
-	};
-
 	var Order = Backbone.Model.extend( {
 		defaults: {
 			selected: false,

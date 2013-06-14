@@ -36,7 +36,7 @@ var GalTrace = GalTrace || {};
 			} );
 			this.$el.html( template );
 
-			this.$( '.check' ).change( GalTrace.bind( function( model_ ) {
+			this.$( '.check' ).change( _.partial( function( model_ ) {
 				model_.set( 'selected', $( this ).is( ':checked' ), {
 					silent: true,
 				} );
@@ -48,7 +48,6 @@ var GalTrace = GalTrace || {};
 			} );
 
 			function makeEditor( opts ) {
-				var $B = GalTrace.bind;
 				var label = opts.cell.children( 'span.inline-label' );
 				var edit = opts.cell.children( 'input.inline-edit' );
 				opts.cell.dblclick( function() {
