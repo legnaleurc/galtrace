@@ -30,7 +30,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 	'beproud.django.ssl.context_processors.conf',
 )
 
-ROOT_URLCONF = 'galtrace.urls.production'
+ROOT_URLCONF = 'galtrace.urls.heroku'
 
 INSTALLED_APPS += (
 	'beproud.django.ssl',
