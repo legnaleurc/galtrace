@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-PHASES = [ ( 0, 'Todo' ), ( 1, 'Get' ), ( 2, 'Opened' ), ( 3, 'Half' ), ( 4, 'Finished' ) ]
+PHASES = ( ( 0, u'todo' ), ( 1, u'get' ), ( 2, u'opened' ), ( 3, u'half' ), ( 4, u'finished' ) )
 
 class OrderManager( models.Manager ):
 	def dump( self, user ):
