@@ -37,9 +37,9 @@ Avaliable in ``galtrace.settings.development``
 Precondition: ``galtrace/settings/secret.json`` exists.
 For more information, please see Notes_.
 
-.. code:: bash 
+.. code:: bash
 
-  python manage.py galtrace_push
+  python manage.py gt_push
 
 Test
 ~~~~
@@ -48,7 +48,7 @@ Avaliable in ``galtrace.settings.development``
 
 .. code:: bash
 
-  python manage.py galtrace_test
+  python manage.py gt_test
 
 Notes
 -----
