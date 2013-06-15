@@ -1,5 +1,6 @@
 {% load url from future %}
 {% load static from staticfiles %}
+{% load less_proxy %}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,8 +10,8 @@
 		{% block head %}
 			<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
 			<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
-			<link rel="stylesheet/less" type="text/css" href="{% static 'css/style.less' %}" />
-			<script type="text/javascript" src="{% static 'js/less.min.js' %}"></script>
+			{% less_file 'css/style.less' %}
+			{% less_script 'js/less.min.js' %}
 		{% endblock %}
 	</head>
 	<body>

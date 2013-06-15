@@ -30,6 +30,14 @@ SECRET_KEY = GALTRACE_SECRET['SECRET_KEY']
 
 ROOT_URLCONF = 'galtrace.urls.vps'
 
+STATICFILES_FINDERS += (
+	'less.finders.LessFinder',
+)
+
+INSTALLED_APPS += (
+	'less',
+)
+
 # email settings
 EMAIL_BACKEND = 'galtrace.libs.mail.GmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
