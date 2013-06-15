@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.template import Library
-from django.contrib.staticfiles.templatetags.staticfiles import StaticFilesNode
+from django.contrib.staticfiles.templatetags.staticfiles import StaticFilesNode, static
 from django.utils.html import format_html
 
 
@@ -31,9 +31,10 @@ class LessFile( StaticFilesNode ):
 			try:
 				from less.templatetags.less import less
 			except ImportError:
-				less = lambda path: path
+				less = lambda path: u''
 			path = self.path.resolve( context )
-			lessPath = less( path )
+			path = less( path )
+			lessPath = static( path )
 		return format_html( u'<link rel="stylesheet/less" type="text/css" href="{0}" />', lessPath )
 
 
