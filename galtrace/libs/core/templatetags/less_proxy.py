@@ -28,7 +28,10 @@ class LessFile( StaticFilesNode ):
 		if DEV_MODE:
 			lessPath = StaticFilesNode.render( self, context )
 		else:
-			from less.templatetags.less import less
+			try:
+				from less.templatetags.less import less
+			except ImportError:
+				less = lambda path: path
 			path = self.path.resolve( context )
 			lessPath = less( path )
 		return format_html( u'<link rel="stylesheet/less" type="text/css" href="{0}" />', lessPath )
