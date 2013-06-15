@@ -27,7 +27,9 @@ class LessFile( StaticFilesNode ):
 	def render( self, context ):
 		if DEV_MODE:
 			lessPath = StaticFilesNode.render( self, context )
+			rel = u'stylesheet/less'
 		else:
+			rel = u'stylesheet'
 			try:
 				from less.templatetags.less import less
 			except ImportError:
@@ -35,7 +37,7 @@ class LessFile( StaticFilesNode ):
 			path = self.path.resolve( context )
 			path = less( path )
 			lessPath = static( path )
-		return format_html( u'<link rel="stylesheet/less" type="text/css" href="{0}" />', lessPath )
+		return format_html( u'<link rel="{0}" type="text/css" href="{1}" />', rel, lessPath )
 
 
 @register.tag
