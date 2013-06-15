@@ -1,4 +1,5 @@
 {% load url from future %}
+{% load static from staticfiles %}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,7 +10,7 @@
 			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css" />
 			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/font-awesome.min.css" />
 			<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/style.less" />
-			<script type="text/javascript" src="{{ STATIC_URL }}js/less.min.js"></script>
+			<script type="text/javascript" src="{% static 'js/less.min.js' %}"></script>
 		{% endblock %}
 	</head>
 	<body>

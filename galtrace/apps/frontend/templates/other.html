@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load url from future %}
+{% load static from staticfiles %}
 
 {% block head %}
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
@@ -87,14 +88,14 @@
 		</div>
 	</div>
 	<script src="https://www.google.com/jsapi" type="text/javascript"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/backbone-min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/backbone-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.csrf' %}"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/model.js"></script>
+	<script type="text/javascript" src="{% static 'js/model.js' %}"></script>
 	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.urls' %}"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/view.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/read.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/write.js"></script>
+	<script type="text/javascript" src="{% static 'js/view.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/read.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/write.js' %}"></script>
 {% endblock %}
