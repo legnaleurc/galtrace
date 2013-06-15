@@ -1,0 +1,3 @@
+-r __init__.txt
+gevent
+gunicorn >= 0.15
