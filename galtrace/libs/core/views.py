@@ -95,7 +95,7 @@ def load( request ):
 			u'vendor': x.vendor,
 			u'date': x.date,
 			u'uri': x.uri,
-			u'thumb': x.thumb.url,
+			u'thumb': u'' if not x.thumb else x.thumb.url,
 			u'phase': x.phase,
 			u'volume': x.volume,
 		} for x in result ]
