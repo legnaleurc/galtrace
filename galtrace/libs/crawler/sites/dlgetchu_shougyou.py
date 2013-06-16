@@ -32,6 +32,8 @@ def create( uri ):
 				key = 'vendor'
 			elif re.search( ur'>登録日：</td>', line ):
 				key = 'date'
+			elif re.search( ur'summary="作品詳細"', line ):
+				key = 'thumb'
 		elif key == 'title':
 			m = re.search( ur'<div.+>(.+)</div>', line )
 			if m:
@@ -46,6 +48,12 @@ def create( uri ):
 			m = re.search( ur'>(\d\d\d\d)年(\d\d)月(\d\d)日<', line )
 			if m:
 				data[key] = '{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
+				key = None
+		elif key == 'thumb':
+			m = re.search( ur'href="([^"]+)"', line )
+			if m:
+				thumb = urlparse.urlunsplit( ( uri.scheme, uri.netloc, m.group( 1 ).strip(), '', '' ) )
+				data[key] = thumb;
 				key = None
 	link.close()
 

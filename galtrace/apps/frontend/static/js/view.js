@@ -25,6 +25,7 @@ var GalTrace = GalTrace || {};
 			var vendor = this.model.get( 'vendor' );
 			var date = this.model.get( 'date' );
 			var uri = this.model.get( 'uri' );
+			var thumb = this.model.get( 'thumb' );
 			var phase = this.model.get( 'phase' );
 
 			var template = ORDER_TEMPLATE( {
@@ -32,6 +33,7 @@ var GalTrace = GalTrace || {};
 				vendor: vendor,
 				date: date,
 				uri: uri,
+				thumb: thumb,
 				phase: phase,
 			} );
 			this.$el.html( template );

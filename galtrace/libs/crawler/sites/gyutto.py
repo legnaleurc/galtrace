@@ -47,11 +47,14 @@ def create( uri ):
 		date_ = u''
 	else:
 		date_ = u'{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
+	thumb = pq( '#noMovie a.highslide' ).attr.href.strip()
+	thumb = urlparse.urlunsplit( ( uri.scheme, uri.netloc, thumb, '', '' ) )
 
 	return {
 		'title': title,
 		'vendor': vendor,
 		'date': date_,
+		'thumb': thumb,
 		'log': log,
 		'error': error,
 	}

@@ -1,8 +1,13 @@
 import json
+from cStringIO import StringIO
+import urllib2
 
 from django.contrib.auth.decorators import login_required
+from django.core.files import File
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+
+import Image
 
 from galtrace.libs import crawler
 from galtrace.libs.core.models import Order, PHASES
@@ -44,6 +49,25 @@ def getArgs( request ):
 			args[k] = escape( strip_tags( v ) )
 	return args
 
+def getImage( url ):
+	buffer_ = urllib2.urlopen( url )
+	rawImage = buffer_.read()
+	buffer_.close()
+
+	buffer_ = StringIO( rawImage )
+	image = Image.open( buffer_ )
+	image.thumbnail( (128, 65536), Image.ANTIALIAS )
+	buffer_.close()
+
+	buffer_ = StringIO()
+	image.save( buffer_, 'png' )
+	rawImage = buffer_.getvalue()
+	buffer_.close()
+
+	buffer_ = StringIO( rawImage )
+	return ( u'tmp.png', File( buffer_ ) )
+
+
 @require_POST
 @ajaxView
 def load( request ):
@@ -62,11 +86,19 @@ def load( request ):
 	except User.MultipleObjectsReturned:
 		raise ValueError( 'user database corrupted' )
 
-	result = Order.objects.filter( user__exact = user ).order_by( 'date', 'title' )[offset:limit].values()
+	result = Order.objects.filter( user__exact = user ).order_by( 'date', 'title' )[offset:limit]
 	if not result:
 		return None
 	else:
-		result = [ x for x in result ]
+		result = [ {
+			u'title': x.title,
+			u'vendor': x.vendor,
+			u'date': x.date,
+			u'uri': x.uri,
+			u'thumb': x.thumb.url,
+			u'phase': x.phase,
+			u'volume': x.volume,
+		} for x in result ]
 		return result
 
 @require_POST
@@ -78,16 +110,32 @@ def save( request ):
 	if u'title' not in args or not args[u'title']:
 		raise ValueError( '`title` is empty' )
 
+	hasThumb = False
+	if u'thumb' in args and args[u'thumb']:
+		hasThumb = True
+		name, file_ = getImage( args[u'thumb'] )
+		del args[u'thumb']
+
 	result = Order.objects.filter( title__exact = args[u'title'] )
 	if not result:
 		# new item, insert
 		result = Order( user = request.user, **args )
+		if hasThumb:
+			result.thumb.save( name, file_ )
 		result.save()
 	else:
 		# item exists, update
 		result.update( **args )
 
-	return None
+	return {
+		u'title': result.title,
+		u'vendor': result.vendor,
+		u'date': result.date,
+		u'uri': result.uri,
+		u'thumb': u'' if not result.thumb else result.thumb.url,
+		u'phase': result.phase,
+		u'volume': result.volume,
+	}
 
 @require_POST
 @login_required

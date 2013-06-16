@@ -94,23 +94,32 @@ var GalTrace = GalTrace || {};
 		// only update data and move order if success
 		if( model !== undefined ) {
 			model.set( 'updating', true );
-			return request.done( function() {
+			return request.done( function( data ) {
 				// update data and HTML
+				if( !data.success ) {
+					GalTrace.cerr( data.type, data.message );
+					return;
+				}
+				data = data.data;
 				model.set( {
-					title: args.title,
-					vendor: args.vendor,
-					date: args.date,
-					uri: args.uri,
-					phase: args.phase,
-					volume: args.volume,
+					title: data.title,
+					vendor: data.vendor,
+					date: data.date,
+					uri: data.uri,
+					thumb: data.thumb,
+					phase: data.phase,
+					volume: data.volume,
 					updating: false,
 				} );
 				GalTrace.orderList.sort();
 			} );
 		}
 
-		return request.done( function() {
-			var model = new Order( args );
+		return request.done( function( data ) {
+			if( !data.success ) {
+				GalTrace.cerr( data.type, data.message );
+			}
+			var model = new Order( data.data );
 			GalTrace.orderList.add( model );
 			// NOTE force update
 			model.set( 'updating', true );

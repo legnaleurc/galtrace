@@ -14,7 +14,8 @@
 			date: $( '#id_date' ).val(),
 			phase: parseInt( $( '#id_phase' ).val(), 10 ),
 			vendor: GalTrace.makeSafe( $( '#id_vendor' ).val() ),
-			volume: parseInt( $( '#id_volume' ).val(), 10 )
+			volume: parseInt( $( '#id_volume' ).val(), 10 ),
+			thumb: GalTrace.makeSafe( $( '#id_thumb' ).val() ),
 		};
 		if( args.title.length <= 0 || args.uri.length <= 0 ) {
 			GalTrace.cerr( 'Field Error', 'No empty field(s)' );
@@ -61,6 +62,7 @@
 			$( '#id_title' ).val( data.title );
 			$( '#id_vendor' ).val( data.vendor );
 			$( '#id_date' ).val( data.date );
+			$( '#id_thumb' ).val( data.thumb );
 		} ).fail( function( jqXHR, textStatus, message ) {
 			GalTrace.cerr( 'Unknown Error', message );
 		} );

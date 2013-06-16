@@ -15,7 +15,8 @@ class RestoreForm( forms.Form ):
 class OrderForm( forms.ModelForm ):
 	class Meta:
 		model = Order
-		fields = ( 'uri', 'title', 'vendor', 'date', 'phase' )
+		fields = ( 'uri', 'title', 'vendor', 'date', 'thumb', 'phase' )
 		widgets = {
+			'thumb': forms.TextInput(),
 			'phase': forms.Select( choices = PHASES ),
 		}

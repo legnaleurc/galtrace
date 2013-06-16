@@ -37,10 +37,17 @@ def create( uri ):
 	title = pq( '#soft-title' ).remove( 'nobr' ).remove( '#wish' ).text()
 	log.append( title )
 	title = title.strip()
+
+	thumb = pq( '#bannera + table a.highslide' ).attr.href
+	log.append( thumb )
+	thumb = urlparse.urlunsplit( ( uri.scheme, uri.netloc, thumb.strip(), '', '' ) )
+	log.append( thumb )
+
 	return {
 		'title': title,
 		'vendor': pq( '#brandsite' ).text(),
 		'date': pq( '#tooltip-day' ).text(),
+		'thumb': thumb,
 		'log': log,
 	}
 

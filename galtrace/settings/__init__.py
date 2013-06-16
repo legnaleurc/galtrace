@@ -42,9 +42,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = ''
+MEDIA_ROOT = join( GALTRACE_ROOT, 'media/' )
 
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 STATIC_ROOT = join( GALTRACE_ROOT, 'static/' )
 
