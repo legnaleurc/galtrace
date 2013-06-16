@@ -40,7 +40,10 @@ def create( uri ):
 
 	thumb = pq( '#bannera + table a.highslide' ).attr.href
 	log.append( thumb )
-	thumb = urlparse.urlunsplit( ( uri.scheme, uri.netloc, thumb.strip(), '', '' ) )
+	if not thumb:
+		thumb = u''
+	else:
+		thumb = urlparse.urlunsplit( ( uri.scheme, uri.netloc, thumb.strip(), '', '' ) )
 	log.append( thumb )
 
 	return {

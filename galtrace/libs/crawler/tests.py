@@ -28,6 +28,13 @@ class SiteTest( unittest.TestCase ):
 		self.assertEqual( result['vendor'], '10mile' )
 		self.assertEqual( result['thumb'], 'http://gyutto.com/data/item_img/742/74230/74230.jpg' )
 
+	def testGyutto2( self ):
+		result = crawler.fetch( 'http://gyutto.com/i/item58146' )
+		self.assertEqual( result['date'], '2011/05/03' )
+		self.assertEqual( result['title'], u'生徒会長で甘えん坊なお姉ちゃんは好きですか？' )
+		self.assertEqual( result['vendor'], u'アルトワークス' )
+		self.assertEqual( result['thumb'], 'http://gyutto.com/data/item_img/581/58146/58146.jpg' )
+
 	def testDLGetchuDoujin( self ):
 		result = crawler.fetch( 'http://dl.getchu.com/index.php?action=gd&gcd=D0006562&cirid=72&cp=&c=' )
 		self.assertEqual( result['date'], '2009/07/24' )

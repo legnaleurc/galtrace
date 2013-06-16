@@ -33,14 +33,23 @@ def create( uri ):
 
 	pq = pyquery.PyQuery( content )
 
+	path = pq( '#topicpath a' )
+	category = path[2].text
+
 	log = []
 	error = []
 	tmp = pq( '#RightSide div > h1' )
 	tmp.remove( 'span, img' )
 	title = tmp.text()
 	tmp = pq( '#RightSide div.unit_DetailBasicInfo dl.BasicInfo.clearfix' )
-	vendor = pyquery.PyQuery( tmp[2] ).find( 'dd a' ).text()
-	date_ = pyquery.PyQuery( tmp[9] ).find( 'dd' ).text()
+	if category == u'美少女ゲーム':
+		vendor = pyquery.PyQuery( tmp[2] ).find( 'dd a' ).text()
+		date_ = pyquery.PyQuery( tmp[9] ).find( 'dd' ).text()
+	elif category == u'同人ソフト':
+		vendor = pyquery.PyQuery( tmp[2] ).find( 'dd a' )[0].text
+		date_ = pyquery.PyQuery( tmp[5] ).find( 'dd' ).text()
+	else:
+		date_ = u''
 	m = re.match( ur'^(\d\d\d\d)年(\d\d)月(\d\d)日$', date_ )
 	if not m:
 		error.append( 'invalid date' )
