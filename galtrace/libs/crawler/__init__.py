@@ -4,8 +4,10 @@ import urlparse
 
 import sites
 
+UnsupportedLinkError = sites._UnsupportedLinkError
+
 def fetch( uri ):
 	uri_ = urlparse.urlsplit( uri )
 	return max( sites.factory, key=lambda x: x[0]( uri_ ) )[1]( uri_ )
 
-__all__ = [ 'fetch' ]
+__all__ = [ 'fetch', 'UnsupportedLinkError' ]
