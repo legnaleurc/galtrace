@@ -1,16 +1,11 @@
 import json
-from cStringIO import StringIO
-import urllib2
 
 from django.contrib.auth.decorators import login_required
-from django.core.files import File
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
-import Image
-
 from galtrace.libs import crawler
-from galtrace.libs.core.models import Order, PHASES
+from galtrace.libs.core.models import getImage, Order, PHASES
 
 
 def ajaxView( f ):
@@ -48,24 +43,6 @@ def getArgs( request ):
 			# NOTE strip HTML tags and escape contents
 			args[k] = escape( strip_tags( v ) )
 	return args
-
-def getImage( url ):
-	buffer_ = urllib2.urlopen( url )
-	rawImage = buffer_.read()
-	buffer_.close()
-
-	buffer_ = StringIO( rawImage )
-	image = Image.open( buffer_ )
-	image.thumbnail( (128, 65536), Image.ANTIALIAS )
-	buffer_.close()
-
-	buffer_ = StringIO()
-	image.save( buffer_, 'png' )
-	rawImage = buffer_.getvalue()
-	buffer_.close()
-
-	buffer_ = StringIO( rawImage )
-	return ( u'tmp.png', File( buffer_ ) )
 
 
 @require_POST

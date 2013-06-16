@@ -1,10 +1,36 @@
 import hashlib
 import os
+from cStringIO import StringIO
+import urllib2
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.files import File
+
+import Image
+
+from galtrace.libs import crawler
+
 
 PHASES = ( ( 0, u'todo' ), ( 1, u'get' ), ( 2, u'opened' ), ( 3, u'half' ), ( 4, u'finished' ) )
+
+def getImage( url ):
+	buffer_ = urllib2.urlopen( url )
+	rawImage = buffer_.read()
+	buffer_.close()
+
+	buffer_ = StringIO( rawImage )
+	image = Image.open( buffer_ )
+	image.thumbnail( (128, 65536), Image.ANTIALIAS )
+	buffer_.close()
+
+	buffer_ = StringIO()
+	image.save( buffer_, 'png' )
+	rawImage = buffer_.getvalue()
+	buffer_.close()
+
+	buffer_ = StringIO( rawImage )
+	return ( u'tmp.png', File( buffer_ ) )
 
 class OrderManager( models.Manager ):
 	def dump( self, user ):
@@ -34,6 +60,13 @@ class OrderManager( models.Manager ):
 			args = dict( ( x, row[x] ) for x in ( 'title', 'vendor', 'date', 'uri', 'phase', 'volume' ) )
 			# FIXME dangerous, please check data
 			o = Order( user = user, **args )
+			try:
+				siteData = crawler.fetch( args['uri'] )
+			except crawler.UnsupportedLinkError:
+				siteData = {}
+			if 'thumb' in siteData and siteData['thumb']:
+				name, file_ = getImage( siteData['thumb'] )
+				o.thumb.save( name, file_ )
 			o.save()
 		return True
 
