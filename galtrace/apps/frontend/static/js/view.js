@@ -5,7 +5,8 @@ var GalTrace = GalTrace || {};
 	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
 
 	var OrderView = Backbone.View.extend( {
-		tagName: 'tr',
+		tagName: 'div',
+		className: 'orders',
 
 		initialize: function() {
 			this.model.on( 'change:vendor', this.onVendorChanged, this );
@@ -106,9 +107,7 @@ var GalTrace = GalTrace || {};
 			} );
 
 			if( !GalTrace.orderFilter.match( this.model ) ) {
-				this.$el.css( {
-					display: 'none',
-				} );
+				this.$el.addClass( 'hidden' );
 			}
 
 			return this;
@@ -132,9 +131,11 @@ var GalTrace = GalTrace || {};
 		},
 
 		onFilterChanged: function() {
-			this.$el.css( {
-				display: ( GalTrace.orderFilter.match( this.model ) ? 'table-row' : 'none' ),
-			} );
+			if( GalTrace.orderFilter.match( this.model ) ) {
+				this.$el.removeClass( 'hidden' );
+			} else {
+				this.$el.addClass( 'hidden' );
+			}
 		},
 
 		onSelectionChanged: function() {

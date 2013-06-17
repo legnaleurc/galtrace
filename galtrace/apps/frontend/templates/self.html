@@ -7,7 +7,15 @@
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
 	{{ block.super }}
 	<script type="text/template" id="order-template">
-		<td><input type="checkbox" class="check" /></td>
+		<div>
+			<a href="<%= uri %>" rel="external">
+				<img src="<%= thumb %>" title="<%= title %>" />
+			</a>
+		</div>
+		<div><span title="<%= title %>"><%= title %></span></div>
+		<div><span title="<%= vendor %>"><%= vendor %></span></div>
+		<div><span title="<%= date %>"><%= date %></span></div>
+		<!--
 		<td class="title"><span title="<%= title %>"><%= title %></span></td>
 		<td><span><%= phase %></span></td>
 		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
@@ -20,6 +28,7 @@
 			<span class="inline-label"><%= date %></span>
 			<input type="text" class="inline-edit" value="<%= date %>" />
 		</td>
+		-->
 	</script>
 {% endblock %}
 
@@ -67,21 +76,8 @@
 {% endblock %}
 
 {% block body %}
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<td><input type="checkbox" id="select-all" value="noa" /></td>
-				<th>Title</th>
-				<th>&nbsp;</th>
-				<th><i class="icon-search"></i></th>
-				<th><i class="icon-link"></i></th>
-				<th>Vendor</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody id="orders">
-		</tbody>
-	</table>
+	<div id="orders">
+	</div>
 {% endblock %}
 
 {% block footer %}

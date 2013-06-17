@@ -59,7 +59,21 @@ form.gsc-search-box, .gsc-adBlock {
 	}
 }
 
+.hidden {
+	display: none;
+}
+
 #orders {
+	@total_width: 1170px;
+	@width: @total_width / 6;
+
+	div.orders {
+		float: left;
+		width: @width;
+		height: 300px;
+		text-align: center;
+	}
+	/*
 	td.title {
 		@width: 1170px - ( 29px ) * 4 - 217px - 117px - 17px;
 		overflow: hidden;
@@ -76,4 +90,5 @@ form.gsc-search-box, .gsc-adBlock {
 	td.date {
 		.inline-editor( 100px );
 	}
+	*/
 }
