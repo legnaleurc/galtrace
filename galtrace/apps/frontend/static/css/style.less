@@ -106,8 +106,16 @@ form.gsc-search-box, .gsc-adBlock {
 			text-align: right;
 			z-index: 1;
 
-			> i.check-btn {
+			> i[class^=icon-] {
 				font-size: 32px;
+				cursor: pointer;
+			}
+
+			> i.search-btn {
+				opacity: 0.5;
+			}
+
+			> i.check-btn {
 				opacity: 0.25;
 
 				&.checked {
@@ -117,7 +125,6 @@ form.gsc-search-box, .gsc-adBlock {
 
 				&:hover {
 					color: green;
-					cursor: pointer;
 				}
 			}
 		}

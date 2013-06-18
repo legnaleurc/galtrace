@@ -8,7 +8,8 @@
 	{{ block.super }}
 	<script type="text/template" id="order-template">
 		<div class="tool-bar">
-			<i class="icon-ok-sign tool-btn check-btn"></i>
+			<i class="icon-search search-btn"></i>
+			<i class="icon-ok-sign check-btn"></i>
 		</div>
 		<div class="thumb">
 			<div>
@@ -21,10 +22,6 @@
 		<div><span title="<%= vendor %>"><%= vendor %></span></div>
 		<div><span title="<%= date %>"><%= date %></span></div>
 		<!--
-		<td class="title"><span title="<%= title %>"><%= title %></span></td>
-		<td><span><%= phase %></span></td>
-		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
-		<td><a class="uri" href="<%= uri %>" rel="external"><i class="icon-link"></i></a></td>
 		<td class="vendor">
 			<span class="inline-label" title="<%= vendor %>"><%= vendor %></span>
 			<input type="text" class="inline-edit" value="<%= vendor %>" />

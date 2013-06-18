@@ -47,7 +47,7 @@ var GalTrace = GalTrace || {};
 				} );
 			}, this.model ) );
 
-			this.$( '.search' ).click( function( event ) {
+			this.$( '.search-btn' ).click( function( event ) {
 				event.preventDefault();
 				GalTrace.googleSearch( title );
 			} );
