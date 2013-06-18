@@ -6,6 +6,7 @@ import urllib2
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.files import File
+from django.core.files.storage import get_storage_class
 
 import Image
 
@@ -31,6 +32,15 @@ def getImage( url ):
 
 	buffer_ = StringIO( rawImage )
 	return ( u'tmp.png', File( buffer_ ) )
+
+def getExistingImage( userName, title ):
+	name = hashlib.sha1( title.encode( 'utf-8' ) ).hexdigest()
+	path = u'{0}/{1}.png'.format( userName, name )
+	cls = get_storage_class()
+	storage = cls()
+	if not storage.exists( path ):
+		return None
+	return path
 
 class OrderManager( models.Manager ):
 	def dump( self, user ):
@@ -60,13 +70,17 @@ class OrderManager( models.Manager ):
 			args = dict( ( x, row[x] ) for x in ( 'title', 'vendor', 'date', 'uri', 'phase', 'volume' ) )
 			# FIXME dangerous, please check data
 			o = Order( user = user, **args )
-			try:
-				siteData = crawler.fetch( args['uri'] )
-			except crawler.UnsupportedLinkError:
-				siteData = {}
-			if 'thumb' in siteData and siteData['thumb']:
-				name, file_ = getImage( siteData['thumb'] )
-				o.thumb.save( name, file_ )
+			name = getExistingImage( user.username, args['title'] )
+			if name:
+				o.thumb.name = name
+			else:
+				try:
+					siteData = crawler.fetch( args['uri'] )
+				except crawler.UnsupportedLinkError:
+					siteData = {}
+				if 'thumb' in siteData and siteData['thumb']:
+					name, file_ = getImage( siteData['thumb'] )
+					o.thumb.save( name, file_ )
 			o.save()
 		return True
 
