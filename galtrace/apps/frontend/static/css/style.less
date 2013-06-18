@@ -66,29 +66,48 @@ form.gsc-search-box, .gsc-adBlock {
 #orders {
 	@total_width: 1170px;
 	@width: @total_width / 6;
+	@height: 300px;
 
 	div.orders {
 		float: left;
 		width: @width;
-		height: 300px;
+		height: @height;
 		text-align: center;
-	}
-	/*
-	td.title {
-		@width: 1170px - ( 29px ) * 4 - 217px - 117px - 17px;
-		overflow: hidden;
-		white-space: nowrap;
-		width: @width;
-		span {
-			display: inline-block;
+		position: relative;
+
+		div.thumb {
+			height: 200px;
+			position: relative;
+
+			> div {
+				width: 100%;
+				position: absolute;
+				bottom: 0px;
+			}
+		}
+
+		> div.tool-bar {
+			position: absolute;
 			width: @width;
+			top: 0px;
+			left: 0px;
+			text-align: right;
+			z-index: 1;
+
+			> i.check-btn {
+				font-size: 32px;
+				opacity: 0.25;
+
+				&.checked {
+					color: green;
+					opacity: 1;
+				}
+
+				&:hover {
+					color: green;
+					cursor: pointer;
+				}
+			}
 		}
 	}
-	td.vendor {
-		.inline-editor( 200px );
-	}
-	td.date {
-		.inline-editor( 100px );
-	}
-	*/
 }

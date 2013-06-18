@@ -7,10 +7,15 @@
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
 	{{ block.super }}
 	<script type="text/template" id="order-template">
-		<div>
-			<a href="<%= uri %>" rel="external">
-				<img src="<%= thumb %>" title="<%= title %>" />
-			</a>
+		<div class="tool-bar">
+			<i class="icon-ok-sign tool-btn check-btn"></i>
+		</div>
+		<div class="thumb">
+			<div>
+				<a href="<%= uri %>" rel="external">
+					<img src="<%= thumb %>" title="<%= title %>" />
+				</a>
+			</div>
 		</div>
 		<div><span title="<%= title %>"><%= title %></span></div>
 		<div><span title="<%= vendor %>"><%= vendor %></span></div>

@@ -39,8 +39,10 @@ var GalTrace = GalTrace || {};
 			} );
 			this.$el.html( template );
 
-			this.$( '.check' ).change( _.partial( function( model_ ) {
-				model_.set( 'selected', $( this ).is( ':checked' ), {
+			this.$( '.check-btn' ).click( _.partial( function( model_ ) {
+				var self = $( this );
+				self.toggleClass( 'checked' );
+				model_.set( 'selected', self.hasClass( 'checked' ), {
 					silent: true,
 				} );
 			}, this.model ) );
@@ -139,9 +141,11 @@ var GalTrace = GalTrace || {};
 		},
 
 		onSelectionChanged: function() {
-			this.$( '.check' ).attr( {
-				checked: this.model.get( 'selected' ),
-			} );
+			if( this.model.get( 'selected' ) ) {
+				this.$( '.check-btn' ).addClass( 'checked' );
+			} else {
+				this.$( '.check-btn' ).removeClass( 'checked' );
+			}
 		},
 
 		onStateChanged: function() {
