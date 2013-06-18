@@ -75,6 +75,18 @@ form.gsc-search-box, .gsc-adBlock {
 		text-align: center;
 		position: relative;
 
+		&.updating {
+			background-color: fade( blue, 25% );
+		}
+
+		&.success {
+			background-color: fade( green, 25% );
+		}
+
+		&.error {
+			background-color: fade( red, 25% );
+		}
+
 		div.thumb {
 			height: 200px;
 			position: relative;

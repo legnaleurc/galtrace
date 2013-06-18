@@ -151,13 +151,13 @@ var GalTrace = GalTrace || {};
 		onStateChanged: function() {
 			var updating = this.model.get( 'updating' );
 			if( updating ) {
-				this.$el.removeClass( 'success error' ).addClass( 'info' );
+				this.$el.removeClass( 'success error' ).addClass( 'updating' );
 			} else {
 				var tmp = window.innerHeight / 2;
 				$( 'html, body' ).animate( {
 					scrollTop: this.$el.offset().top - tmp,
 				}, 1000 );
-				this.$el.removeClass( 'info' ).addClass( 'success' );
+				this.$el.removeClass( 'updating' ).addClass( 'success' );
 				tmp = this.$el;
 				var handle = setTimeout( function() {
 					tmp.removeClass( 'success' );
