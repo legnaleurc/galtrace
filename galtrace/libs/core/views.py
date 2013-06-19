@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
 from galtrace.libs import crawler
-from galtrace.libs.core.models import getImage, Order, PHASES
+from galtrace.libs.core.models import Order, PHASES
 
 
 def ajaxView( f ):
@@ -87,18 +87,15 @@ def save( request ):
 	if u'title' not in args or not args[u'title']:
 		raise ValueError( '`title` is empty' )
 
-	hasThumb = False
-	if u'thumb' in args and args[u'thumb']:
-		hasThumb = True
-		name, file_ = getImage( args[u'thumb'] )
+	thumbUri = args.get( u'thumb', None )
+	if u'thumb' in args:
 		del args[u'thumb']
 
 	result = Order.objects.filter( title__exact = args[u'title'] )
 	if not result:
 		# new item, insert
 		result = Order( user = request.user, **args )
-		if hasThumb:
-			result.thumb.save( name, file_ )
+		result.retrieveThumb( thumbUri )
 		result.save()
 	else:
 		# item exists, update
