@@ -52,8 +52,8 @@ def getImageName( instance, filename ):
 	name = hashlib.sha1( instance.title.encode( 'utf-8' ) ).hexdigest()
 	return u'{0}/{1}{2}'.format( instance.user.username, name, ext )
 
-def _getImage( url ):
-	buffer_ = urllib2.urlopen( url )
+def _getImage( uri ):
+	buffer_ = urllib2.urlopen( uri )
 	rawImage = buffer_.read()
 	buffer_.close()
 
@@ -106,7 +106,7 @@ class Order( models.Model ):
 			if not uri:
 				return False
 
-		name, file_ = _getImage( url )
+		name, file_ = _getImage( uri )
 		self.thumb.save( name, file_ )
 
 		return True
