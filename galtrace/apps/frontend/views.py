@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
-from galtrace.apps.frontend.forms import RestoreForm, OrderForm
+from galtrace.apps.frontend.forms import EditForm, OrderForm, RestoreForm
 from galtrace.libs.core.models import PHASES
 
 
@@ -26,10 +26,12 @@ def member( request, user_name ):
 		}, context_instance = context )
 
 	form = OrderForm()
+	editForm = EditForm()
 	restoreForm = RestoreForm()
 	return render_to_response( 'self.html', {
 		'phases': PHASES,
 		'form': form,
+		'editForm': editForm,
 		'restoreForm': restoreForm,
 	}, context_instance = context )
 

@@ -20,3 +20,30 @@ class OrderForm( forms.ModelForm ):
 			'thumb': forms.TextInput(),
 			'phase': forms.Select( choices = PHASES ),
 		}
+
+class EditForm( forms.Form ):
+	title = forms.CharField()
+	vendor = forms.CharField()
+	date = forms.CharField()
+	uri = forms.CharField()
+	thumb = forms.CharField()
+
+	def save( self, user, oldTitle ):
+		title = self.cleaned_data['title']
+		vendor = self.cleaned_data['vendor']
+		date = self.cleaned_data['date']
+		uri = self.cleaned_data['uri']
+		thumb = self.cleaned_data['thumb']
+
+		row = Order.objects.filter( user__exact = user, title__exact = oldTitle )
+		if len( row ) != 1:
+			return False
+		row = row[0]
+		row.title = title
+		row.vendor = vendor
+		row.date = date
+		row.uri = uri
+		row.retrieveThumb( thumb )
+		row.save()
+
+		return True

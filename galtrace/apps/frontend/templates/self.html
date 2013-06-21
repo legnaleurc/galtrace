@@ -8,6 +8,7 @@
 	{{ block.super }}
 	<script type="text/template" id="order-template">
 		<div class="tool-bar">
+			<i class="icon-edit edit-btn"></i>
 			<i class="icon-search search-btn"></i>
 			<i class="icon-ok-sign check-btn"></i>
 		</div>
@@ -99,6 +100,37 @@
 		</div>
 		<div class="modal-body">
 			<form class="well form-horizontal" id="stdin" action=".">
+				<fieldset>
+					{% for field in form %}
+						<div class="control-group">
+							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<div class="controls">
+								{{ field }}
+								<p class="help-block">
+									{{ field.help_text }}
+								</p>
+							</div>
+						</div>
+					{% endfor %}
+					<input type="hidden" id="id_volume" name="volume" value="-1" />
+					<div class="form-actions">
+						<button type="button" id="fetch" class="btn btn-info">Fetch</button>
+						<button type="reset" class="btn btn-warning">Reset</button>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+		</div>
+	</div>
+	<div id="edit-modal" class="modal hide fade">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">&times;</a>
+			<h3>Edit</h3>
+		</div>
+		<div class="modal-body">
+			<form class="well form-horizontal" id="edit" action=".">
 				<fieldset>
 					{% for field in form %}
 						<div class="control-group">
