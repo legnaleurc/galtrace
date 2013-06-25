@@ -132,9 +132,9 @@
 		<div class="modal-body">
 			<form class="well form-horizontal" id="edit" action=".">
 				<fieldset>
-					{% for field in form %}
+					{% for field in editForm %}
 						<div class="control-group">
-							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<label class="control-label" for="id_edit_{{ field.html_name }}">{{ field.label }}</label>
 							<div class="controls">
 								{{ field }}
 								<p class="help-block">
@@ -145,7 +145,7 @@
 					{% endfor %}
 					<input type="hidden" id="id_volume" name="volume" value="-1" />
 					<div class="form-actions">
-						<button type="button" id="fetch" class="btn btn-info">Fetch</button>
+						<button type="button" id="update" class="btn btn-info">Update</button>
 						<button type="reset" class="btn btn-warning">Reset</button>
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</div>

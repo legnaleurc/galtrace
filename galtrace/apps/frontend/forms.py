@@ -22,11 +22,21 @@ class OrderForm( forms.ModelForm ):
 		}
 
 class EditForm( forms.Form ):
-	title = forms.CharField()
-	vendor = forms.CharField()
-	date = forms.CharField()
-	uri = forms.CharField()
-	thumb = forms.CharField()
+	title = forms.CharField( widget = forms.TextInput( attrs = {
+		'id': 'id_edit_title',
+	} ) )
+	vendor = forms.CharField( widget = forms.TextInput( attrs = {
+		'id': 'id_edit_vendor',
+	} ) )
+	date = forms.CharField( widget = forms.TextInput( attrs = {
+		'id': 'id_edit_date',
+	} ) )
+	uri = forms.CharField( widget = forms.TextInput( attrs = {
+		'id': 'id_edit_uri',
+	} ) )
+	thumb = forms.CharField( widget = forms.TextInput( attrs = {
+		'id': 'id_edit_thumb',
+	} ) )
 
 	def save( self, user, oldTitle ):
 		title = self.cleaned_data['title']

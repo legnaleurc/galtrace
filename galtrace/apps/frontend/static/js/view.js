@@ -39,6 +39,7 @@ var GalTrace = GalTrace || {};
 			} );
 			this.$el.html( template );
 
+			// TODO global delegate
 			this.$( '.check-btn' ).click( _.partial( function( model_ ) {
 				var self = $( this );
 				self.toggleClass( 'checked' );
@@ -47,9 +48,19 @@ var GalTrace = GalTrace || {};
 				} );
 			}, this.model ) );
 
-			this.$( '.search-btn' ).click( function( event ) {
-				event.preventDefault();
+			// TODO global delegate
+			this.$( '.search-btn' ).click( function() {
 				GalTrace.googleSearch( title );
+			} );
+
+			// TODO global delegate
+			this.$( '.edit-btn' ).click( function() {
+				GalTrace.editDialog.modal( 'toggle' );
+				$( '#id_edit_title' ).val( title );
+				$( '#id_edit_vendor' ).val( vendor );
+				$( '#id_edit_date' ).val( date );
+				$( '#id_edit_uri' ).val( uri );
+//				$( '#id_edit_thumb' ).val( '' );
 			} );
 
 			function makeEditor( opts ) {
@@ -342,5 +353,8 @@ var GalTrace = GalTrace || {};
 	var queryView = new QueryView( {
 		el: '#query-string',
 		model: GalTrace.orderFilter,
+	} );
+	GalTrace.editDialog = $( '#edit-modal' ).modal( {
+		show: false,
 	} );
 } )();

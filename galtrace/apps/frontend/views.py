@@ -26,7 +26,7 @@ def member( request, user_name ):
 		}, context_instance = context )
 
 	form = OrderForm()
-	editForm = EditForm()
+	editForm = EditForm( auto_id = False )
 	restoreForm = RestoreForm()
 	return render_to_response( 'self.html', {
 		'phases': PHASES,
