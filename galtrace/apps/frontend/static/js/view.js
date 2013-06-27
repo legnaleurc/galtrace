@@ -41,62 +41,6 @@ var GalTrace = GalTrace || {};
 			} );
 			this.$el.html( template );
 
-			function makeEditor( opts ) {
-				var label = opts.cell.children( 'span.inline-label' );
-				var edit = opts.cell.children( 'input.inline-edit' );
-				opts.cell.dblclick( function() {
-					opts.cell.addClass( 'editing' );
-					edit.focus();
-				} );
-				function onFinished() {
-					var labelText = label.text();
-					var inputText = edit.val();
-					if( labelText !== inputText && ( opts.validator ? opts.validator( inputText ) : true ) ) {
-						var args = {
-							title: opts.orderKey,
-						};
-						args[opts.fieldKey] = inputText;
-						opts.model.set( 'updating', true );
-						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).done( function( data, textStatus, jqXHR ) {
-							if( !data.success ) {
-								// TODO display error message
-								opts.model.set( 'updating', false );
-								return;
-							}
-							opts.model.set( opts.fieldKey, inputText );
-							GalTrace.orderList.sort();
-							opts.model.set( 'updating', false );
-						} );
-					}
-					opts.cell.removeClass( 'editing' );
-				}
-				edit.blur( onFinished ).keypress( function( event ) {
-					if( event.which === 13 ) {
-						onFinished();
-					}
-				} );
-			}
-
-			// vendor cell
-			makeEditor( {
-				cell: this.$( '.vendor' ),
-				validator: null,
-				model: this.model,
-				orderKey: title,
-				fieldKey: 'vendor',
-			} );
-
-			// date cell
-			makeEditor( {
-				cell: this.$( '.date' ),
-				validator: function( inputText ) {
-					return /^\d\d\d\d\/\d\d\/\d\d$/.test( inputText );
-				},
-				model: this.model,
-				orderKey: title,
-				fieldKey: 'date',
-			} );
-
 			if( !GalTrace.orderFilter.match( this.model ) ) {
 				this.$el.addClass( 'hidden' );
 			}
