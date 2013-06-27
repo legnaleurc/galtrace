@@ -57,7 +57,7 @@ var GalTrace = GalTrace || {};
 
 		onVendorChanged: function() {
 			var vendor = this.model.get( 'vendor' );
-			this.$( 'span.title' ).attr( {
+			this.$( 'span.vendor' ).attr( {
 				title: vendor,
 			} ).text( vendor );
 		},
