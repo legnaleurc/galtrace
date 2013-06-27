@@ -40,7 +40,7 @@ class OrderManager( models.Manager ):
 		rows = data['orders']
 		super( OrderManager, self ).filter( user__exact = user ).delete()
 		for row in rows:
-			args = dict( ( x, row[x] ) for x in ( 'title', 'vendor', 'date', 'uri', 'phase', 'volume' ) )
+			args = { x: row[x] for x in ( 'title', 'vendor', 'date', 'uri', 'phase', 'volume' ) }
 			# FIXME dangerous, please check data
 			o = Order( user = user, **args )
 			o.retrieveThumb()
