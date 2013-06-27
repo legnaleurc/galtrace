@@ -47,10 +47,14 @@ class OrderManager( models.Manager ):
 			o.save()
 		return True
 
+def _getImagePath( model, ext ):
+	name = hashlib.sha1( model.title.encode( 'utf-8' ) ).hexdigest()
+	path = u'{0}/{1}{2}'.format( model.user.username, name, ext )
+	return path
+
 def getImageName( instance, filename ):
 	name, ext = os.path.splitext( filename )
-	name = hashlib.sha1( instance.title.encode( 'utf-8' ) ).hexdigest()
-	return u'{0}/{1}{2}'.format( instance.user.username, name, ext )
+	return _getImagePath( instance, ext )
 
 def _getImage( uri ):
 	buffer_ = urllib2.urlopen( uri )
@@ -83,8 +87,7 @@ class Order( models.Model ):
 	volume = models.IntegerField()
 
 	def _getExistingThumb( self ):
-		name = hashlib.sha1( self.title.encode( 'utf-8' ) ).hexdigest()
-		path = u'{0}/{1}.png'.format( self.user.username, name )
+		path = _getImagePath( self, u'.png' )
 		cls = get_storage_class()
 		storage = cls()
 		if not storage.exists( path ):
