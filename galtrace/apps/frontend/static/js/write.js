@@ -92,6 +92,91 @@ var GalTrace = GalTrace || {};
 		return $( jQuery.parseHTML( unsafe ) ).text();
 	};
 
+	function EditorDialog( selector ) {
+		this.dialog = $( selector ).modal( {
+			show: false,
+		} );
+
+		this.dialog.find( 'button[type=submit]' ).click( function( event ) {
+			event.preventDefault();
+
+			var args = {
+				title: GalTrace.makeSafe( $( '#id_edit_title' ).data( 'title' ) ),
+				uri: GalTrace.makeSafe( $( '#id_edit_uri' ).val() ),
+				date: $( '#id_edit_date' ).val(),
+				vendor: GalTrace.makeSafe( $( '#id_edit_vendor' ).val() ),
+				thumb: GalTrace.makeSafe( $( '#id_edit_thumb' ).val() ),
+			};
+			if( args.title.length <= 0 || args.uri.length <= 0 ) {
+				GalTrace.cerr( 'Field Error', 'No empty field(s)' );
+				return false;
+			}
+			if( $( '#id_edit_title' ).val() !== args.title ) {
+				args.new_title = $( '#id_edit_title' ).val();
+			}
+			if( !/^\d\d\d\d\/\d\d\/\d\d$/.test( args.date ) ) {
+				GalTrace.cerr( 'Date Format Error', 'e.g. 2011/11/02' );
+				return false;
+			}
+
+			var self = $( this ).button( 'loading' );
+			GalTrace.saveOrder( args ).complete( function() {
+				self.button( 'reset' );
+			} ).done( function( data, textStatus, jqXHR ) {
+				if( !data.success ) {
+					GalTrace.cerr( data.type, data.message );
+					return;
+				}
+				// clear input fields
+				$( '#editor-modal input[type=text]' ).val( '' );
+				GalTrace.editor.hide();
+			} ).fail( function( jqXHR, textStatus, message ) {
+				GalTrace.cerr( 'Unknown Error', message );
+			} );
+		} );
+
+		// update dialog
+		$( '#update' ).click( function( event ) {
+			event.preventDefault();
+
+			var uri = $( '#id_edit_uri' ).val();
+			if( !uri ) {
+				return;
+			}
+			var self = $( this ).button( 'loading' );
+			jQuery.post( GalTrace.urls.FETCH, {
+				uri: uri
+			}, null, 'json' ).always( function() {
+				self.button( 'reset' );
+			} ).done( function( data, textStatus, jqXHR ) {
+				if( !data.success ) {
+					GalTrace.cerr( data.type, data.message );
+					return;
+				}
+				data = data.data;
+				$( '#id_edit_title' ).val( data.title );
+				$( '#id_edit_vendor' ).val( data.vendor );
+				$( '#id_edit_date' ).val( data.date );
+				$( '#id_edit_thumb' ).val( data.thumb );
+			} ).fail( function( jqXHR, textStatus, message ) {
+				GalTrace.cerr( 'Unknown Error', message );
+			} );
+		} );
+	}
+	EditorDialog.prototype.show = function( cid ) {
+		var model = GalTrace.orderList.get( cid );
+		this.dialog.modal( 'show' );
+		$( '#id_edit_title' ).val( model.get( 'title' ) );
+		$( '#id_edit_title' ).data( 'title', model.get( 'title' ) );
+		$( '#id_edit_vendor' ).val( model.get( 'vendor' ) );
+		$( '#id_edit_date' ).val( model.get( 'date' ) );
+		$( '#id_edit_uri' ).val( model.get( 'uri' ) );
+	};
+	EditorDialog.prototype.hide = function() {
+		this.dialog.modal( 'hide' );
+	};
+	GalTrace.editor = new EditorDialog( '#editor-modal' );
+
 	// select action
 	$( '#orders' ).on( 'click', '.check-btn', function() {
 		var self = $( this );
@@ -104,13 +189,8 @@ var GalTrace = GalTrace || {};
 
 	// edit action
 	$( '#orders' ).on( 'click', '.edit-btn', function() {
-		var model = GalTrace.orderList.get( $( this ).parent().data( 'cid' ) );
-		GalTrace.editDialog.modal( 'toggle' );
-		$( '#id_edit_title' ).val( model.get( 'title' ) );
-		$( '#id_edit_title' ).data( 'title', model.get( 'title' ) );
-		$( '#id_edit_vendor' ).val( model.get( 'vendor' ) );
-		$( '#id_edit_date' ).val( model.get( 'date' ) );
-		$( '#id_edit_uri' ).val( model.get( 'uri' ) );
+		var cid = $( this ).parent().data( 'cid' );
+		GalTrace.editor.show( cid );
 	} );
 
 	// insert dialog
@@ -176,73 +256,6 @@ var GalTrace = GalTrace || {};
 			GalTrace.cerr( 'Unknown Error', message );
 		} );
 	} );
-
-	// edit dialog
-	$( '#edit-modal button[type=submit]' ).click( function( event ) {
-		event.preventDefault();
-
-		var args = {
-			title: GalTrace.makeSafe( $( '#id_edit_title' ).data( 'title' ) ),
-			uri: GalTrace.makeSafe( $( '#id_edit_uri' ).val() ),
-			date: $( '#id_edit_date' ).val(),
-			vendor: GalTrace.makeSafe( $( '#id_edit_vendor' ).val() ),
-			thumb: GalTrace.makeSafe( $( '#id_edit_thumb' ).val() ),
-		};
-		if( args.title.length <= 0 || args.uri.length <= 0 ) {
-			GalTrace.cerr( 'Field Error', 'No empty field(s)' );
-			return false;
-		}
-		if( $( '#id_edit_title' ).val() !== args.title ) {
-			args.new_title = $( '#id_edit_title' ).val();
-		}
-		if( !/^\d\d\d\d\/\d\d\/\d\d$/.test( args.date ) ) {
-			GalTrace.cerr( 'Date Format Error', 'e.g. 2011/11/02' );
-			return false;
-		}
-
-		var self = $( this ).button( 'loading' );
-		GalTrace.saveOrder( args ).complete( function() {
-			self.button( 'reset' );
-		} ).done( function( data, textStatus, jqXHR ) {
-			if( !data.success ) {
-				GalTrace.cerr( data.type, data.message );
-				return;
-			}
-			// clear input fields
-			$( '#edit-modal input[type=text]' ).val( '' );
-			GalTrace.editDialog.modal( 'toggle' );
-		} ).fail( function( jqXHR, textStatus, message ) {
-			GalTrace.cerr( 'Unknown Error', message );
-		} );
-	} );
-	// update dialog
-	$( '#update' ).click( function( event ) {
-		event.preventDefault();
-
-		var uri = $( '#id_edit_uri' ).val();
-		if( uri === '' ) {
-			return;
-		}
-		var self = $( this ).button( 'loading' );
-		jQuery.post( GalTrace.urls.FETCH, {
-			uri: uri
-		}, null, 'json' ).always( function( jqXHR, textStatus ) {
-			self.button( 'reset' );
-		} ).done( function( data, textStatus, jqXHR ) {
-			if( !data.success ) {
-				GalTrace.cerr( data.type, data.message );
-				return;
-			}
-			data = data.data;
-			$( '#id_edit_title' ).val( data.title );
-			$( '#id_edit_vendor' ).val( data.vendor );
-			$( '#id_edit_date' ).val( data.date );
-			$( '#id_edit_thumb' ).val( data.thumb );
-		} ).fail( function( jqXHR, textStatus, message ) {
-			GalTrace.cerr( 'Unknown Error', message );
-		} );
-	} );
-
 
 	// move phase event
 	$( '#control-panel a' ).click( function( event ) {

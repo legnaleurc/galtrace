@@ -284,7 +284,4 @@ var GalTrace = GalTrace || {};
 		el: '#query-string',
 		model: GalTrace.orderFilter,
 	} );
-	GalTrace.editDialog = $( '#edit-modal' ).modal( {
-		show: false,
-	} );
 } )();
