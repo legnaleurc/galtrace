@@ -1,5 +1,41 @@
+var GalTrace = GalTrace || {};
 ( function() {
 	'use strict';
+
+	GalTrace.initialize = function() {
+		// FIXME: dirty hack, please pass uid properly
+		var user_id = location.pathname.substr( 1 );
+
+		function load( offset ) {
+			jQuery.post( GalTrace.urls.LOAD, {
+				offset: offset,
+				limit: 100,
+				user_id: user_id,
+			}, null, 'json' ).done( function( data, textStatus, jqXHR ) {
+				if( !data.success ) {
+					GalTrace.cerr( data.type, data.message );
+					return;
+				}
+				if( data.data === null ) {
+					// load finished
+					return;
+				}
+				data = data.data;
+
+				load( offset + data.length );
+
+				GalTrace.orderList.add( data );
+			} ).fail( function( jqXHR, textStatus, message ) {
+				GalTrace.cerr( 'Unknown Error', message );
+			} );
+		}
+
+		load( 0 );
+	};
+
+	GalTrace.cerr = function( type, message ) {
+		console.error( [ type, ': ', message ].join( '' ) );
+	};
 
 	// create table and load orders
 	GalTrace.initialize();
@@ -21,16 +57,16 @@
 		},
 	} );
 
+	// search action
+	$( '#orders' ).on( 'click', '.search-btn', function() {
+		GalTrace.googleSearch( GalTrace.orderList.get( $( this ).parent().data( 'cid' ) ).get( 'title' ) );
+	} );
+
 	// alert widget
 	$( '#stderr .close' ).click( function( event ) {
 		event.preventDefault();
 
 		$( '#stderr' ).fadeOut( 'slow' );
-	} );
-
-	// select all on click
-	$( '#stdin input[type=text]' ).focus( function() {
-		this.select();
 	} );
 
 	// open in new window/tab

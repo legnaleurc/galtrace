@@ -36,32 +36,9 @@ var GalTrace = GalTrace || {};
 				uri: uri,
 				thumb: thumb,
 				phase: phase,
+				cid: this.model.cid,
 			} );
 			this.$el.html( template );
-
-			// TODO global delegate
-			this.$( '.check-btn' ).click( _.partial( function( model_ ) {
-				var self = $( this );
-				self.toggleClass( 'checked' );
-				model_.set( 'selected', self.hasClass( 'checked' ), {
-					silent: true,
-				} );
-			}, this.model ) );
-
-			// TODO global delegate
-			this.$( '.search-btn' ).click( function() {
-				GalTrace.googleSearch( title );
-			} );
-
-			// TODO global delegate
-			this.$( '.edit-btn' ).click( function() {
-				GalTrace.editDialog.modal( 'toggle' );
-				$( '#id_edit_title' ).val( title );
-				$( '#id_edit_vendor' ).val( vendor );
-				$( '#id_edit_date' ).val( date );
-				$( '#id_edit_uri' ).val( uri );
-//				$( '#id_edit_thumb' ).val( '' );
-			} );
 
 			function makeEditor( opts ) {
 				var label = opts.cell.children( 'span.inline-label' );
