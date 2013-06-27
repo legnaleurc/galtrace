@@ -83,24 +83,41 @@ def load( request ):
 @ajaxView
 def save( request ):
 	args = getArgs( request )
-	# title should not be null
-	if u'title' not in args or not args[u'title']:
-		raise ValueError( '`title` is empty' )
 
-	thumbUri = args.get( u'thumb', None )
+	# purify keys
+	args = { k: args[k] for k in ( u'title', u'new_title', u'vendor', u'date', u'uri', u'thumb', u'phase', u'volume' ) if k in args }
+
+	# title should not be null
+	if not args[u'title']:
+		raise ValueError( u'`title` is empty' )
+
+	newTitle = None
+	if u'new_title' in args:
+		newTitle = args[u'new_title']
+		del args[u'new_title']
+
+	thumbUri = None
 	if u'thumb' in args:
+		thumbUri = args[u'thumb']
 		del args[u'thumb']
 
-	result = Order.objects.filter( title__exact = args[u'title'] )
-	if not result:
+	try:
+		result = Order.objects.get( user__exact = request.user, title__exact = args[u'title'] )
+		del args[u'title']
+		# item exists, update
+		for k in args:
+			setattr( result, k, args[k] )
+		if newTitle:
+			result.title = newTitle
+	except Order.DoesNotExist:
 		# new item, insert
 		result = Order( user = request.user, **args )
 		result.retrieveThumb( thumbUri )
-		result.save()
-	else:
-		# item exists, update
-		result.update( **args )
+	except Order.MultipleObjectsReturned:
+		# TODO new exception
+		raise
 
+	result.save()
 	return {
 		u'title': result.title,
 		u'vendor': result.vendor,

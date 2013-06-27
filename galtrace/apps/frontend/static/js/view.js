@@ -9,6 +9,7 @@ var GalTrace = GalTrace || {};
 		className: 'orders',
 
 		initialize: function() {
+			this.model.on( 'change:title', this.onTitleChanged, this );
 			this.model.on( 'change:vendor', this.onVendorChanged, this );
 			this.model.on( 'change:date', this.onDateChanged, this );
 			this.model.on( 'change:uri', this.onUriChanged, this );
@@ -103,15 +104,23 @@ var GalTrace = GalTrace || {};
 			return this;
 		},
 
+		onTitleChanged: function() {
+			var title = this.model.get( 'title' );
+			this.$( 'span.title' ).attr( {
+				title: title,
+			} ).text( title );
+		},
+
 		onVendorChanged: function() {
 			var vendor = this.model.get( 'vendor' );
-			this.$( 'td.vendor span.inline-label' ).attr( {
+			this.$( 'span.title' ).attr( {
 				title: vendor,
 			} ).text( vendor );
 		},
 
 		onDateChanged: function() {
-			this.$( 'td.date span.inline-label' ).text( this.model.get( 'date' ) );
+			var date = this.model.get( 'date' );
+			this.$( 'span.date' ).text( date );
 		},
 
 		onUriChanged: function() {

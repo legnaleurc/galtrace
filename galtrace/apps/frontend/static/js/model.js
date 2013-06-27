@@ -39,6 +39,7 @@ var GalTrace = GalTrace || {};
 		},
 	} );
 
+	GalTrace.Order = Order;
 	GalTrace.orderList = new OrderList();
 	GalTrace.orderFilter = new OrderFilter( {
 		phases: {

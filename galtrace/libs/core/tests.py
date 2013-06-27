@@ -79,7 +79,12 @@ class SaveTest( TestCase ):
 
 	@classmethod
 	def setUpClass( cls ):
-		User.objects.create_user( username = 'alpha', password = 'alpha' )
+		user = User.objects.create_user( username = 'alpha', password = 'alpha' )
+		order = Order( user = user, title = 'test_title', uri = 'test_uri', vendor = 'test_vendor', date = '1234/56/78', phase = 0, volume = -1 )
+		order.save()
+		user = User.objects.create_user( username = 'beta', password = 'beta' )
+		order = Order( user = user, title = 'test_title', uri = 'test_uri', vendor = 'test_vendor', date = '1234/56/78', phase = 0, volume = -1 )
+		order.save()
 
 	@classmethod
 	def tearDownClass( cls ):
@@ -89,6 +94,7 @@ class SaveTest( TestCase ):
 	def setUp( self ):
 		self.url = '/save.cgi'
 		self.userAlpha = User.objects.get( username__exact = 'alpha' )
+		self.userBeta = User.objects.get( username__exact = 'beta' )
 
 	def testGet( self ):
 		"""
@@ -216,10 +222,10 @@ class SaveTest( TestCase ):
 		result = json.loads( response.content )
 		self.assertFalse( result['success'] )
 
-	def testRightArgs( self ):
+	def testAddOrder( self ):
 		"""
 		Call with title and phase
-		Should get a JSON which success is False
+		Should get a JSON which success is True
 		"""
 		c = Client()
 		result = c.login( username = 'alpha', password = 'alpha' )
@@ -235,6 +241,44 @@ class SaveTest( TestCase ):
 		result = Order.objects.get( user__exact = self.userAlpha, title__exact = '1' )
 		self.assertEqual( result.phase, -1 )
 		self.assertEqual( result.volume, -1 )
+
+	def testModifyTitle( self ):
+		"""
+		Call with new_title
+		Should get a JSON wich success is False
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.url, {
+			'title': 'test_title',
+			'new_title': 'new_test_title',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertTrue( result['success'] )
+		result = Order.objects.filter( user__exact = self.userAlpha, title__exact = 'new_test_title' )
+		self.assertEqual( len( result ), 1 )
+
+	def testModifyOrder( self ):
+		"""
+		Call with title and phase
+		Should get a JSON which success is True
+		"""
+		c = Client()
+		result = c.login( username = 'alpha', password = 'alpha' )
+		self.assertTrue( result )
+		response = c.post( self.url, {
+			'title': 'test_title',
+			'uri': 'new_test_uri',
+		} )
+		self.assertEqual( response.status_code, 200 )
+		result = json.loads( response.content )
+		self.assertTrue( result['success'] )
+		result = Order.objects.get( user__exact = self.userAlpha, title__exact = 'test_title' )
+		self.assertEqual( result.uri, 'new_test_uri' )
+		result = Order.objects.get( user__exact = self.userBeta, title__exact = 'test_title' )
+		self.assertEqual( result.uri, 'test_uri' )
 
 class DeleteTest( TestCase ):
 

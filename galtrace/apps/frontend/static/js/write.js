@@ -2,7 +2,7 @@ var GalTrace = GalTrace || {};
 ( function() {
 	'use strict';
 
-	GalTrace.addOrder = function( args ) {
+	GalTrace.saveOrder = function( args ) {
 		// send request, server will handle INSERT/UPDATE by itself
 		var request = jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
 
@@ -37,8 +37,9 @@ var GalTrace = GalTrace || {};
 		return request.done( function( data ) {
 			if( !data.success ) {
 				GalTrace.cerr( data.type, data.message );
+				return;
 			}
-			var model = new Order( data.data );
+			var model = new GalTrace.Order( data.data );
 			GalTrace.orderList.add( model );
 			// NOTE force update
 			model.set( 'updating', true );
@@ -106,6 +107,7 @@ var GalTrace = GalTrace || {};
 		var model = GalTrace.orderList.get( $( this ).parent().data( 'cid' ) );
 		GalTrace.editDialog.modal( 'toggle' );
 		$( '#id_edit_title' ).val( model.get( 'title' ) );
+		$( '#id_edit_title' ).data( 'title', model.get( 'title' ) );
 		$( '#id_edit_vendor' ).val( model.get( 'vendor' ) );
 		$( '#id_edit_date' ).val( model.get( 'date' ) );
 		$( '#id_edit_uri' ).val( model.get( 'uri' ) );
@@ -134,7 +136,7 @@ var GalTrace = GalTrace || {};
 		}
 
 		var self = $( this ).button( 'loading' );
-		GalTrace.addOrder( args ).complete( function() {
+		GalTrace.saveOrder( args ).complete( function() {
 			self.button( 'reset' );
 		} ).done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
@@ -176,13 +178,13 @@ var GalTrace = GalTrace || {};
 	} );
 
 	// edit dialog
-	$( '#edit-modal button[type=submit]' ).click( function( event ) {s
+	$( '#edit-modal button[type=submit]' ).click( function( event ) {
 		event.preventDefault();
 
 		var args = {
-			title: GalTrace.makeSafe( $( '#id_edit_title' ).val() ),
+			title: GalTrace.makeSafe( $( '#id_edit_title' ).data( 'title' ) ),
 			uri: GalTrace.makeSafe( $( '#id_edit_uri' ).val() ),
-			date: $( '#id_date' ).val(),
+			date: $( '#id_edit_date' ).val(),
 			vendor: GalTrace.makeSafe( $( '#id_edit_vendor' ).val() ),
 			thumb: GalTrace.makeSafe( $( '#id_edit_thumb' ).val() ),
 		};
@@ -190,13 +192,16 @@ var GalTrace = GalTrace || {};
 			GalTrace.cerr( 'Field Error', 'No empty field(s)' );
 			return false;
 		}
+		if( $( '#id_edit_title' ).val() !== args.title ) {
+			args.new_title = $( '#id_edit_title' ).val();
+		}
 		if( !/^\d\d\d\d\/\d\d\/\d\d$/.test( args.date ) ) {
 			GalTrace.cerr( 'Date Format Error', 'e.g. 2011/11/02' );
 			return false;
 		}
 
 		var self = $( this ).button( 'loading' );
-		GalTrace.editOrder( args ).complete( function() {
+		GalTrace.saveOrder( args ).complete( function() {
 			self.button( 'reset' );
 		} ).done( function( data, textStatus, jqXHR ) {
 			if( !data.success ) {
@@ -205,6 +210,7 @@ var GalTrace = GalTrace || {};
 			}
 			// clear input fields
 			$( '#edit-modal input[type=text]' ).val( '' );
+			GalTrace.editDialog.modal( 'toggle' );
 		} ).fail( function( jqXHR, textStatus, message ) {
 			GalTrace.cerr( 'Unknown Error', message );
 		} );
