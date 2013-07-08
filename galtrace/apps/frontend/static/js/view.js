@@ -225,21 +225,38 @@ var GalTrace = GalTrace || {};
 	} );
 
 	var PhaseView = Backbone.View.extend( {
+		loaded: {
+			0: false,
+			1: false,
+			2: false,
+			3: false,
+			4: false,
+		},
+
 		initialize: function() {
 			this.children = this.$el.children();
+			var view = this;
 			// apply filter
 			this.children.click( function( event ) {
 				event.preventDefault();
 				var self = $( this );
 				self.toggleClass( 'active' );
 				var tmp = GalTrace.orderFilter.get( 'phases' );
-				tmp[self.data( 'value' )] = self.hasClass( 'active' );
+				var i = self.data( 'value' );
+				tmp[i] = self.hasClass( 'active' );
 				GalTrace.orderFilter.set( 'phases', tmp );
 				// FIXME somehow I must trigger this manually
 				GalTrace.orderFilter.trigger( 'change:phases' );
+
+				if ( !view.loaded[i] ) {
+					GalTrace.load( i );
+					view.loaded[i] = true;
+				}
 			} );
 			// set initial filter
-			this.children[0].click();
+			$( document ).ready( function () {
+				view.children[0].click();
+			} );
 		},
 
 		render: function() {

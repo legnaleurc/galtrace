@@ -2,15 +2,19 @@ var GalTrace = GalTrace || {};
 ( function() {
 	'use strict';
 
-	GalTrace.initialize = function() {
-		// FIXME: dirty hack, please pass uid properly
-		var user_id = location.pathname.substr( 1 );
+	GalTrace.userID = location.pathname.match( /^\/([\w_]+).*$/ )[1];
 
+	GalTrace.cerr = function( type, message ) {
+		console.error( [ type, ': ', message ].join( '' ) );
+	};
+
+	GalTrace.load = function( phase ) {
 		function load( offset ) {
 			jQuery.post( GalTrace.urls.LOAD, {
 				offset: offset,
 				limit: 100,
-				user_id: user_id,
+				phase: phase,
+				user_id: GalTrace.userID,
 			}, null, 'json' ).done( function( data, textStatus, jqXHR ) {
 				if( !data.success ) {
 					GalTrace.cerr( data.type, data.message );
@@ -32,13 +36,6 @@ var GalTrace = GalTrace || {};
 
 		load( 0 );
 	};
-
-	GalTrace.cerr = function( type, message ) {
-		console.error( [ type, ': ', message ].join( '' ) );
-	};
-
-	// create table and load orders
-	GalTrace.initialize();
 
 	// Google CSE
 	var cseDialog = $( '#search-modal' ).modal( {

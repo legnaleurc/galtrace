@@ -51,8 +51,9 @@ def load( request ):
 	offset = int( request.POST['offset'] )
 	limit = offset + int( request.POST['limit'] )
 	user = request.POST['user_id']
+	phase = int( request.POST['phase'] )
 
-	if offset < 0 or limit <= 0:
+	if offset < 0 or limit <= 0 or phase < 0 or phase > 4:
 		raise ValueError( 'invalid interval' )
 
 	from django.contrib.auth.models import User
@@ -63,7 +64,7 @@ def load( request ):
 	except User.MultipleObjectsReturned:
 		raise ValueError( 'user database corrupted' )
 
-	result = Order.objects.filter( user__exact = user ).order_by( 'date', 'title' )[offset:limit]
+	result = Order.objects.filter( user__exact = user, phase__exact = phase ).order_by( 'date', 'title' )[offset:limit]
 	if not result:
 		return None
 	else:
