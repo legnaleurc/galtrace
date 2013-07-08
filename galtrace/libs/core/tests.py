@@ -70,6 +70,7 @@ class LoadTest( TestCase ):
 			'user_id': 'alpha',
 			'offset': 0,
 			'limit': 100,
+			'phase': 0,
 		} )
 		self.assertEqual( response.status_code, 200 )
 		result = json.loads( response.content )
