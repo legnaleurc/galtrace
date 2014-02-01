@@ -42,6 +42,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+ATOMIC_REQUESTS = True
+
 MEDIA_ROOT = ''
 
 MEDIA_URL = ''
@@ -71,7 +73,6 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'django.middleware.transaction.TransactionMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
