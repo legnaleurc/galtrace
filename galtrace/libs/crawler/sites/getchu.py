@@ -2,12 +2,11 @@
 
 import re
 import urllib.parse
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
 import io
 
-import pycurl
 import pyquery
+import requests
+
 
 def verify(uri):
     if uri.netloc == 'www.getchu.com':
@@ -23,14 +22,9 @@ def create(uri):
         query['gc'] = 'gc'
     uri_ = urllib.parse.urlunsplit((uri.scheme, uri.netloc, uri.path, urllib.parse.urlencode(query), ''))
 
-    link = pycurl.Curl()
-    link.setopt(pycurl.URL, uri_.encode('utf-8'))
-    sin = io.StringIO()
-    link.setopt(pycurl.WRITEFUNCTION, lambda x: sin.write(x))
-    link.perform()
-    link.close()
-    content = sin.getvalue().decode('EUC-JP', 'replace')
-    sin.close()
+    link = requests.get(uri_)
+    link.encoding = 'EUC-JP'
+    content = link.text
     pq = pyquery.PyQuery(content)
 
     log = []
@@ -38,7 +32,7 @@ def create(uri):
     log.append(title)
     title = title.strip()
 
-    thumb = pq('#bannera + table a.highslide').attr.href
+    thumb = pq('#soft_table a.highslide').attr.href
     log.append(thumb)
     if not thumb:
         thumb = ''

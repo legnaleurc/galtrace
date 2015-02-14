@@ -2,11 +2,10 @@
 
 import re
 import urllib.parse
-import urllib.request, urllib.error, urllib.parse
-import http.cookiejar
-import urllib.request, urllib.parse, urllib.error
 
 import pyquery
+import requests
+
 
 def verify(uri):
     if uri.netloc == 'gyutto.com':
@@ -14,27 +13,25 @@ def verify(uri):
     else:
         return 0
 
+
 def create(uri):
     m = re.match(r'^/i/item(\d+)$', uri.path)
     if not m:
         raise RuntimeError('invalid url path')
-    query = {
+
+    uri_ = urllib.parse.urlunsplit((uri.scheme, uri.netloc, '/adult_check.php', '', ''))
+    link = requests.get(uri_, params={
         '_adult_check': 'yes',
         'item_flag': '1',
         'ref_path': uri.path,
         'id': m.group(1),
-    }
-
-    uri_ = urllib.parse.urlunsplit((uri.scheme, uri.netloc, '/adult_check.php', '', ''))
-    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
-    link = opener.open(uri_, urllib.parse.urlencode(query))
-    content = link.read().decode('shift-jis', 'replace')
-    link.close()
-
+    })
+    link.encoding = 'shift-jis'
+    content = link.text
     pq = pyquery.PyQuery(content)
 
-    path = pq('#topicpath a')
-    category = path[2].text
+    path = pq('#naviglobal_InArea img[src*="on"]')
+    category = path.attr.name
 
     log = []
     error = []
@@ -42,10 +39,10 @@ def create(uri):
     tmp.remove('span, img')
     title = tmp.text()
     tmp = pq('#RightSide div.unit_DetailBasicInfo dl.BasicInfo.clearfix')
-    if category == '美少女ゲーム':
+    if category == 'category_6':
         vendor = pyquery.PyQuery(tmp[2]).find('dd a').text()
         date_ = pyquery.PyQuery(tmp[9]).find('dd').text()
-    elif category == '同人ソフト':
+    elif category == 'category_10':
         vendor = pyquery.PyQuery(tmp[2]).find('dd a')[0].text
         date_ = pyquery.PyQuery(tmp[5]).find('dd').text()
     else:

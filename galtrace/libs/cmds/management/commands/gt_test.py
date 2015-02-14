@@ -10,6 +10,6 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         a = subprocess.call(['python', '-m', 'unittest', 'galtrace.libs.crawler.tests'])
-        b = subprocess.call(['python', 'manage.py', 'test', 'core'])
-        if any((a, b)):
+        # b = subprocess.call(['python', 'manage.py', 'test', 'core'])
+        if any((a,)):
             sys.exit(1)

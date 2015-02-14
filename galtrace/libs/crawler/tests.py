@@ -45,7 +45,7 @@ class SiteTest(unittest.TestCase):
     def testDLGetchuShougyou(self):
         result = crawler.fetch('http://dl.getchu.com/index.php?action=gdSoft&gcd=74749&cp=&c=')
         self.assertEqual(result['date'], '2012/02/24')
-        self.assertEqual(result['title'], 'めちゃ婚！')
+        self.assertEqual(result['title'], 'めちゃ婚！Windows8対応版')
         self.assertEqual(result['vendor'], 'onomatope*')
         self.assertEqual(result['thumb'], 'http://dl.getchu.com/images/soft/74749/74749large.jpg')
 
