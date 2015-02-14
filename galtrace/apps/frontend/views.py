@@ -56,11 +56,11 @@ def auth( request ):
 
 def csrf( request ):
 	return render_to_response( 'csrf.js', {
-	}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
+	}, context_instance = RequestContext( request ), content_type = 'text/javascript' )
 
 def urls( request ):
 	return render_to_response( 'urls.js', {
-	}, context_instance = RequestContext( request ), mimetype = 'text/javascript' )
+	}, context_instance = RequestContext( request ), content_type = 'text/javascript' )
 
 @login_required
 def restore( request ):
