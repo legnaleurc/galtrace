@@ -15,25 +15,25 @@ ADMINS = GALTRACE_SECRET['ADMINS']
 MANAGERS = ADMINS
 
 DATABASES = {
-	'default': dj_database_url.config(),
+    'default': dj_database_url.config(),
 }
 
 SECRET_KEY = GALTRACE_SECRET['SECRET_KEY']
 
 MIDDLEWARE_CLASSES = (
-	'beproud.django.ssl.middleware.SSLProxyMiddleware',
+    'beproud.django.ssl.middleware.SSLProxyMiddleware',
 ) + MIDDLEWARE_CLASSES + (
-	'beproud.django.ssl.middleware.SSLRedirectMiddleware',
+    'beproud.django.ssl.middleware.SSLRedirectMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
-	'beproud.django.ssl.context_processors.conf',
+    'beproud.django.ssl.context_processors.conf',
 )
 
 ROOT_URLCONF = 'galtrace.urls.heroku'
 
 INSTALLED_APPS += (
-	'beproud.django.ssl',
+    'beproud.django.ssl',
 )
 
 # email settings
@@ -49,9 +49,9 @@ SERVER_EMAIL = GALTRACE_SECRET['SERVER_EMAIL']
 
 # ssl settings
 ALLOWED_HOSTS = [
-	'galtrace.herokuapp.com',
+    'galtrace.herokuapp.com',
 ]
-SECURE_PROXY_SSL_HEADER = ( 'HTTP_X_FORWARDED_PROTO', 'https' )
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SSL_URLS = (
-	r'^.*$',
+    r'^.*$',
 )
