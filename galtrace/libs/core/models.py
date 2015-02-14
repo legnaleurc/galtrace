@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.files.storage import get_storage_class
 
-import Image
+from PIL import Image
 
 from galtrace.libs import crawler
 
