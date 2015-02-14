@@ -23,6 +23,7 @@ DATABASES = {
 		'PASSWORD': '',
 		'HOST': '',
 		'PORT': '',
+		'ATOMIC_REQUESTS': True,
 	},
 }
 
