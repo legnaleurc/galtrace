@@ -113,7 +113,7 @@ def save(request):
     except Order.DoesNotExist:
         # new item, insert
         result = Order(user=request.user, **args)
-        result.retrieveThumb(thumbUri)
+        result.retrieve_thumb(thumbUri)
     except Order.MultipleObjectsReturned:
         # TODO new exception
         raise
