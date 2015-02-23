@@ -2,42 +2,41 @@
 {% load static from staticfiles %}
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>GalTrace</title>
-		{% block head %}
-			<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
-			<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
-			<link rel="stylesheet/less" type="text/css" href="{% static 'css/style.less' %}" />
-			<script type="text/javascript" src="{% static 'js/less.min.js' %}"></script>
-		{% endblock %}
-	</head>
-	<body>
-		<div id="page-head" class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a href="#" class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
-					<a href="{% url 'galtrace.apps.frontend.views.index' %}" class="brand">GalTrace</a>
-					<div class="nav-collapse">
-						{% block navbar %}
-						{% endblock %}
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="page-body" class="container">
-			{% block body %}
-			{% endblock %}
-			<hr />
-			<footer id="page-foot">
-			</footer>
-		</div>
-		{% block footer %}
-		{% endblock %}
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GalTrace</title>
+        {% block head %}
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css" />
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
+            <link rel="stylesheet/less" type="text/css" href="{% static 'css/style.less' %}" />
+        {% endblock %}
+    </head>
+    <body>
+        <nav id="page-head" class="navbar navbar-fixed-top navbar-inverse">
+            <div class="container">
+                <button class="navbar-toggle collapsed" type="button" aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'galtrace.apps.frontend.views.index' %}">GalTrace</a>
+                <div id="navbar" class="collapse navbar-collapse">
+                    {% block navbar %}
+                    {% endblock %}
+                </div>
+            </div>
+        </nav>
+        <div id="page-body" class="container">
+            {% block body %}
+            {% endblock %}
+            <hr />
+            <footer id="page-foot">
+            </footer>
+        </div>
+        {% block footer %}
+        {% endblock %}
+    </body>
 </html>

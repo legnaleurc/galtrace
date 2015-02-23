@@ -1,132 +1,132 @@
 @media ( min-width: 481px ) {
-	body {
-		padding-top: 60px;
-	}
+    body {
+        padding-top: 60px;
+    }
 }
 
 #stderr {
-	position: fixed;
-	z-index: 1045;	/* between dialog and background */
-	top: 60px;
-	left: 50%;
-	width: 560px;	/* dialog width */
-	margin-left: -280px;	/* centralize */
-	display: none;
+    position: fixed;
+    z-index: 1045;       /* between dialog and background */
+    top: 60px;
+    left: 50%;
+    width: 560px;        /* dialog width */
+    margin-left: -280px; /* centralize */
+    display: none;
 }
 
 footer p {
-	text-align: center;
+    text-align: center;
 }
 
 /* Override for Google CSE */
 
 .gsc-control-cse, .gsc-result-info {
-	padding: 0px;
+    padding: 0px;
 }
 
 .gsc-resultsbox-visible {
-	overflow: auto;
-	max-height: 390px;
+    overflow: auto;
+    max-height: 390px;
 }
 
 form.gsc-search-box, .gsc-adBlock {
-	display: none;
+    display: none;
 }
 
 .inline-editor ( @width ) {
-	overflow: hidden;
-	white-space: nowrap;
-	width: @width;
+    overflow: hidden;
+    white-space: nowrap;
+    width: @width;
 
-	span.inline-label {
-		display: inline-block;
-		width: @width;
-	}
-	input.inline-edit {
-		display: none;
-	}
-	&.editing {
-		span.inline-label {
-			display: none;
-		}
-		input.inline-edit {
-			display: inline-block;
-			margin-bottom: 0;
-			border-width: 0;
-			padding: 0;
-			width: @width;
-		}
-	}
+    span.inline-label {
+        display: inline-block;
+        width: @width;
+    }
+    input.inline-edit {
+        display: none;
+    }
+    &.editing {
+        span.inline-label {
+            display: none;
+        }
+        input.inline-edit {
+            display: inline-block;
+            margin-bottom: 0;
+            border-width: 0;
+            padding: 0;
+            width: @width;
+        }
+    }
 }
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 #orders {
-	@total_width: 1170px;
-	@width: @total_width / 6;
-	@height: 300px;
+    @total_width: 1170px;
+    @width: @total_width / 6;
+    @height: 300px;
 
-	div.orders {
-		float: left;
-		width: @width;
-		height: @height;
-		text-align: center;
-		position: relative;
+    div.orders {
+        float: left;
+        width: @width;
+        height: @height;
+        text-align: center;
+        position: relative;
 
-		&.updating {
-			background-color: fade( blue, 25% );
-		}
+        &.updating {
+            background-color: fade( blue, 25% );
+        }
 
-		&.success {
-			background-color: fade( green, 25% );
-		}
+        &.success {
+            background-color: fade( green, 25% );
+        }
 
-		&.error {
-			background-color: fade( red, 25% );
-		}
+        &.error {
+            background-color: fade( red, 25% );
+        }
 
-		div.thumb {
-			height: 200px;
-			position: relative;
+        div.thumb {
+            height: 200px;
+            position: relative;
 
-			> div {
-				width: 100%;
-				position: absolute;
-				bottom: 0px;
-			}
-		}
+            > div {
+                width: 100%;
+                position: absolute;
+                bottom: 0px;
+            }
+        }
 
-		> div.tool-bar {
-			position: absolute;
-			width: @width;
-			top: 0px;
-			left: 0px;
-			text-align: right;
-			z-index: 1;
+        > div.tool-bar {
+            position: absolute;
+            width: @width;
+            top: 0px;
+            left: 0px;
+            text-align: right;
+            z-index: 1;
 
-			> i[class^=icon-] {
-				font-size: 32px;
-				cursor: pointer;
-			}
+            > span.glyphicon {
+                font-size: 32px;
+                cursor: pointer;
+            }
 
-			> i.search-btn, i.edit-btn {
-				opacity: 0.5;
-			}
+            > span.search-btn, span.edit-btn {
+                opacity: 0.5;
+            }
 
-			> i.check-btn {
-				opacity: 0.25;
+            > span.check-btn {
+                opacity: 0.25;
 
-				&.checked {
-					color: green;
-					opacity: 1;
-				}
+                &.checked {
+                    color: green;
+                    opacity: 1;
+                }
 
-				&:hover {
-					color: green;
-				}
-			}
-		}
-	}
+                &:hover {
+                    color: green;
+                }
+            }
+        }
+    }
 }

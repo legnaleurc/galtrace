@@ -3,28 +3,29 @@
 {% load url from future %}
 
 {% block body %}
-	<form class="well form-horizontal" id="login" method="post" action="{% url 'galtrace.apps.frontend.views.auth' %}">
-		<fieldset>
-			<legend>{% trans 'Please sign in or sign up' %}</legend>
-			<div class="control-group">
-				<label class="control-label" for="id_user">User Name</label>
-				<div class="controls">
-					<input id="id_user" type="text" name="user" />
-					<p class="help-block"></p>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="id_pswd">Password</label>
-				<div class="controls">
-					<input id="id_pswd" type="password" name="pswd" />
-					<p class="help-block"></p>
-				</div>
-			</div>
-			{% csrf_token %}
-			<div class="form-actions">
-				<button type="reset" class="btn btn-warning">Reset</button>
-				<button type="submit" class="btn btn-primary">Sign In</button>
-			</div>
-		</fieldset>
-	</form>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.4.0/less.min.js"></script>
+    <form class="well form-horizontal" id="login" method="post" action="{% url 'galtrace.apps.frontend.views.auth' %}">
+        <fieldset>
+            <legend>{% trans 'Please sign in or sign up' %}</legend>
+            <div class="control-group">
+                <label class="control-label" for="id_user">User Name</label>
+                <div class="controls">
+                    <input id="id_user" type="text" name="user" />
+                    <p class="help-block"></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_pswd">Password</label>
+                <div class="controls">
+                    <input id="id_pswd" type="password" name="pswd" />
+                    <p class="help-block"></p>
+                </div>
+            </div>
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="reset" class="btn btn-warning">Reset</button>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </div>
+        </fieldset>
+    </form>
 {% endblock %}

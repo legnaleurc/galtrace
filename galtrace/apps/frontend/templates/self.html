@@ -4,196 +4,213 @@
 {% load static from staticfiles %}
 
 {% block head %}
-	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
-	{{ block.super }}
-	<script type="text/template" id="order-template">
-		<div class="tool-bar" data-cid="<%= cid %>">
-			<i class="icon-edit edit-btn"></i>
-			<i class="icon-search search-btn"></i>
-			<i class="icon-ok-sign check-btn"></i>
-		</div>
-		<div class="thumb">
-			<div>
-				<a href="<%= uri %>" rel="external">
-					<img src="<%= thumb %>" title="<%= title %>" />
-				</a>
-			</div>
-		</div>
-		<div><span class="title" title="<%= title %>"><%= title %></span></div>
-		<div><span class="vendor" title="<%= vendor %>"><%= vendor %></span></div>
-		<div><span class="date" title="<%= date %>"><%= date %></span></div>
-	</script>
+    <link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
+    {{ block.super }}
+    <script type="text/template" id="order-template">
+        <div class="tool-bar" data-cid="<%= cid %>">
+            <span class="glyphicon glyphicon-edit edit-btn" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-search search-btn" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-ok-sign check-btn" aria-hidden="true"></span>
+        </div>
+        <div class="thumb">
+            <div>
+                <a href="<%= uri %>" rel="external">
+                    <img src="<%= thumb %>" title="<%= title %>" />
+                </a>
+            </div>
+        </div>
+        <div><span class="title" title="<%= title %>"><%= title %></span></div>
+        <div><span class="vendor" title="<%= vendor %>"><%= vendor %></span></div>
+        <div><span class="date" title="<%= date %>"><%= date %></span></div>
+    </script>
 {% endblock %}
 
 {% block navbar %}
-	<ul class="nav">
-		<li class="divider-vertical"></li>
-		<li><a href="#insert-modal" data-toggle="modal">Insert</a></li>
-		<li class="dropdown">
-			<a id="move-menu-anchor" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" >Move<b class="caret"></b></a>
-			<ul class="dropdown-menu" id="control-panel" aria-labelledby="move-menu-anchor" role="menu">
-				{% for phase in phases %}
-					<li><a href="#" data-phase="{{ phase.0 }}">{{ phase.1 }}</a></li>
-				{% endfor %}
-			</ul>
-		</li>
-		<li class="dropdown">
-			<a id="data-menu-anchor" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Data<b class="caret"></b></a>
-			<ul class="dropdown-menu" aria-labelledby="data-menu-anchor" role="menu">
-				<li><a href="#" id="button-delete">Delete</a></li>
-				<li><a href="{% url 'galtrace.libs.core.views.backup' %}">Backup</a></li>
-				<li><a href="#restore-modal" data-toggle="modal">Restore</a></li>
-			</ul>
-		</li>
-		<li class="divider-vertical"></li>
-	</ul>
-	<ul id="phases" class="nav">
-		{% for phase in phases %}
-			<li data-value="{{ phase.0 }}"><a href="#">{{ phase.1 }}</a></li>
-		{% endfor %}
-	</ul>
-	<div>
-		<form action="" class="navbar-search">
-			<input type="text" class="search-query" id="query-string" placeholder="Search" />
-		</form>
-	</div>
-	<ul class="nav pull-right">
-		<li class="navbar-text">
-			<span id="current-orders"></span>
-			<span>&nbsp;/&nbsp;</span>
-			<span id="total-orders"></span>
-		</li>
-		<li class="divider-vertical"></li>
-		<li><a href="{% url 'galtrace.apps.frontend.views.auth' %}?next={{ request.path }}">Sign Out</a></li>
-	</ul>
+    <ul class="nav navbar-nav">
+        <li class="divider-vertical"></li>
+        <li><a href="#insert-modal" data-toggle="modal">Insert</a></li>
+        <li class="dropdown">
+            <a id="move-menu-anchor" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" >Move<b class="caret"></b></a>
+            <ul class="dropdown-menu" id="control-panel" aria-labelledby="move-menu-anchor" role="menu">
+                {% for phase in phases %}
+                    <li><a href="#" data-phase="{{ phase.0 }}">{{ phase.1 }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a id="data-menu-anchor" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Data<b class="caret"></b></a>
+            <ul class="dropdown-menu" aria-labelledby="data-menu-anchor" role="menu">
+                <li><a href="#" id="button-delete">Delete</a></li>
+                <li><a href="{% url 'galtrace.libs.core.views.backup' %}">Backup</a></li>
+                <li><a href="#restore-modal" data-toggle="modal">Restore</a></li>
+            </ul>
+        </li>
+        <li class="divider-vertical"></li>
+    </ul>
+    <ul class="nav navbar-nav" id="phases">
+        {% for phase in phases %}
+            <li data-value="{{ phase.0 }}"><a href="#">{{ phase.1 }}</a></li>
+        {% endfor %}
+    </ul>
+    <form class="nav navbar-nav navbar-form">
+        <div class="form-group">
+            <input class="form-control" id="query-string" type="text" placeholder="Search" />
+        </div>
+    </form>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text">
+            <span id="current-orders"></span>
+            <span>&nbsp;/&nbsp;</span>
+            <span id="total-orders"></span>
+        </li>
+        <li class="divider-vertical"></li>
+        <li><a href="{% url 'galtrace.apps.frontend.views.auth' %}?next={{ request.path }}">Sign Out</a></li>
+    </ul>
 {% endblock %}
 
 {% block body %}
-	<div id="orders">
-	</div>
+    <div id="orders">
+    </div>
 {% endblock %}
 
 {% block footer %}
-	<div id="search-modal" class="modal hide fade">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Google Search Result</h3>
-		</div>
-		<div class="modal-body">
-			<div id="cse"></div>
-		</div>
-	</div>
-	<div id="insert-modal" class="modal hide fade">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Insert</h3>
-		</div>
-		<div class="modal-body">
-			<form class="well form-horizontal" id="stdin" action=".">
-				<fieldset>
-					{% for field in form %}
-						<div class="control-group">
-							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-							<div class="controls">
-								{{ field }}
-								<p class="help-block">
-									{{ field.help_text }}
-								</p>
-							</div>
-						</div>
-					{% endfor %}
-					<input type="hidden" id="id_volume" name="volume" value="-1" />
-					<div class="form-actions">
-						<button type="button" id="fetch" class="btn btn-info">Fetch</button>
-						<button type="reset" class="btn btn-warning">Reset</button>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		<div class="modal-footer">
-		</div>
-	</div>
-	<div id="editor-modal" class="modal hide fade">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Edit</h3>
-		</div>
-		<div class="modal-body">
-			<form class="well form-horizontal" id="edit" action=".">
-				<fieldset>
-					{% for field in editForm %}
-						<div class="control-group">
-							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-							<div class="controls">
-								{{ field }}
-								<p class="help-block">
-									{{ field.help_text }}
-								</p>
-							</div>
-						</div>
-					{% endfor %}
-					<input type="hidden" id="id_volume" name="volume" value="-1" />
-					<div class="form-actions">
-						<button type="button" id="update" class="btn btn-info">Update</button>
-						<button type="reset" class="btn btn-warning">Reset</button>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		<div class="modal-footer">
-		</div>
-	</div>
-	<div id="restore-modal" class="modal hide fade">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">&times;</a>
-			<h3>Restore</h3>
-		</div>
-		<div class="modal-body">
-			<form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url 'galtrace.apps.frontend.views.restore' %}">
-				<fieldset>
-					{% for field in restoreForm %}
-						<div class="control-group">
-							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-							<div class="controls">
-								{{ field }}
-								<p class="help-block">
-									{{ field.help_text }}
-								</p>
-							</div>
-						</div>
-					{% endfor %}
-					{% csrf_token %}
-					<div class="form-actions">
-						<button type="reset" class="btn btn-warning">Reset</button>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		<div class="modal-footer">
-		</div>
-	</div>
-	<div id="stderr">
-		<div class="alert alert-error">
-			<a class="close" href="#">&times;</a>
-			<p>
-				<strong id="error-title"></strong>
-				<span id="error-message"></span>
-			</p>
-		</div>
-	</div>
-	<script src="https://www.google.com/jsapi" type="text/javascript"></script>
-	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/backbone-min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.csrf' %}"></script>
-	<script type="text/javascript" src="{% static 'js/model.js' %}"></script>
-	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.urls' %}"></script>
-	<script type="text/javascript" src="{% static 'js/view.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/view-write.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/read.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/write.js' %}"></script>
+    <div id="search-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">&times;</a>
+                    <h3>Google Search Result</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="cse"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="insert-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">&times;</a>
+                    <h3>Insert</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="well form-horizontal" id="stdin" action=".">
+                        <fieldset>
+                            {% for field in form %}
+                                <div class="control-group">
+                                    <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <div class="controls">
+                                        {{ field }}
+                                        <p class="help-block">
+                                            {{ field.help_text }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <input type="hidden" id="id_volume" name="volume" value="-1" />
+                            <div class="form-actions">
+                                <button type="button" id="fetch" class="btn btn-info">Fetch</button>
+                                <button type="reset" class="btn btn-warning">Reset</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editor-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">&times;</a>
+                    <h3>Edit</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="well form-horizontal" id="edit" action=".">
+                        <fieldset>
+                            {% for field in editForm %}
+                                <div class="control-group">
+                                    <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <div class="controls">
+                                        {{ field }}
+                                        <p class="help-block">
+                                            {{ field.help_text }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <input type="hidden" id="id_volume" name="volume" value="-1" />
+                            <div class="form-actions">
+                                <button type="button" id="update" class="btn btn-info">Update</button>
+                                <button type="reset" class="btn btn-warning">Reset</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="restore-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">&times;</a>
+                    <h3>Restore</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="well form-horizontal" id="restore" enctype="multipart/form-data" method="post" action="{% url 'galtrace.apps.frontend.views.restore' %}">
+                        <fieldset>
+                            {% for field in restoreForm %}
+                                <div class="control-group">
+                                    <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <div class="controls">
+                                        {{ field }}
+                                        <p class="help-block">
+                                            {{ field.help_text }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% csrf_token %}
+                            <div class="form-actions">
+                                <button type="reset" class="btn btn-warning">Reset</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="stderr">
+        <div class="alert alert-error">
+            <a class="close" href="#">&times;</a>
+            <p>
+                <strong id="error-title"></strong>
+                <span id="error-message"></span>
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.4.0/less.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.3.0/lodash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.csrf' %}"></script>
+    <script type="text/javascript" src="{% static 'js/model.js' %}"></script>
+    <script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.urls' %}"></script>
+    <script type="text/javascript" src="{% static 'js/view.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/view-write.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/read.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/write.js' %}"></script>
 {% endblock %}
