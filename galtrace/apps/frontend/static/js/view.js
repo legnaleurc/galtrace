@@ -5,9 +5,11 @@ var GalTrace = GalTrace || {};
 	var ORDER_TEMPLATE = _.template( $( '#order-template' ).html() );
 
 	var OrderView = Backbone.View.extend( {
-		tagName: 'tr',
+		tagName: 'div',
+		className: 'orders',
 
 		initialize: function() {
+			this.model.on( 'change:title', this.onTitleChanged, this );
 			this.model.on( 'change:vendor', this.onVendorChanged, this );
 			this.model.on( 'change:date', this.onDateChanged, this );
 			this.model.on( 'change:uri', this.onUriChanged, this );
@@ -25,6 +27,7 @@ var GalTrace = GalTrace || {};
 			var vendor = this.model.get( 'vendor' );
 			var date = this.model.get( 'date' );
 			var uri = this.model.get( 'uri' );
+			var thumb = this.model.get( 'thumb' );
 			var phase = this.model.get( 'phase' );
 
 			var template = ORDER_TEMPLATE( {
@@ -32,95 +35,36 @@ var GalTrace = GalTrace || {};
 				vendor: vendor,
 				date: date,
 				uri: uri,
+				thumb: thumb,
 				phase: phase,
+				cid: this.model.cid,
 			} );
 			this.$el.html( template );
 
-			this.$( '.check' ).change( _.partial( function( model_ ) {
-				model_.set( 'selected', $( this ).is( ':checked' ), {
-					silent: true,
-				} );
-			}, this.model ) );
-
-			this.$( '.search' ).click( function( event ) {
-				event.preventDefault();
-				GalTrace.googleSearch( title );
-			} );
-
-			function makeEditor( opts ) {
-				var label = opts.cell.children( 'span.inline-label' );
-				var edit = opts.cell.children( 'input.inline-edit' );
-				opts.cell.dblclick( function() {
-					opts.cell.addClass( 'editing' );
-					edit.focus();
-				} );
-				function onFinished() {
-					var labelText = label.text();
-					var inputText = edit.val();
-					if( labelText !== inputText && ( opts.validator ? opts.validator( inputText ) : true ) ) {
-						var args = {
-							title: opts.orderKey,
-						};
-						args[opts.fieldKey] = inputText;
-						opts.model.set( 'updating', true );
-						jQuery.post( GalTrace.urls.SAVE, args, null, 'json' ).done( function( data, textStatus, jqXHR ) {
-							if( !data.success ) {
-								// TODO display error message
-								opts.model.set( 'updating', false );
-								return;
-							}
-							opts.model.set( opts.fieldKey, inputText );
-							GalTrace.orderList.sort();
-							opts.model.set( 'updating', false );
-						} );
-					}
-					opts.cell.removeClass( 'editing' );
-				}
-				edit.blur( onFinished ).keypress( function( event ) {
-					if( event.which === 13 ) {
-						onFinished();
-					}
-				} );
-			}
-
-			// vendor cell
-			makeEditor( {
-				cell: this.$( '.vendor' ),
-				validator: null,
-				model: this.model,
-				orderKey: title,
-				fieldKey: 'vendor',
-			} );
-
-			// date cell
-			makeEditor( {
-				cell: this.$( '.date' ),
-				validator: function( inputText ) {
-					return /^\d\d\d\d\/\d\d\/\d\d$/.test( inputText );
-				},
-				model: this.model,
-				orderKey: title,
-				fieldKey: 'date',
-			} );
-
 			if( !GalTrace.orderFilter.match( this.model ) ) {
-				this.$el.css( {
-					display: 'none',
-				} );
+				this.$el.addClass( 'hidden' );
 			}
 
 			return this;
 		},
 
+		onTitleChanged: function() {
+			var title = this.model.get( 'title' );
+			this.$( 'span.title' ).attr( {
+				title: title,
+			} ).text( title );
+		},
+
 		onVendorChanged: function() {
 			var vendor = this.model.get( 'vendor' );
-			this.$( 'td.vendor span.inline-label' ).attr( {
+			this.$( 'span.vendor' ).attr( {
 				title: vendor,
 			} ).text( vendor );
 		},
 
 		onDateChanged: function() {
-			this.$( 'td.date span.inline-label' ).text( this.model.get( 'date' ) );
+			var date = this.model.get( 'date' );
+			this.$( 'span.date' ).text( date );
 		},
 
 		onUriChanged: function() {
@@ -130,27 +74,31 @@ var GalTrace = GalTrace || {};
 		},
 
 		onFilterChanged: function() {
-			this.$el.css( {
-				display: ( GalTrace.orderFilter.match( this.model ) ? 'table-row' : 'none' ),
-			} );
+			if( GalTrace.orderFilter.match( this.model ) ) {
+				this.$el.removeClass( 'hidden' );
+			} else {
+				this.$el.addClass( 'hidden' );
+			}
 		},
 
 		onSelectionChanged: function() {
-			this.$( '.check' ).attr( {
-				checked: this.model.get( 'selected' ),
-			} );
+			if( this.model.get( 'selected' ) ) {
+				this.$( '.check-btn' ).addClass( 'checked' );
+			} else {
+				this.$( '.check-btn' ).removeClass( 'checked' );
+			}
 		},
 
 		onStateChanged: function() {
 			var updating = this.model.get( 'updating' );
 			if( updating ) {
-				this.$el.removeClass( 'success error' ).addClass( 'info' );
+				this.$el.removeClass( 'success error' ).addClass( 'updating' );
 			} else {
 				var tmp = window.innerHeight / 2;
 				$( 'html, body' ).animate( {
 					scrollTop: this.$el.offset().top - tmp,
 				}, 1000 );
-				this.$el.removeClass( 'info' ).addClass( 'success' );
+				this.$el.removeClass( 'updating' ).addClass( 'success' );
 				tmp = this.$el;
 				var handle = setTimeout( function() {
 					tmp.removeClass( 'success' );
@@ -277,21 +225,38 @@ var GalTrace = GalTrace || {};
 	} );
 
 	var PhaseView = Backbone.View.extend( {
+		loaded: {
+			0: false,
+			1: false,
+			2: false,
+			3: false,
+			4: false,
+		},
+
 		initialize: function() {
 			this.children = this.$el.children();
+			var view = this;
 			// apply filter
 			this.children.click( function( event ) {
 				event.preventDefault();
 				var self = $( this );
 				self.toggleClass( 'active' );
 				var tmp = GalTrace.orderFilter.get( 'phases' );
-				tmp[self.data( 'value' )] = self.hasClass( 'active' );
+				var i = self.data( 'value' );
+				tmp[i] = self.hasClass( 'active' );
 				GalTrace.orderFilter.set( 'phases', tmp );
 				// FIXME somehow I must trigger this manually
 				GalTrace.orderFilter.trigger( 'change:phases' );
+
+				if ( !view.loaded[i] ) {
+					GalTrace.load( i );
+					view.loaded[i] = true;
+				}
 			} );
 			// set initial filter
-			this.children[0].click();
+			$( document ).ready( function () {
+				view.children[0].click();
+			} );
 		},
 
 		render: function() {

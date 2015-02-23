@@ -1,11 +1,13 @@
 #-*- coding: utf-8 -*-
 
-import urlparse
+import urllib.parse
 
-import sites
+from . import sites
 
-def fetch( uri ):
-	uri_ = urlparse.urlsplit( uri )
-	return max( sites.factory, key=lambda x: x[0]( uri_ ) )[1]( uri_ )
+UnsupportedLinkError = sites._UnsupportedLinkError
 
-__all__ = [ 'fetch' ]
+def fetch(uri):
+    uri_ = urllib.parse.urlsplit(uri)
+    return max(sites.factory, key=lambda x: x[0](uri_))[1](uri_)
+
+__all__ = ['fetch', 'UnsupportedLinkError']

@@ -1,52 +1,47 @@
 #-*- coding: utf-8 -*-
 
 import re
-import urllib
-import urllib2
-import cookielib
-import urlparse
+import urllib.parse
 
-def verify( uri ):
-	if uri.netloc == 'dl.getchu.com':
-		result = urlparse.parse_qs( uri.query )
-		if result['action'][0] == 'gdSoft':
-			return 100
-	return 0
+import pyquery
+import requests
 
-def create( uri ):
-	query = {}
-	query['action'] = 'aa'
-	query['aaR18'] = 'true'
-	query['returl'] = uri.geturl()
 
-	opener = urllib2.build_opener( urllib2.HTTPCookieProcessor( cookielib.CookieJar() ) )
-	link = opener.open( 'http://dl.getchu.com/index.php', urllib.urlencode( query ) )
-	data = {}
-	key = None
-	for line in link:
-		line = line.decode( 'EUC-JP', 'replace' )
-		if not key:
-			if 'title' not in data and re.search( ur'imgs/pts_line_312\.gif', line ):
-				key = 'title'
-			elif re.search( ur'>ブランド：</td>', line ):
-				key = 'vendor'
-			elif re.search( ur'>登録日：</td>', line ):
-				key = 'date'
-		elif key == 'title':
-			m = re.search( ur'<div.+>(.+)</div>', line )
-			if m:
-				data[key] = m.group( 1 )
-				key = None
-		elif key == 'vendor':
-			m = re.search( ur'<a.+>(.+)</a>', line )
-			if m:
-				data[key] = m.group( 1 )
-				key = None
-		elif key == 'date':
-			m = re.search( ur'>(\d\d\d\d)年(\d\d)月(\d\d)日<', line )
-			if m:
-				data[key] = '{0}/{1}/{2}'.format( m.group( 1 ), m.group( 2 ), m.group( 3 ) )
-				key = None
-	link.close()
+def verify(uri):
+    if uri.netloc == 'dl.getchu.com':
+        result = urllib.parse.parse_qs(uri.query)
+        if result['action'][0] == 'gdSoft':
+            return 100
+    return 0
 
-	return data
+
+def create(uri):
+    link = requests.get('http://dl.getchu.com/index.php', params={
+        'action': 'aa',
+        'aaR18': 'true',
+        'returl': uri.geturl(),
+    })
+    link.encoding = 'EUC-JP'
+    content = link.text
+    pq = pyquery.PyQuery(content)
+    data = {}
+
+    tmp = pq('a.highslide')
+    thumb = tmp[0].attrib['href']
+    thumb = urllib.parse.urlunsplit((uri.scheme, uri.netloc, thumb.strip(), '', ''))
+    data['thumb'] = thumb
+
+    tmp = pq('td[width="318"] div[align="left"]')
+    title = tmp.text()
+    data['title'] = title
+
+    tmp = pq('td[width="318"] table td')
+    vendor = tmp[3].getchildren()[0].text
+    date = tmp[5].text
+
+    data['vendor'] = vendor
+
+    tmp = re.search(r'(\d\d\d\d)年(\d\d)月(\d\d)日', date)
+    data['date'] = '/'.join(tmp.groups())
+
+    return data

@@ -7,19 +7,21 @@
 	<link rel="stylesheet" href="https://www.google.com/cse/style/look/default.css" type="text/css" />
 	{{ block.super }}
 	<script type="text/template" id="order-template">
-		<td><input type="checkbox" class="check" /></td>
-		<td class="title"><span title="<%= title %>"><%= title %></span></td>
-		<td><span><%= phase %></span></td>
-		<td><a href="#" class="search"><i class="icon-search"></i></a></td>
-		<td><a class="uri" href="<%= uri %>" rel="external"><i class="icon-link"></i></a></td>
-		<td class="vendor">
-			<span class="inline-label" title="<%= vendor %>"><%= vendor %></span>
-			<input type="text" class="inline-edit" value="<%= vendor %>" />
-		</td>
-		<td class="date">
-			<span class="inline-label"><%= date %></span>
-			<input type="text" class="inline-edit" value="<%= date %>" />
-		</td>
+		<div class="tool-bar" data-cid="<%= cid %>">
+			<i class="icon-edit edit-btn"></i>
+			<i class="icon-search search-btn"></i>
+			<i class="icon-ok-sign check-btn"></i>
+		</div>
+		<div class="thumb">
+			<div>
+				<a href="<%= uri %>" rel="external">
+					<img src="<%= thumb %>" title="<%= title %>" />
+				</a>
+			</div>
+		</div>
+		<div><span class="title" title="<%= title %>"><%= title %></span></div>
+		<div><span class="vendor" title="<%= vendor %>"><%= vendor %></span></div>
+		<div><span class="date" title="<%= date %>"><%= date %></span></div>
 	</script>
 {% endblock %}
 
@@ -67,21 +69,8 @@
 {% endblock %}
 
 {% block body %}
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<td><input type="checkbox" id="select-all" value="noa" /></td>
-				<th>Title</th>
-				<th>&nbsp;</th>
-				<th><i class="icon-search"></i></th>
-				<th><i class="icon-link"></i></th>
-				<th>Vendor</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody id="orders">
-		</tbody>
-	</table>
+	<div id="orders">
+	</div>
 {% endblock %}
 
 {% block footer %}
@@ -104,7 +93,7 @@
 				<fieldset>
 					{% for field in form %}
 						<div class="control-group">
-							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
 							<div class="controls">
 								{{ field }}
 								<p class="help-block">
@@ -125,6 +114,37 @@
 		<div class="modal-footer">
 		</div>
 	</div>
+	<div id="editor-modal" class="modal hide fade">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">&times;</a>
+			<h3>Edit</h3>
+		</div>
+		<div class="modal-body">
+			<form class="well form-horizontal" id="edit" action=".">
+				<fieldset>
+					{% for field in editForm %}
+						<div class="control-group">
+							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+							<div class="controls">
+								{{ field }}
+								<p class="help-block">
+									{{ field.help_text }}
+								</p>
+							</div>
+						</div>
+					{% endfor %}
+					<input type="hidden" id="id_volume" name="volume" value="-1" />
+					<div class="form-actions">
+						<button type="button" id="update" class="btn btn-info">Update</button>
+						<button type="reset" class="btn btn-warning">Reset</button>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+		</div>
+	</div>
 	<div id="restore-modal" class="modal hide fade">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">&times;</a>
@@ -135,7 +155,7 @@
 				<fieldset>
 					{% for field in restoreForm %}
 						<div class="control-group">
-							<label class="control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+							<label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
 							<div class="controls">
 								{{ field }}
 								<p class="help-block">
@@ -173,6 +193,7 @@
 	<script type="text/javascript" src="{% static 'js/model.js' %}"></script>
 	<script type="text/javascript" src="{% url 'galtrace.apps.frontend.views.urls' %}"></script>
 	<script type="text/javascript" src="{% static 'js/view.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/view-write.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/read.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/write.js' %}"></script>
 {% endblock %}

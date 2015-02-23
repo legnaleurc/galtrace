@@ -39,8 +39,8 @@ var GalTrace = GalTrace || {};
 		},
 	} );
 
+	GalTrace.Order = Order;
 	GalTrace.orderList = new OrderList();
-
 	GalTrace.orderFilter = new OrderFilter( {
 		phases: {
 			0: false,
@@ -51,119 +51,4 @@ var GalTrace = GalTrace || {};
 		},
 		queryString: '',
 	} );
-
-	GalTrace.initialize = function() {
-		// FIXME: dirty hack, please pass uid properly
-		var user_id = location.pathname.substr( 1 );
-
-		function load( offset ) {
-			jQuery.post( GalTrace.urls.LOAD, {
-				offset: offset,
-				limit: 100,
-				user_id: user_id,
-			}, null, 'json' ).done( function( data, textStatus, jqXHR ) {
-				if( !data.success ) {
-					GalTrace.cerr( data.type, data.message );
-					return;
-				}
-				if( data.data === null ) {
-					// load finished
-					return;
-				}
-				data = data.data;
-
-				load( offset + data.length );
-
-				GalTrace.orderList.add( data );
-			} ).fail( function( jqXHR, textStatus, message ) {
-				GalTrace.cerr( 'Unknown Error', message );
-			} );
-		}
-
-		load( 0 );
-	};
-
-	GalTrace.addOrder = function( args ) {
-		// send request, server will handle INSERT/UPDATE by itself
-		var request = jQuery.post( GalTrace.urls.SAVE, args, null, 'json' );
-
-		// find if exists (by title); can not use binary search here
-		var model = GalTrace.orderList.find( function( model_ ) {
-			return model_.get( 'title' ) === args.title;
-		} );
-		// only update data and move order if success
-		if( model !== undefined ) {
-			model.set( 'updating', true );
-			return request.done( function() {
-				// update data and HTML
-				model.set( {
-					title: args.title,
-					vendor: args.vendor,
-					date: args.date,
-					uri: args.uri,
-					phase: args.phase,
-					volume: args.volume,
-					updating: false,
-				} );
-				GalTrace.orderList.sort();
-			} );
-		}
-
-		return request.done( function() {
-			var model = new Order( args );
-			GalTrace.orderList.add( model );
-			// NOTE force update
-			model.set( 'updating', true );
-			model.set( 'updating', false );
-		} );
-	};
-
-	GalTrace.movePhase = function( phase ) {
-		var selected = GalTrace.orderList.filter( function( model ) {
-			return model.get( 'selected' );
-		} );
-		_.each( selected, function( model ) {
-			model.set( 'updating', true );
-		} );
-		var request = jQuery.post( GalTrace.urls.MOVE, {
-			phase: phase,
-			orders: _.map( selected, function( value ) {
-				return value.get( 'title' );
-			} ),
-		}, null, 'json' ).done( function() {
-			_.each( selected, function( element ) {
-				element.set( {
-					phase: phase,
-					selected: false,
-				} );
-			} );
-		} ).always( function() {
-			_.each( selected, function( model ) {
-				model.set( 'updating', false );
-			} );
-		} );
-		return request;
-	};
-
-	GalTrace.deleteOrders = function() {
-		var selected = GalTrace.orderList.filter( function( model ) {
-			return model.get( 'selected' );
-		} );
-		var request = jQuery.post( GalTrace.urls.DELETE, {
-			orders: _.map( selected, function( value ) {
-				return value.get( 'title' );
-			} ),
-		}, null, 'json' ).done( function() {
-			GalTrace.orderList.remove( selected );
-		} );
-		return request;
-	};
-
-	GalTrace.cerr = function( type, message ) {
-		console.error( [ type, ': ', message ].join( '' ) );
-	};
-
-	GalTrace.makeSafe = function( unsafe ) {
-		return $( jQuery.parseHTML( unsafe ) ).text();
-	};
 } )();

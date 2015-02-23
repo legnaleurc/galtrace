@@ -3,16 +3,21 @@
 import pkgutil
 import sys
 
-def __module_filter():
-	for importer, name, isPackage in pkgutil.walk_packages( sys.modules[__name__].__path__ ):
-		if not isPackage:
-			loader = importer.find_module( name )
-			module = loader.load_module( name )
-			yield module
 
-def __helper( x ):
-	raise RuntimeError( u'unsupported link' )
-factory = [ ( lambda x: 1, __helper ) ]
+class _UnsupportedLinkError(RuntimeError):
+    pass
 
-for module in __module_filter():
-	factory.append( ( module.verify, module.create ) )
+
+def _module_filter():
+    for importer, name, isPackage in pkgutil.walk_packages(sys.modules[__name__].__path__):
+        if not isPackage:
+            loader = importer.find_module(name)
+            module = loader.load_module(name)
+            yield module
+
+def _helper(x):
+    raise _UnsupportedLinkError('unsupported link')
+factory = [(lambda x: 1, _helper)]
+
+for module in _module_filter():
+    factory.append((module.verify, module.create))

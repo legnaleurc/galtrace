@@ -1,3 +1,4 @@
 Django >= 1.6
-pycurl
+Pillow
 pyquery
+requests

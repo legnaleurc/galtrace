@@ -59,21 +59,74 @@ form.gsc-search-box, .gsc-adBlock {
 	}
 }
 
+.hidden {
+	display: none;
+}
+
 #orders {
-	td.title {
-		@width: 1170px - ( 29px ) * 4 - 217px - 117px - 17px;
-		overflow: hidden;
-		white-space: nowrap;
+	@total_width: 1170px;
+	@width: @total_width / 6;
+	@height: 300px;
+
+	div.orders {
+		float: left;
 		width: @width;
-		span {
-			display: inline-block;
-			width: @width;
+		height: @height;
+		text-align: center;
+		position: relative;
+
+		&.updating {
+			background-color: fade( blue, 25% );
 		}
-	}
-	td.vendor {
-		.inline-editor( 200px );
-	}
-	td.date {
-		.inline-editor( 100px );
+
+		&.success {
+			background-color: fade( green, 25% );
+		}
+
+		&.error {
+			background-color: fade( red, 25% );
+		}
+
+		div.thumb {
+			height: 200px;
+			position: relative;
+
+			> div {
+				width: 100%;
+				position: absolute;
+				bottom: 0px;
+			}
+		}
+
+		> div.tool-bar {
+			position: absolute;
+			width: @width;
+			top: 0px;
+			left: 0px;
+			text-align: right;
+			z-index: 1;
+
+			> i[class^=icon-] {
+				font-size: 32px;
+				cursor: pointer;
+			}
+
+			> i.search-btn, i.edit-btn {
+				opacity: 0.5;
+			}
+
+			> i.check-btn {
+				opacity: 0.25;
+
+				&.checked {
+					color: green;
+					opacity: 1;
+				}
+
+				&:hover {
+					color: green;
+				}
+			}
+		}
 	}
 }
