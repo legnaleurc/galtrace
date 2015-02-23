@@ -1,13 +1,13 @@
 import base64
 import json
 import os
-from os.path import abspath, dirname, join, normpath
 import subprocess
 
 
-GALTRACE_SETTINGS_ROOT = dirname(abspath(__file__))
-GALTRACE_ROOT = normpath(join(GALTRACE_SETTINGS_ROOT, '../..'))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+GALTRACE_SETTINGS_ROOT = os.path.join(BASE_DIR, 'galtrace/settings')
 GALTRACE_HEROKU_CONFIG_KEY = 'GALTRACE_SECRET'
+
 
 def fromLocalEnvironment():
     tmp = os.environ[GALTRACE_HEROKU_CONFIG_KEY]
@@ -23,7 +23,7 @@ def fromRemoteEnvironment():
     return tmp
 
 def fromJsonFile():
-    tmp = join(GALTRACE_SETTINGS_ROOT, 'secret.json')
+    tmp = os.path.join(GALTRACE_SETTINGS_ROOT, 'secret.json')
     tmp = open(tmp, 'r')
     secret = json.load(tmp)
     tmp.close()
@@ -42,25 +42,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = join(GALTRACE_ROOT, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = join(GALTRACE_ROOT, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
