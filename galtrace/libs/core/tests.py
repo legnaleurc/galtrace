@@ -39,7 +39,7 @@ class LoadTest(TestCase):
         self.assertTrue(result)
         response = c.post(self.url)
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testWrongArgs(self):
@@ -55,7 +55,7 @@ class LoadTest(TestCase):
             'limit': 0,
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testRightArgs(self):
@@ -73,7 +73,7 @@ class LoadTest(TestCase):
             'phase': 0,
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertTrue(result['success'])
 
 class SaveTest(TestCase):
@@ -125,7 +125,7 @@ class SaveTest(TestCase):
         self.assertTrue(result)
         response = c.post(self.url)
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testEmptyTitle(self):
@@ -140,7 +140,7 @@ class SaveTest(TestCase):
             'title': '',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testEmptyOthers(self):
@@ -155,7 +155,7 @@ class SaveTest(TestCase):
             'title': '1',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testNonIntPhase(self):
@@ -171,7 +171,7 @@ class SaveTest(TestCase):
             'phase': 'a',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testNegativePhase(self):
@@ -187,7 +187,7 @@ class SaveTest(TestCase):
             'phase': '-1',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testGreaterThanFivePhase(self):
@@ -203,7 +203,7 @@ class SaveTest(TestCase):
             'phase': '6',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testWrongVolume(self):
@@ -220,7 +220,7 @@ class SaveTest(TestCase):
             'volume': 'a',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testAddOrder(self):
@@ -237,7 +237,7 @@ class SaveTest(TestCase):
             'volume': -1,
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertTrue(result['success'])
         result = Order.objects.get(user__exact=self.userAlpha, title__exact = '1')
         self.assertEqual(result.phase, -1)
@@ -256,7 +256,7 @@ class SaveTest(TestCase):
             'new_title': 'new_test_title',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertTrue(result['success'])
         result = Order.objects.filter(user__exact=self.userAlpha, title__exact = 'new_test_title')
         self.assertEqual(len(result), 1)
@@ -274,7 +274,7 @@ class SaveTest(TestCase):
             'uri': 'new_test_uri',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertTrue(result['success'])
         result = Order.objects.get(user__exact=self.userAlpha, title__exact = 'test_title')
         self.assertEqual(result.uri, 'new_test_uri')
@@ -325,7 +325,7 @@ class DeleteTest(TestCase):
         self.assertTrue(result)
         response = c.post(self.url)
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testEmptyTitle(self):
@@ -340,7 +340,7 @@ class DeleteTest(TestCase):
             'title': '',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testDeleteNonExists(self):
@@ -354,13 +354,13 @@ class DeleteTest(TestCase):
         response = c.post(self.url, {
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
         response = c.post(self.url, {
             'orders[]': 'non-exists',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertFalse(result['success'])
 
     def testRightArgs(self):
@@ -375,7 +375,7 @@ class DeleteTest(TestCase):
             'orders[]': 'to-be-deleted',
         })
         self.assertEqual(response.status_code, 200)
-        result = json.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
         self.assertTrue(result['success'])
 
 class FetchTest(TestCase):
