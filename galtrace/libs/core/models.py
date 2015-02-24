@@ -1,6 +1,6 @@
 import hashlib
 import os
-from io import StringIO
+import io
 import urllib.request
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -44,8 +44,10 @@ class OrderManager(models.Manager):
 
         with ThreadPoolExecutor(max_workers=8) as pool:
             futures = pool.map(lambda o: download_thumbnail(user, o), rows)
-            for order, thumb_ok in futures:
-                order.save()
+            orders = [order for order, thumb_ok in futures]
+
+        for order in orders:
+            order.save()
 
         return True
 
@@ -106,17 +108,17 @@ def get_image(uri):
     rawImage = buffer_.read()
     buffer_.close()
 
-    buffer_ = StringIO(rawImage)
+    buffer_ = io.BytesIO(rawImage)
     image = Image.open(buffer_)
     image.thumbnail((128, 65536), Image.ANTIALIAS)
     buffer_.close()
 
-    buffer_ = StringIO()
+    buffer_ = io.BytesIO()
     image.save(buffer_, 'png')
     rawImage = buffer_.getvalue()
     buffer_.close()
 
-    buffer_ = StringIO(rawImage)
+    buffer_ = io.BytesIO(rawImage)
     return ('tmp.png', File(buffer_))
 
 
@@ -157,6 +159,6 @@ class Order(models.Model):
                 return False
 
         name, file_ = get_image(uri)
-        self.thumb.save(name, file_)
+        self.thumb.save(name, file_, save=False)
 
         return True
