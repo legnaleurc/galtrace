@@ -1,13 +1,21 @@
 #-*- coding: utf-8 -*-
 
 import urllib.parse
+import urllib.error
 
 from . import sites
 
 UnsupportedLinkError = sites._UnsupportedLinkError
 
-def fetch(uri):
-    uri_ = urllib.parse.urlsplit(uri)
-    return max(sites.factory, key=lambda x: x[0](uri_))[1](uri_)
+class UnavailableLinkError(RuntimeError):
+    pass
 
-__all__ = ['fetch', 'UnsupportedLinkError']
+def fetch(uri):
+    uri = urllib.parse.urlsplit(uri)
+    try:
+        handler = max(sites.factory, key=lambda x: x[0](uri))
+    except urllib.error.HTTPError as e:
+        raise UnavailableLinkError(e.code)
+    return handler[1](uri)
+
+__all__ = ['fetch', 'UnsupportedLinkError', 'UnavailableLinkError']

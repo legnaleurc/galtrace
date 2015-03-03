@@ -152,7 +152,7 @@ class Order(models.Model):
         if not uri:
             try:
                 site_data = crawler.fetch(self.uri)
-            except crawler.UnsupportedLinkError:
+            except crawler.UnsupportedLinkError, crawler.UnavailableLinkError:
                 site_data = {}
             uri = site_data.get('thumb', None)
             if not uri:
