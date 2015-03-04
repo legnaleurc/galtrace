@@ -7,48 +7,47 @@ import io
 import pyquery
 import requests
 
+from .base import Site as AbstractSite
 
-def verify(uri):
-    if uri.netloc == 'www.getchu.com':
-        return 100
-    else:
-        return 0
 
-def create(uri):
-    query = urllib.parse.parse_qs(uri.query)
-    for key in query:
-        query[key] = query[key][0]
-    if 'gc' not in query:
-        query['gc'] = 'gc'
-    uri_ = urllib.parse.urlunsplit((uri.scheme, uri.netloc, uri.path, urllib.parse.urlencode(query), ''))
+class Site(AbstractSite):
 
-    link = requests.get(uri_)
-    link.encoding = 'EUC-JP'
-    content = link.text
-    pq = pyquery.PyQuery(content)
+    def do_evaluate(self, uri):
+        if uri.netloc == 'www.getchu.com':
+            return 100
+        else:
+            return 0
 
-    log = []
-    title = pq('#soft-title').remove('nobr').remove('#wish').text()
-    log.append(title)
-    title = title.strip()
+    def do_parse(self, uri):
+        query = urllib.parse.parse_qs(uri.query)
+        for key in query:
+            query[key] = query[key][0]
+        if 'gc' not in query:
+            query['gc'] = 'gc'
+        uri_ = urllib.parse.urlunsplit((uri.scheme, uri.netloc, uri.path, urllib.parse.urlencode(query), ''))
 
-    thumb = pq('#soft_table a.highslide').attr.href
-    log.append(thumb)
-    if not thumb:
-        thumb = ''
-    else:
-        thumb = urllib.parse.urlunsplit((uri.scheme, uri.netloc, thumb.strip(), '', ''))
-    log.append(thumb)
+        link = requests.get(uri_)
+        link.encoding = 'EUC-JP'
+        content = link.text
+        pq = pyquery.PyQuery(content)
 
-    return {
-        'title': title,
-        'vendor': pq('#brandsite').text(),
-        'date': pq('#tooltip-day').text(),
-        'thumb': thumb,
-        'log': log,
-    }
+        log = []
+        title = pq('#soft-title').remove('nobr').remove('#wish').text()
+        log.append(title)
+        title = title.strip()
 
-if __name__ == '__main__':
-    import sys
-    uri = urllib.parse.urlsplit(sys.argv[1])
-    print(create(uri))
+        thumb = pq('#soft_table a.highslide').attr.href
+        log.append(thumb)
+        if not thumb:
+            thumb = ''
+        else:
+            thumb = urllib.parse.urlunsplit((uri.scheme, uri.netloc, thumb.strip(), '', ''))
+        log.append(thumb)
+
+        return {
+            'title': title,
+            'vendor': pq('#brandsite').text(),
+            'date': pq('#tooltip-day').text(),
+            'thumb': thumb,
+            'log': log,
+        }

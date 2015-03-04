@@ -1,23 +1,18 @@
-#-*- coding: utf-8 -*-
-
 import pkgutil
 import sys
 
+from .base import UnsupportedLinkError
+from .base import UnavailableLinkError
 
-class _UnsupportedLinkError(RuntimeError):
-    pass
+
+def package_walker(package_name):
+    path = sys.modules[package_name].__path__
+    for module_finder, name, ispkg in pkgutil.walk_packages(path):
+        if ispkg:
+            continue
+        loader = module_finder.find_module(name)
+        module = loader.load_module('{0}.{1}'.format(package_name, name))
+        yield module
 
 
-def _module_filter():
-    for importer, name, isPackage in pkgutil.walk_packages(sys.modules[__name__].__path__):
-        if not isPackage:
-            loader = importer.find_module(name)
-            module = loader.load_module(name)
-            yield module
-
-def _helper(x):
-    raise _UnsupportedLinkError('unsupported link')
-factory = [(lambda x: 1, _helper)]
-
-for module in _module_filter():
-    factory.append((module.verify, module.create))
+factory = [module.Site() for module in package_walker(__name__)]
