@@ -3,3 +3,4 @@
 /galtrace/settings/secret.json
 /galtrace/settings/default.sqlite
 .DS_Store
+__pycache__
