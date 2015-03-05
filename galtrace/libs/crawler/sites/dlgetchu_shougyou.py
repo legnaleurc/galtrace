@@ -6,7 +6,7 @@ import urllib.parse
 import pyquery
 import requests
 
-from .base import Site as AbstractSite
+from . import Site as AbstractSite
 
 
 class Site(AbstractSite):
