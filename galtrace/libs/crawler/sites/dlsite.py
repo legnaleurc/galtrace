@@ -25,7 +25,7 @@ class Site(AbstractSite):
         pq = pyquery.PyQuery(content)
 
         log = []
-        title = pq('#work_name').text()
+        title = pq('#work_name').remove('span').text()
         vendor = pq('#work_maker span.maker_name a').text()
         date = pq('#work_outline').text()
         thumb = pq('#work_visual').attr.style
