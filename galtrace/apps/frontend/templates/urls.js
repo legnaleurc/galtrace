@@ -1,4 +1,3 @@
-{% load url from future %}
 GalTrace.urls = {
     DELETE: '{% url 'galtrace.libs.core.views.delete' %}',
     FETCH: '{% url 'galtrace.libs.core.views.fetch' %}',
